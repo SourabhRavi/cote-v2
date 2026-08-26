@@ -10,6 +10,7 @@ const router = Router();
 
 router.get("/google", (req, res) => {
   const url = oauth2Client.generateAuthUrl({
+    prompt: "select_account",
     scope: ["openid", "email", "profile"],
   });
 
@@ -50,7 +51,7 @@ router.get("/google/callback", async (req, res) => {
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
-    return res.send("Token Verified");
+    return res.redirect(process.env.CLIENT_URL);
   } catch (error) {
     console.error("Invalid ID Token:", error);
     return res.status(401).send("Invalid ID token");
