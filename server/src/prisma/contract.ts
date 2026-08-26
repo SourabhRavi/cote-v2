@@ -13,6 +13,16 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
     },
   });
 
+  const Session = model("Session", {
+    fields: {
+      id: field.id.uuidv7String(),
+      tokenHash: field.text().unique(),
+      userId: field.uuidString(),
+      createdAt: field.temporal.createdAtString(),
+      expiresAt: field.temporal.timestamptzString(),
+    },
+  });
+
   // const Post = model("Post", {
   //   fields: {
   //     id: field.id.uuidv7String(),
@@ -24,9 +34,32 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
   //   },
   // });
 
+  // return {
+  //   models: {
+  //     User: User.relations({
+  //       posts: rel.hasMany(Post, { by: "authorId" }),
+  //     }),
+  //     Post: Post.relations({
+  //       author: rel.belongsTo(User, { from: "authorId", to: "id" }),
+  //     }),
+  //   },
+  // };
+
   return {
     models: {
-      User: User,
+      User: User.relations({
+        sessions: rel.hasMany(Session, { by: "userId" }),
+      }),
+      Session: Session.relations({
+        user: rel.belongsTo(User, { from: "userId", to: "id" }),
+      }).sql(({ cols, constraints }) => ({
+        table: "Session",
+        foreignKeys: [
+          constraints.foreignKey(cols.userId, User.refs.id, {
+            name: "Session_userId_fkey",
+          }),
+        ],
+      })),
     },
   };
 });
