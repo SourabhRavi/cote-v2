@@ -7,3 +7,8 @@ export const workspaceIdSchema = z.object({
 export const workspaceUpdateSchema = z.object({
   name: z.string().min(1),
 });
+
+export const workspaceMemberCreateSchema = z.object({
+  userId: z.uuidv7(),
+  role: z.enum(["admin", "member"]),
+});

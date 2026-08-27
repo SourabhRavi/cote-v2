@@ -7,8 +7,8 @@ export const createWorkspace = async ({ createdByUserId, name }) => {
       name,
     });
 
-    await createWorkspaceMember(tx, {
-      userId: createdByUserId,
+    await createWorkspaceMember(tx.orm, {
+      createdByUserId,
       workspaceId: workspace.id,
       role: "owner",
     });
@@ -17,8 +17,8 @@ export const createWorkspace = async ({ createdByUserId, name }) => {
   });
 };
 
-const createWorkspaceMember = async (tx, { userId, workspaceId, role }) => {
-  return tx.orm.public.WorkspaceMember.create({
+const createWorkspaceMember = async (orm, { userId, workspaceId, role }) => {
+  return orm.public.WorkspaceMember.create({
     userId,
     workspaceId,
     role,
@@ -51,5 +51,47 @@ export const updateWorkspace = async ({ userId, workspaceId, name }) => {
 
   return db.orm.public.Workspace.where({ id: workspace.id }).update({
     name: name,
+  });
+};
+
+export const getWorkspaceMember = async ({ userId, workspaceId }) => {
+  return db.orm.public.WorkspaceMember.where({
+    userId,
+    workspaceId,
+  }).first();
+};
+
+export const addWorkspaceMember = async ({
+  userId,
+  workspaceId,
+  memberUserId,
+  role,
+}) => {
+  const workspaceMember = await getWorkspaceMember({
+    userId,
+    workspaceId,
+  });
+
+  if (!workspaceMember) {
+    throw new Error("Workspace not found.");
+  }
+
+  if (!["owner", "admin"].includes(workspaceMember.role)) {
+    throw new Error("Insufficient permissions for adding member.");
+  }
+
+  const existingMember = await getWorkspaceMember({
+    userId: memberUserId,
+    workspaceId,
+  });
+
+  if (existingMember) {
+    throw new Error("User is already a member of this workspace.");
+  }
+
+  return createWorkspaceMember(db.orm, {
+    memberUserId,
+    workspaceId: workspace.id,
+    role: role,
   });
 };

@@ -1,14 +1,16 @@
 import { Router } from "express";
 import {
+  addWorkspaceMember,
   createWorkspace,
   getWorkspace,
   getWorkspaces,
   updateWorkspace,
 } from "./workspace.service.js";
 import {
-  workspaceIdSchema,
-  workspaceUpdateSchema,
-} from "./workspace.schema.js";
+  validateWorkspaceId,
+  validateWorkspaceMemberCreate,
+  validateWorkspaceUpdate,
+} from "./workspace.middleware.js";
 
 const router = Router();
 
@@ -54,28 +56,14 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:workspaceId", async (req, res) => {
-  const { workspaceId } = req.params;
-
+router.get("/:workspaceId", validateWorkspaceId, async (req, res) => {
   const { id: userId } = req.user;
-
-  const {
-    data: validated,
-    success,
-    error,
-  } = workspaceIdSchema.safeParse({
-    workspaceId: workspaceId,
-  });
-
-  if (!success) {
-    console.error("Invalid workspace ID:", error);
-    return res.status(400).send("Invalid workspace ID.");
-  }
+  const { workspaceId } = req.params;
 
   try {
     const workspace = await getWorkspace({
       userId: userId,
-      workspaceId: validated.workspaceId,
+      workspaceId: workspaceId,
     });
 
     return res.status(200).json({
@@ -88,43 +76,59 @@ router.get("/:workspaceId", async (req, res) => {
   }
 });
 
-router.patch("/:workspaceId", async (req, res) => {
-  const { workspaceId } = req.params;
+router.patch(
+  "/:workspaceId",
+  validateWorkspaceId,
+  validateWorkspaceUpdate,
+  async (req, res) => {
+    const { id: userId } = req.user;
+    const { workspaceId } = req.params;
+    const { name } = req.body;
 
-  const { id: userId } = req.user;
+    try {
+      await updateWorkspace({
+        userId: userId,
+        workspaceId: workspaceId,
+        name: name,
+      });
 
-  const { name } = req.body;
+      return res.status(200).json({
+        success: true,
+        message: "Workspace updated.",
+      });
+    } catch (error) {
+      console.error("Failed to update workspace:", error);
+      return res.status(500).send("Failed to update workspace.");
+    }
+  },
+);
 
-  const workspaceIdResult = workspaceIdSchema.safeParse(workspaceId);
+router.post(
+  "/:workspaceId/members",
+  validateWorkspaceId,
+  validateWorkspaceMemberCreate,
+  async (req, res) => {
+    const { id: userId } = req.user;
+    const { workspaceId } = req.params;
+    const { userId: memberUserId, role } = req.body;
 
-  if (!workspaceIdResult.success) {
-    console.error("Invalid workspace ID:", workspaceIdResult.error);
-    return res.status(400).send("Invalid workspace ID.");
-  }
+    try {
+      await addWorkspaceMember({
+        userId: userId,
+        workspaceId: workspaceId,
+        memberUserId: memberUserId,
+        role: role,
+      });
 
-  const workspaceUpdateResult = workspaceUpdateSchema.safeParse(name);
-
-  if (!workspaceUpdateResult.success) {
-    console.error("Invalid workspace update:", workspaceUpdateResult.error);
-
-    return res.status(400).send("Invalid workspace update.");
-  }
-
-  try {
-    await updateWorkspace({
-      userId: userId,
-      workspaceId: workspaceIdResult.data.workspaceId,
-      name: workspaceUpdateResult.data.name,
-    });
-
-    return res.status(200).json({
-      success: true,
-      message: "Workspace updated.",
-    });
-  } catch (error) {
-    console.error("Failed to update workspace:", error);
-    return res.status(500).send("Failed to update workspace.");
-  }
-});
+      return res.status(201).json({
+        success: true,
+        message: "Workspace member added.",
+      });
+    } catch (error) {
+      console.error("Failed to add workspace member:", error);
+      return res.status(500).send("Failed to add workspace member.");
+    }
+  },
+);
 
 export default router;
