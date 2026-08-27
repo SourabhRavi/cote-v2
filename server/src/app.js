@@ -1,7 +1,8 @@
 import express from "express";
-import authRouter from "./routes/auth.routes.js";
-import { requireAuth } from "./middleware/auth.middleware.js";
 import cookieParser from "cookie-parser";
+import authRouter from "./modules/auth/auth.routes.js";
+import workspaceRouter from "./modules/workspace/workspace.route.js";
+import { requireAuth } from "./middleware/auth.middleware.js";
 
 const app = express();
 app.use(express.json());
@@ -17,5 +18,6 @@ app.get("/me", requireAuth, (req, res) => {
 });
 
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/workspaces", requireAuth, workspaceRouter);
 
 export default app;

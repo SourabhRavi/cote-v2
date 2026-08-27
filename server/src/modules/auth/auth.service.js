@@ -1,4 +1,4 @@
-import { db } from "../prisma/db.ts";
+import { db } from "../../prisma/db.ts";
 import crypto from "node:crypto";
 
 const generateSessionToken = () => {

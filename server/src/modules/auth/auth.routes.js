@@ -1,10 +1,10 @@
 import { Router } from "express";
-import oauth2Client from "../config/google.js";
+import oauth2Client from "../../config/google.js";
 import {
   createSession,
   deleteSession,
   findOrCreateUserByGoogleId,
-} from "../services/auth.service.js";
+} from "../auth/auth.service.js";
 
 const router = Router();
 
