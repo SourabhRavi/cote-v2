@@ -12,3 +12,14 @@ export const workspaceMemberCreateSchema = z.object({
   userId: z.uuidv7(),
   role: z.enum(["admin", "member"]),
 });
+
+export const workspaceMemberUpdateSchema = z.object({
+  workspaceId: z.uuidv7(),
+  memberUserId: z.uuidv7(),
+  role: z.enum(["admin", "member"]),
+});
+
+export const workspaceMemberDeleteSchema = z.object({
+  workspaceId: z.uuidv7(),
+  memberUserId: z.uuidv7(),
+});

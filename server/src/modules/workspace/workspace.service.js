@@ -46,7 +46,7 @@ export const updateWorkspace = async ({ userId, workspaceId, name }) => {
   });
 
   if (!workspace) {
-    throw new Error("Workspace not found.");
+    throw new Error("User is not a member of this workspace.");
   }
 
   return db.orm.public.Workspace.where({ id: workspace.id }).update({
@@ -73,7 +73,7 @@ export const addWorkspaceMember = async ({
   });
 
   if (!workspaceMember) {
-    throw new Error("Workspace not found.");
+    throw new Error("User is not a member of this workspace.");
   }
 
   if (!["owner", "admin"].includes(workspaceMember.role)) {
@@ -93,5 +93,95 @@ export const addWorkspaceMember = async ({
     memberUserId,
     workspaceId: workspace.id,
     role: role,
+  });
+};
+
+export const getWorkspaceMembers = async ({ userId, workspaceId }) => {
+  const existingMember = await getWorkspaceMember({
+    userId,
+    workspaceId,
+  });
+
+  if (!existingMember) {
+    throw new Error("User is not member of this workspace.");
+  }
+
+  return db.orm.public.WorkspaceMember.where({
+    workspaceId,
+  }).all();
+};
+
+export const updateWorkspaceMember = async ({
+  userId,
+  workspaceId,
+  memberUserId,
+  role,
+}) => {
+  const requestingWorkspaceMember = await getWorkspaceMember({
+    userId,
+    workspaceId,
+  });
+
+  if (!requestingWorkspaceMember) {
+    throw new Error("User is not a member of this workspace.");
+  }
+
+  if (!["owner", "admin"].includes(requestingWorkspaceMember.role)) {
+    throw new Error("User is not authorized to update member roles.");
+  }
+
+  const targetWorkspaceMember = await getWorkspaceMember({
+    userId: memberUserId,
+    workspaceId,
+  });
+
+  if (!targetWorkspaceMember) {
+    throw new Error("Workspace member not found.");
+  }
+
+  return db.orm.public.WorkspaceMember.where({
+    workspaceId,
+    userId: memberUserId,
+  }).update({
+    role: role,
+  });
+};
+
+export const deleteWorkspaceMember = async ({
+  userId,
+  workspaceId,
+  memberUserId,
+}) => {
+  const requestingWorkspaceMember = await getWorkspaceMember({
+    userId,
+    workspaceId,
+  });
+
+  if (!requestingWorkspaceMember) {
+    throw new Error("User is not a member of this workspace.");
+  }
+
+  // check if requestingWorkspaceMember has permission to delete
+  if (!["owner", "admin"].includes(requestingWorkspaceMember.role)) {
+    throw new Error("User is not authorized to delete members.");
+  }
+
+  const targetWorkspaceMember = await getWorkspaceMember({
+    userId: memberUserId,
+    workspaceId,
+  });
+
+  if (!targetWorkspaceMember) {
+    throw new Error("Workspace member not found.");
+  }
+
+  // check if targetWorkspaceMember is not an owner: owner cannot be deleted
+  if (targetWorkspaceMember.role === "owner") {
+    throw new Error("Only the workspace owner can delete the owner.");
+  }
+
+  return db.orm.public.WorkspaceMember.delete({
+    workspaceId,
+    userId: memberUserId,
   });
 };
