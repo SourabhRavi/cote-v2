@@ -59,6 +59,17 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
     },
   });
 
+  // channels
+  const Channel = model("Channel", {
+    fields: {
+      id: field.id.uuidv7String(),
+      workspaceId: field.uuidString(),
+      name: field.text(),
+      createdAt: field.temporal.createdAtString(),
+      updatedAt: field.temporal.updatedAtString(),
+    },
+  });
+
   return {
     enums: { Role },
     models: {
@@ -82,6 +93,7 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
           from: "createdByUserId",
           to: "id",
         }),
+        channels: rel.hasMany(Channel, { by: "workspaceId" }),
       }).sql(({ cols, constraints }) => ({
         table: "Workspace",
         foreignKeys: [
@@ -107,6 +119,15 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
           }),
           constraints.foreignKey(cols.workspaceId, Workspace.refs.id, {
             name: "WorkspaceMember_workspaceId_fKey",
+          }),
+        ],
+      })),
+      Channel: Channel.relations({
+        workspace: rel.belongsTo(Workspace, { from: "workspaceId", to: "id" }),
+      }).sql(({ cols, constraints }) => ({
+        foreignKeys: [
+          constraints.foreignKey(cols.workspaceId, Workspace.refs.id, {
+            name: "Channel_workspaceId_fKey",
           }),
         ],
       })),
