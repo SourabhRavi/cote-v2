@@ -70,12 +70,26 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
     },
   });
 
+  // message
+  const Message = model("Message", {
+    fields: {
+      id: field.id.uuidv7String(),
+      channelId: field.uuidString(),
+      authorId: field.uuidString(),
+      content: field.text(),
+      createdAt: field.temporal.createdAtString(),
+      updatedAt: field.temporal.updatedAtString(),
+      deletedAt: field.temporal.timestamptzString().optional(),
+    },
+  });
+
   return {
     enums: { Role },
     models: {
       User: User.relations({
         sessions: rel.hasMany(Session, { by: "userId" }),
         workspaceMembers: rel.hasMany(WorkspaceMember, { by: "userId" }),
+        messages: rel.hasMany(Message, { by: "authorId" }),
       }),
       Session: Session.relations({
         user: rel.belongsTo(User, { from: "userId", to: "id" }),
@@ -124,10 +138,24 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
       })),
       Channel: Channel.relations({
         workspace: rel.belongsTo(Workspace, { from: "workspaceId", to: "id" }),
+        messages: rel.hasMany(Message, { by: "channelId" }),
       }).sql(({ cols, constraints }) => ({
         foreignKeys: [
           constraints.foreignKey(cols.workspaceId, Workspace.refs.id, {
             name: "Channel_workspaceId_fKey",
+          }),
+        ],
+      })),
+      Message: Message.relations({
+        channel: rel.belongsTo(Channel, { from: "channelId", to: "id" }),
+        author: rel.belongsTo(User, { from: "authorId", to: "id" }),
+      }).sql(({ cols, constraints }) => ({
+        foreignKeys: [
+          constraints.foreignKey(cols.channelId, Channel.refs.id, {
+            name: "Message_channelId_fKey",
+          }),
+          constraints.foreignKey(cols.authorId, User.refs.id, {
+            name: "Message_authorId_fKey",
           }),
         ],
       })),
