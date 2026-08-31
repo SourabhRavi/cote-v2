@@ -56,8 +56,8 @@ router.get("/", async (req, res) => {
       data: workspaces,
     });
   } catch (error) {
-    console.error("Failed to get workspaces:", error);
-    return res.status(500).send("Failed to get workspaces.");
+    console.error("Failed to fetch workspaces:", error);
+    return res.status(500).send("Failed to fetch workspaces.");
   }
 });
 
@@ -76,8 +76,8 @@ router.get("/:workspaceId", validateWorkspaceId, async (req, res) => {
       data: workspace,
     });
   } catch (error) {
-    console.error("Failed to get workspace:", error);
-    return res.status(500).send("Failed to get workspace.");
+    console.error("Failed to fetch workspace:", error);
+    return res.status(500).send("Failed to fetch workspace.");
   }
 });
 
@@ -151,8 +151,8 @@ router.get("/:workspaceId/members", validateWorkspaceId, async (req, res) => {
       data: workspaceMemebers,
     });
   } catch (error) {
-    console.error("Failed to get workspace members:", error);
-    return res.status(500).send("Failed to get workspace members.");
+    console.error("Failed to fetch workspace members:", error);
+    return res.status(500).send("Failed to fetch workspace members.");
   }
 });
 

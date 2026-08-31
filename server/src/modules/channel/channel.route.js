@@ -54,11 +54,11 @@ router.get("/", validateChannelWorkspaceId, async (req, res) => {
       data: channels,
     });
   } catch (error) {
-    console.error("Failed to get channels:", error);
+    console.error("Failed to fetch channels:", error);
 
     return res.status(500).json({
       success: false,
-      message: `Failed to get channels.`,
+      message: `Failed to fetch channels.`,
     });
   }
 });
@@ -78,11 +78,11 @@ router.get("/:channelId", validateChannelWorkspaceId, async (req, res) => {
       data: channel,
     });
   } catch (error) {
-    console.error("Failed to get channel:", error);
+    console.error("Failed to fetch channel:", error);
 
     return res.status(500).json({
       success: false,
-      message: `Failed to get channel.`,
+      message: `Failed to fetch channel.`,
     });
   }
 });
@@ -102,11 +102,11 @@ router.get("/:channelId", validateChannelWorkspaceId, async (req, res) => {
       data: channel,
     });
   } catch (error) {
-    console.error("Failed to get channel:", error);
+    console.error("Failed to fetch channel:", error);
 
     return res.status(500).json({
       success: false,
-      message: `Failed to get channel.`,
+      message: `Failed to fetch channel.`,
     });
   }
 });
@@ -128,11 +128,11 @@ router.patch("/:channelId", validateChannelUpdate, async (req, res) => {
       data: channel,
     });
   } catch (error) {
-    console.error("Failed to get channel:", error);
+    console.error("Failed to fetch channel:", error);
 
     return res.status(500).json({
       success: false,
-      message: `Failed to get channel.`,
+      message: `Failed to fetch channel.`,
     });
   }
 });
