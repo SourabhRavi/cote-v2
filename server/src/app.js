@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import authRouter from "./modules/auth/auth.routes.js";
 import workspaceRouter from "./modules/workspace/workspace.route.js";
+import channelRouter from "./modules/channel/channel.route.js";
 import { requireAuth } from "./middleware/auth.middleware.js";
 
 const app = express();
@@ -19,5 +20,6 @@ app.get("/me", requireAuth, (req, res) => {
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/workspaces", requireAuth, workspaceRouter);
+app.use("/api/v1/channels", requireAuth, channelRouter);
 
 export default app;
