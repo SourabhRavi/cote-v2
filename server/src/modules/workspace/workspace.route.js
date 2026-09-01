@@ -4,7 +4,7 @@ import {
   createWorkspace,
   deleteWorkspaceMember,
   getWorkspace,
-  getWorkspaceMemebers,
+  getWorkspaceMembers,
   getWorkspaces,
   updateWorkspace,
   updateWorkspaceMember,

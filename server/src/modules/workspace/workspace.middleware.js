@@ -5,7 +5,6 @@ import {
   workspaceMemberCreateSchema,
   workspaceMemberDeleteSchema,
   workspaceMemberUpdateSchema,
-  workspaceMemberUserIdSchema,
   workspaceUpdateSchema,
 } from "./workspace.schema.js";
 
