@@ -70,6 +70,16 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
     },
   });
 
+  const ChannelMember = model("ChannelMember", {
+    fields: {
+      id: field.id.uuidv7String(),
+      channelId: field.uuidString(),
+      userId: field.uuidString(),
+      createdAt: field.temporal.createdAtString(),
+      updatedAt: field.temporal.updatedAtString(),
+    },
+  });
+
   // message
   const Message = model("Message", {
     fields: {
@@ -90,6 +100,7 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
         sessions: rel.hasMany(Session, { by: "userId" }),
         workspaceMembers: rel.hasMany(WorkspaceMember, { by: "userId" }),
         messages: rel.hasMany(Message, { by: "authorId" }),
+        channelMembers: rel.hasMany(ChannelMember, { by: "userId" }),
       }),
       Session: Session.relations({
         user: rel.belongsTo(User, { from: "userId", to: "id" }),
@@ -139,10 +150,31 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
       Channel: Channel.relations({
         workspace: rel.belongsTo(Workspace, { from: "workspaceId", to: "id" }),
         messages: rel.hasMany(Message, { by: "channelId" }),
+        channelMembers: rel.hasMany(ChannelMember, { by: "channelId" }),
       }).sql(({ cols, constraints }) => ({
         foreignKeys: [
           constraints.foreignKey(cols.workspaceId, Workspace.refs.id, {
             name: "Channel_workspaceId_fKey",
+          }),
+        ],
+      })),
+      ChannelMember: ChannelMember.relations({
+        user: rel.belongsTo(User, { from: "userId", to: "id" }),
+        channel: rel.belongsTo(Channel, { from: "channelId", to: "id" }),
+      }).sql(({ cols, constraints }) => ({
+        table: "ChannelMember",
+        indexes: [
+          constraints.index([cols.userId, cols.channelId], {
+            name: "ChannelMember_userId_channelId_key",
+            unique: true,
+          }),
+        ],
+        foreignKeys: [
+          constraints.foreignKey(cols.userId, User.refs.id, {
+            name: "ChannelMember_userId_fKey",
+          }),
+          constraints.foreignKey(cols.channelId, Channel.refs.id, {
+            name: "ChannelMember_channelId_fKey",
           }),
         ],
       })),

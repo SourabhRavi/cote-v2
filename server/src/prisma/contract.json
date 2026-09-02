@@ -8,6 +8,10 @@
       "model": "Channel",
       "namespace": "public"
     },
+    "ChannelMember": {
+      "model": "ChannelMember",
+      "namespace": "public"
+    },
     "Message": {
       "model": "Message",
       "namespace": "public"
@@ -97,6 +101,21 @@
               }
             },
             "relations": {
+              "channelMembers": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "channelId"
+                  ]
+                },
+                "to": {
+                  "model": "ChannelMember",
+                  "namespace": "public"
+                }
+              },
               "messages": {
                 "cardinality": "1:N",
                 "on": {
@@ -148,6 +167,107 @@
               },
               "namespaceId": "public",
               "table": "Channel"
+            }
+          },
+          "ChannelMember": {
+            "fields": {
+              "channelId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/char@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 36
+                  }
+                }
+              },
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/char@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 36
+                  }
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "userId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/char@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 36
+                  }
+                }
+              }
+            },
+            "relations": {
+              "channel": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "channelId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Channel",
+                  "namespace": "public"
+                }
+              },
+              "user": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "userId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "channelId": {
+                  "column": "channelId"
+                },
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                },
+                "userId": {
+                  "column": "userId"
+                }
+              },
+              "namespaceId": "public",
+              "table": "ChannelMember"
             }
           },
           "Message": {
@@ -410,6 +530,21 @@
               }
             },
             "relations": {
+              "channelMembers": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "userId"
+                  ]
+                },
+                "to": {
+                  "model": "ChannelMember",
+                  "namespace": "public"
+                }
+              },
               "messages": {
                 "cardinality": "1:N",
                 "on": {
@@ -787,6 +922,117 @@
                   ],
                   "name": "Channel_workspaceId_idx_ba65f874",
                   "prefix": "Channel_workspaceId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "ChannelMember": {
+              "columns": {
+                "channelId": {
+                  "codecId": "sql/char@1",
+                  "nativeType": "character",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 36
+                  }
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "sql/char@1",
+                  "nativeType": "character",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 36
+                  }
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "userId": {
+                  "codecId": "sql/char@1",
+                  "nativeType": "character",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 36
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "name": "ChannelMember_userId_fKey",
+                  "source": {
+                    "columns": [
+                      "userId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ChannelMember"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "User"
+                  }
+                },
+                {
+                  "name": "ChannelMember_channelId_fKey",
+                  "source": {
+                    "columns": [
+                      "channelId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ChannelMember"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "Channel"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "channelId"
+                  ],
+                  "name": "ChannelMember_channelId_idx_166d3598",
+                  "prefix": "ChannelMember_channelId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "userId",
+                    "channelId"
+                  ],
+                  "name": "ChannelMember_userId_channelId_key_51e51f8c",
+                  "prefix": "ChannelMember_userId_channelId_key",
+                  "unique": true
+                },
+                {
+                  "columns": [
+                    "userId"
+                  ],
+                  "name": "ChannelMember_userId_idx_a489d58a",
+                  "prefix": "ChannelMember_userId_idx",
                   "unique": false
                 }
               ],
@@ -1277,10 +1523,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "492a64751c5432b8a417c1bb1bbd69138c0e60d5510ffe2f9d6efa5501e474e5"
+    "storageHash": "50353af1b0228e0f529fccc3ec06e43874704c41e6157b43b90b670cf6c33814"
   },
   "execution": {
-    "executionHash": "4ec526fff9648072c55a41ce4a5bcfc4da4be9240a6a7dc3831ccccd2f56096a",
+    "executionHash": "5c7404b7631b3de43377d312e5feffdd75943ca633e78afa27bf0131f65f54a4",
     "mutations": {
       "defaults": [
         {
@@ -1307,6 +1553,32 @@
             "column": "updatedAt",
             "namespace": "public",
             "table": "Channel"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv7",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "ChannelMember"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "updatedAt",
+            "namespace": "public",
+            "table": "ChannelMember"
           }
         },
         {

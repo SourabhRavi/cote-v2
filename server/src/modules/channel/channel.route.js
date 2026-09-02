@@ -5,11 +5,15 @@ import {
   validateChannelUpdate,
   validateChannelWorkspaceId,
 } from "./channel.middleware.js";
+
 import {
   createChannel,
   getChannel,
   getChannels,
+  joinChannel,
+  leaveChannel,
   updateChannel,
+  deleteChannel,
 } from "./channel.service.js";
 
 const router = Router();
@@ -34,7 +38,7 @@ router.post("/", validateChannelCreate, async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: `Failed to create channel.`,
+      message: "Failed to create channel.",
     });
   }
 });
@@ -49,7 +53,7 @@ router.get("/", validateChannelWorkspaceId, async (req, res) => {
       workspaceId,
     });
 
-    return res.status(201).json({
+    return res.status(200).json({
       success: true,
       data: channels,
     });
@@ -58,12 +62,12 @@ router.get("/", validateChannelWorkspaceId, async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: `Failed to fetch channels.`,
+      message: "Failed to fetch channels.",
     });
   }
 });
 
-router.get("/:channelId", validateChannelWorkspaceId, async (req, res) => {
+router.get("/:channelId", validateChannelId, async (req, res) => {
   const { id: userId } = req.user;
   const { channelId } = req.params;
 
@@ -82,31 +86,55 @@ router.get("/:channelId", validateChannelWorkspaceId, async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: `Failed to fetch channel.`,
+      message: "Failed to fetch channel.",
     });
   }
 });
 
-router.get("/:channelId", validateChannelWorkspaceId, async (req, res) => {
+router.post("/:channelId/join", validateChannelId, async (req, res) => {
   const { id: userId } = req.user;
   const { channelId } = req.params;
 
   try {
-    const channel = await getChannel({
+    const channelMember = await joinChannel({
       userId,
       channelId,
     });
 
     return res.status(200).json({
       success: true,
-      data: channel,
+      data: channelMember,
     });
   } catch (error) {
-    console.error("Failed to fetch channel:", error);
+    console.error("Failed to join channel:", error);
 
     return res.status(500).json({
       success: false,
-      message: `Failed to fetch channel.`,
+      message: "Failed to join channel.",
+    });
+  }
+});
+
+router.delete("/:channelId/leave", validateChannelId, async (req, res) => {
+  const { id: userId } = req.user;
+  const { channelId } = req.params;
+
+  try {
+    await leaveChannel({
+      userId,
+      channelId,
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: null,
+    });
+  } catch (error) {
+    console.error("Failed to leave channel:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to leave channel.",
     });
   }
 });
@@ -128,11 +156,11 @@ router.patch("/:channelId", validateChannelUpdate, async (req, res) => {
       data: channel,
     });
   } catch (error) {
-    console.error("Failed to fetch channel:", error);
+    console.error("Failed to update channel:", error);
 
     return res.status(500).json({
       success: false,
-      message: `Failed to fetch channel.`,
+      message: "Failed to update channel.",
     });
   }
 });
@@ -156,7 +184,7 @@ router.delete("/:channelId", validateChannelId, async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: `Failed to delete channel.`,
+      message: "Failed to delete channel.",
     });
   }
 });

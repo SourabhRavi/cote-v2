@@ -10,10 +10,18 @@ export const createChannel = async ({ userId, workspaceId, name }) => {
     throw new Error("User is not a member of this workspace.");
   }
 
-  return db.orm.public.Channel.create({
+  const channel = await db.orm.public.Channel.create({
     workspaceId,
     name,
   });
+
+  // The user who creates the channel automatically becomes a member.
+  await db.orm.public.ChannelMember.create({
+    channelId: channel.id,
+    userId,
+  });
+
+  return channel;
 };
 
 export const getChannels = async ({ userId, workspaceId }) => {
@@ -46,10 +54,75 @@ export const getChannel = async ({ userId, channelId }) => {
   });
 
   if (!workspaceMember) {
-    throw new Error("Channel not found.");
+    throw new Error("User is not a member of this workspace.");
   }
 
   return channel;
+};
+
+export const joinChannel = async ({ userId, channelId }) => {
+  const channel = await db.orm.public.Channel.first({
+    id: channelId,
+  });
+
+  if (!channel) {
+    throw new Error("Channel not found.");
+  }
+
+  const workspaceMember = await db.orm.public.WorkspaceMember.first({
+    workspaceId: channel.workspaceId,
+    userId,
+  });
+
+  if (!workspaceMember) {
+    throw new Error("User is not a member of this workspace.");
+  }
+
+  const existingChannelMember = await db.orm.public.ChannelMember.first({
+    channelId,
+    userId,
+  });
+
+  if (existingChannelMember) {
+    return existingChannelMember;
+  }
+
+  return db.orm.public.ChannelMember.create({
+    channelId,
+    userId,
+  });
+};
+
+export const leaveChannel = async ({ userId, channelId }) => {
+  const channel = await db.orm.public.Channel.first({
+    id: channelId,
+  });
+
+  if (!channel) {
+    throw new Error("Channel not found.");
+  }
+
+  const workspaceMember = await db.orm.public.WorkspaceMember.first({
+    workspaceId: channel.workspaceId,
+    userId,
+  });
+
+  if (!workspaceMember) {
+    throw new Error("User is not a member of this workspace.");
+  }
+
+  const channelMember = await db.orm.public.ChannelMember.first({
+    channelId,
+    userId,
+  });
+
+  if (!channelMember) {
+    throw new Error("User is not a member of this channel.");
+  }
+
+  return db.orm.public.ChannelMember.delete({
+    id: channelMember.id,
+  });
 };
 
 export const updateChannel = async ({ userId, channelId, name }) => {
@@ -67,10 +140,12 @@ export const updateChannel = async ({ userId, channelId, name }) => {
   });
 
   if (!workspaceMember) {
-    throw new Error("Channel not found.");
+    throw new Error("User is not a member of this workspace.");
   }
 
-  return db.orm.public.Channel.update({
+  return db.orm.public.Channel.where({
+    id: channelId,
+  }).update({
     name,
   });
 };
@@ -90,7 +165,7 @@ export const deleteChannel = async ({ userId, channelId }) => {
   });
 
   if (!workspaceMember) {
-    throw new Error("Channel not found.");
+    throw new Error("User is not a member of this workspace.");
   }
 
   if (workspaceMember.role !== "owner") {
