@@ -14,6 +14,8 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { GalleryVerticalEndIcon } from "lucide-react";
+import useWorkspaces from "@/hooks/use-workspaces.ts";
+import { useChannels } from "@/hooks/use-channels.ts";
 
 const data = {
   user: {
@@ -52,14 +54,36 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const {
+    data: workspaces = [],
+    isPending: workspaceIsPending,
+    isError: workspaceIsError,
+  } = useWorkspaces();
+
+  const [activeWorkspaceId, setActiveWorkspaceId] = React.useState<string | undefined>(undefined);
+
+  const currentWorkspaceId = activeWorkspaceId ?? workspaces[0]?.id;
+
+  const {
+    data: channels = [],
+    isPending: channelsIsPending,
+    isError: channelsError,
+  } = useChannels(currentWorkspaceId);
+
   return (
     <Sidebar collapsible="icon" className="border-r" {...props}>
       <SidebarHeader className="px-3 py-3">
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher
+          workspaces={workspaces}
+          activeWorkspaceId={currentWorkspaceId}
+          onWorkspaceChange={setActiveWorkspaceId}
+          isLoading={workspaceIsPending}
+          isError={workspaceIsError}
+        />
       </SidebarHeader>
 
       <SidebarContent className="px-2">
-        <NavMain items={data.navMain} />
+        <NavMain items={channels} isLoading={channelsIsPending} isError={channelsError} />
         <NavProjects projects={data.projects} />
       </SidebarContent>
 

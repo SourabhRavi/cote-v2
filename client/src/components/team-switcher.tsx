@@ -1,7 +1,5 @@
 "use client";
 
-import * as React from "react";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,22 +16,73 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronsUpDownIcon, PlusIcon } from "lucide-react";
 
+type Workspace = {
+  id: string;
+  name: string;
+};
+
 export function TeamSwitcher({
-  teams,
+  workspaces,
+  activeWorkspaceId,
+  onWorkspaceChange,
+  isLoading,
+  isError,
 }: {
-  teams: {
-    name: string;
-    logo: React.ReactNode;
-    plan: string;
-  }[];
+  workspaces: Workspace[];
+  activeWorkspaceId?: string;
+  onWorkspaceChange: (workspaceId: string) => void;
+  isLoading?: boolean;
+  isError?: boolean;
 }) {
   const { isMobile } = useSidebar();
-  const [activeTeam, setActiveTeam] = React.useState(teams[0]);
-  if (!activeTeam) {
-    return null;
+
+  const activeWorkspace = workspaces.find((workspace) => workspace.id === activeWorkspaceId);
+
+  if (isLoading) {
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton size="lg" disabled>
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <Skeleton className="h-4 w-28" />
+            </div>
+
+            <ChevronsUpDownIcon className="ml-auto size-4 opacity-50" />
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    );
   }
+
+  if (isError) {
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton size="lg" disabled>
+            <span className="truncate text-sm text-muted-foreground">
+              Failed to load workspaces
+            </span>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    );
+  }
+
+  if (!activeWorkspace) {
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton size="lg" disabled>
+            <span className="truncate text-sm text-muted-foreground">No workspaces</span>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    );
+  }
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -46,15 +95,13 @@ export function TeamSwitcher({
               />
             }
           >
-            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-              {activeTeam.logo}
-            </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">{activeTeam.name}</span>
-              <span className="truncate text-xs">{activeTeam.plan}</span>
+              <span className="truncate font-medium">{activeWorkspace.name}</span>
             </div>
+
             <ChevronsUpDownIcon className="ml-auto" />
           </DropdownMenuTrigger>
+
           <DropdownMenuContent
             className="w-fit"
             align="start"
@@ -65,21 +112,21 @@ export function TeamSwitcher({
               <DropdownMenuLabel className="text-xs text-muted-foreground">
                 Workspaces
               </DropdownMenuLabel>
-              {teams.map((team, index) => (
+
+              {workspaces.map((workspace, index) => (
                 <DropdownMenuItem
-                  key={team.name}
-                  onClick={() => setActiveTeam(team)}
+                  key={workspace.id}
+                  onClick={() => onWorkspaceChange(workspace.id)}
                   className="gap-2 p-2"
                 >
-                  <div className="flex size-6 items-center justify-center rounded-md border">
-                    {team.logo}
-                  </div>
-                  {team.name}
+                  {workspace.name}
                   <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuGroup>
+
             <DropdownMenuSeparator />
+
             <DropdownMenuGroup>
               <DropdownMenuItem className="gap-2 p-2">
                 <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
