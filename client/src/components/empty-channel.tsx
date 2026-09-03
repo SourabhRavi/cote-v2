@@ -13,8 +13,8 @@ export function EmptyChannel({ channelName }: EmptyChannelProps) {
         </div>
 
         <div className="flex w-full flex-col items-center gap-3">
-          <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground sm:text-[28px]">
-            The birth of #{channelName}
+          <h2 className="font-heading text-2xl tracking-tight text-foreground sm:text-[28px]">
+            The birth of <span className="lowercase font-semibold">#{channelName}</span>
           </h2>
 
           <p className="max-w-130 text-sm leading-6 text-muted-foreground">
