@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
   console.log("body///", req.body);
   const { name } = req.body;
 
-  if (!workspaceName) {
+  if (!name) {
     console.error("Workspace name is required.");
     return res.status(400).send("Workspace name is required.");
   }
