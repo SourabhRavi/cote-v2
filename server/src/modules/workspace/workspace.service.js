@@ -8,7 +8,7 @@ export const createWorkspace = async ({ createdByUserId, name }) => {
     });
 
     await createWorkspaceMember(tx.orm, {
-      createdByUserId,
+      userId: createdByUserId,
       workspaceId: workspace.id,
       role: "owner",
     });
