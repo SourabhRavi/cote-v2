@@ -4,10 +4,10 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 const AppLayout = () => {
   return (
-    <SidebarProvider>
+    <SidebarProvider className="h-svh min-h-0">
       <AppSidebar />
 
-      <SidebarInset>
+      <SidebarInset className="min-h-0 overflow-hidden">
         <Outlet />
       </SidebarInset>
     </SidebarProvider>

@@ -96,7 +96,7 @@ export function TeamSwitcher({
             }
           >
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">{activeWorkspace.name}</span>
+              <span className="truncate font-medium capitalize">{activeWorkspace.name}</span>
             </div>
 
             <ChevronsUpDownIcon className="ml-auto" />
@@ -117,7 +117,7 @@ export function TeamSwitcher({
                 <DropdownMenuItem
                   key={workspace.id}
                   onClick={() => onWorkspaceChange(workspace.id)}
-                  className="gap-2 p-2"
+                  className="gap-2 p-2 capitalize"
                 >
                   {workspace.name}
                   <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
