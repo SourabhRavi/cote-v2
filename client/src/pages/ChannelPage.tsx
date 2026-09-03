@@ -5,6 +5,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useChannel } from "@/hooks/use-channels.ts";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { MessageList } from "@/components/messages/message-list.tsx";
+import { Separator } from "@base-ui/react";
 
 const ChannelPage = () => {
   const { channelId } = useParams<{
@@ -24,23 +25,46 @@ const ChannelContent = ({ channelId }: { channelId: string }) => {
 
   if (isPending) {
     return (
-      <div className="flex h-full min-h-0 flex-col overflow-hidden bg-background text-foreground">
-        <header className="flex min-h-19.75 shrink-0 items-center border-b px-4 py-4 md:px-5">
+      <div className="flex h-full min-h-0 flex-col text-foreground">
+        <header className="flex min-h-10 shrink-0 items-center px-4 py-4 md:px-5">
           <div className="flex min-w-0 items-center gap-3">
             <SidebarTrigger className="md:hidden" />
 
-            <Skeleton className="h-5 w-32" />
+            <div className="flex flex-col gap-2">
+              <Skeleton className="h-7 w-32" />
+            </div>
           </div>
         </header>
 
-        <main className="min-h-0 flex-1" />
+        <main className="min-h-0 flex-1">
+          <div className="w-full px-4">
+            <Separator className="w-full inset-0 bg-sidebar-border h-px" />
+          </div>
+          <div className="flex flex-col gap-6 p-4 md:p-5 ">
+            {[1, 2, 3, 4].map((item) => (
+              <div key={item} className="flex gap-3">
+                <Skeleton className="size-9 shrink-0 rounded-full" />
 
-        <div className="shrink-0 border-t p-4 md:p-5">
-          <div className="mx-auto w-full rounded-xl border p-3">
-            <Skeleton className="h-10 w-full" />
+                <div className="min-w-0 flex-1 space-y-2">
+                  <div className="flex items-center justify-between gap-3">
+                    <Skeleton className="h-4 w-28" />
+                    <Skeleton className="h-3 w-14" />
+                  </div>
+
+                  <Skeleton className="h-4 w-full max-w-2xl" />
+                  <Skeleton className="h-4 w-3/4 max-w-xl" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </main>
+
+        <div className="shrink-0">
+          <div className="mx-auto h-full w-full rounded-xl bg-background shadow-lg shadow-primary/15 p-3">
+            <Skeleton className="h-12 w-full" />
 
             <div className="mt-2 flex items-center justify-between">
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2">
                 <Skeleton className="size-6 rounded-md" />
                 <Skeleton className="size-6 rounded-md" />
                 <Skeleton className="size-6 rounded-md" />
@@ -56,8 +80,8 @@ const ChannelContent = ({ channelId }: { channelId: string }) => {
 
   if (isError || !channel) {
     return (
-      <div className="flex h-full min-h-0 flex-col overflow-hidden bg-background text-foreground">
-        <header className="flex min-h-19.75 shrink-0 items-center border-b px-4 py-4 md:px-5">
+      <div className="flex h-full min-h-0 flex-col text-foreground">
+        <header className="flex min-h-10 shrink-0 items-center px-4 py-4 md:px-5">
           <div className="flex min-w-0 items-center gap-3">
             <SidebarTrigger className="md:hidden" />
 
@@ -89,9 +113,9 @@ const ChannelContent = ({ channelId }: { channelId: string }) => {
   // return <EmptyChannel channelName={channel.name} />;
 
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-background text-foreground">
+    <div className="flex h-full min-h-0 flex-col text-foreground">
       {/* Channel header */}
-      <header className="flex min-h-19.75 shrink-0 items-center justify-between border-b px-4 py-4 md:px-5">
+      <header className="flex min-h-10 shrink-0 items-center justify-between px-4 py-4 md:px-5">
         <div className="flex min-w-0 items-center gap-3">
           <SidebarTrigger className="md:hidden" />
 
@@ -99,13 +123,23 @@ const ChannelContent = ({ channelId }: { channelId: string }) => {
             {isPending ? (
               <Skeleton className="h-10 w-full" />
             ) : (
-              <h1 className="truncate font-heading text-lg font-semibold text-foreground lowercase">
-                # {channel.name}
-              </h1>
+              <>
+                <h1 className="truncate font-heading text-lg font-semibold text-foreground lowercase">
+                  # {channel.name}
+                </h1>
+
+                {!channel.description && (
+                  <p className="truncate text-xs text-muted-foreground">{channel.description}</p>
+                )}
+              </>
             )}
           </div>
         </div>
       </header>
+
+      <div className="w-full px-4">
+        <Separator className="w-full inset-0 bg-sidebar-border h-px" />
+      </div>
 
       {/* Messages */}
       <main className="min-h-0 flex-1 overflow-y-auto p-4 md:p-5 scrollbar-none">
@@ -114,8 +148,8 @@ const ChannelContent = ({ channelId }: { channelId: string }) => {
       </main>
 
       {/* Composer */}
-      <div className="shrink-0 border-t p-4 md:p-5">
-        <div className="mx-auto w-full rounded-xl border bg-background p-3">
+      <div className="shrink-0">
+        <div className="mx-auto w-full rounded-xl bg-background shadow-lg shadow-primary/15 p-3">
           <textarea
             rows={2}
             placeholder={`Type message in #${channel.name}...`}

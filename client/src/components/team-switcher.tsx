@@ -7,7 +7,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -92,11 +91,13 @@ export function TeamSwitcher({
               <SidebarMenuButton
                 size="lg"
                 className="
+                hover:text-sidebar-foreground
                 data-open:bg-sidebar-accent
                 data-open:text-sidebar-accent-foreground
                 group-data-[collapsible=icon]:size-8
                 group-data-[collapsible=icon]:p-0
                 group-data-[collapsible=icon]:justify-center
+                aria-expanded:bg-sidebar-accent
               "
               />
             }
@@ -105,8 +106,12 @@ export function TeamSwitcher({
             <div
               className="
               flex size-8 shrink-0 items-center justify-center rounded-md
-              bg-sidebar-accent text-xs font-semibold
+              bg-sidebar-accent font-semibold
               group-data-[collapsible=icon]:size-7
+              ring-1 ring-primary/20
+              uppercase
+              text-xl
+              text-card-foreground
             "
             >
               {activeWorkspace.name.charAt(0).toUpperCase()}
@@ -132,14 +137,13 @@ export function TeamSwitcher({
                 Workspaces
               </DropdownMenuLabel>
 
-              {workspaces.map((workspace, index) => (
+              {workspaces.map((workspace) => (
                 <DropdownMenuItem
                   key={workspace.id}
                   onClick={() => onWorkspaceChange(workspace.id)}
-                  className="gap-2 p-2 capitalize"
+                  className="gap-2 p-2 capitalize focus:text-sidebar-foreground"
                 >
                   {workspace.name}
-                  <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuGroup>
@@ -147,12 +151,12 @@ export function TeamSwitcher({
             <DropdownMenuSeparator />
 
             <DropdownMenuGroup>
-              <DropdownMenuItem className="gap-2 p-2">
-                <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
-                  <PlusIcon className="size-4" />
+              <DropdownMenuItem variant="default" className="gap-2 p-2 group/add-workspace">
+                <div className="flex size-6 items-center justify-center rounded-md border group-hover/add-workspace:bg-primary">
+                  <PlusIcon className="size-4 group-hover/add-workspace:stroke-background" />
                 </div>
 
-                <div className="font-medium text-muted-foreground">Add workspace</div>
+                <span className="font-medium text-muted-foreground">Add workspace</span>
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>

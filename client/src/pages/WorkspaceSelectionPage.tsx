@@ -37,7 +37,7 @@ const WorkspaceSelectionPage = () => {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background px-4 py-8 sm:px-6">
+    <main className="flex min-h-screen items-center justify-center bg-page px-4 py-8 sm:px-6">
       <div className="w-full max-w-4xl">
         {/* Header stays fixed */}
         <div className="mx-auto h-29 max-w-md text-center">
@@ -59,7 +59,7 @@ const WorkspaceSelectionPage = () => {
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Search workspaces..."
-              className="h-10 pl-9 text-xs"
+              className="h-10 pl-9 text-xs focus-visible:ring-0! focus-visible:ring-transparent! border-none bg-background! shadow-md shadow-primary/15"
             />
           </div>
         </div>
@@ -102,11 +102,13 @@ const WorkspaceSelectionPage = () => {
                     px-4
                     text-xs
                     font-normal
+                    bg-transparent
+                    hover:bg-sidebar-accent
                   "
                 >
-                  <span className="truncate">{workspace.name}</span>
+                  <span className="truncate font-medium">{workspace.name}</span>
 
-                  <span className="ml-3 shrink-0 text-xs text-muted-foreground">Workspace</span>
+                  <span className="ml-3 shrink-0 text-xs text-muted-foreground/50">Workspace</span>
                 </Button>
               ))}
             </div>

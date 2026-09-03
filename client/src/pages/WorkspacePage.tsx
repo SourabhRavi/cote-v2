@@ -21,7 +21,7 @@ const WorkspacePage = () => {
   }
 
   return (
-    <main className="flex min-h-full flex-1 items-center justify-center bg-background px-6">
+    <main className="flex min-h-full flex-1 items-center justify-center px-6">
       <div className="w-full max-w-lg space-y-3 text-center">
         <p className="text-xs font-medium text-muted-foreground"># {workspace.name}</p>
 
