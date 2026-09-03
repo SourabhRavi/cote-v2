@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { NavMain } from "@/components/nav-main";
@@ -20,7 +19,11 @@ import { useUser } from "@/hooks/use-user.ts";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const navigate = useNavigate();
-  const { workspaceId } = useParams<{ workspaceId: string }>();
+
+  const { workspaceId, channelId } = useParams<{
+    workspaceId: string;
+    channelId: string;
+  }>();
 
   const {
     data: workspaces = [],
@@ -42,7 +45,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     navigate(`/${workspaceId}`);
   };
 
-  const [activeChannelId, setActiveChannelId] = React.useState<string | undefined>(undefined);
+  const handleChannelChange = (channelId: string) => {
+    if (!currentWorkspaceId) return;
+
+    navigate(`/${currentWorkspaceId}/${channelId}`);
+  };
 
   return (
     <Sidebar collapsible="icon" className="border-r" {...props}>
@@ -59,8 +66,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent className="px-2">
         <NavMain
           items={channels}
-          activeChannelId={activeChannelId}
-          onChannelChange={setActiveChannelId}
+          activeChannelId={channelId}
+          onChannelChange={handleChannelChange}
           isLoading={channelsIsPending}
           isError={channelsIsError}
         />

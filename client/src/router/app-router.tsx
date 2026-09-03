@@ -2,7 +2,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import AppLayout from "@/layouts/AppLayout.tsx";
 import LoginPage from "@/pages/LoginPage.tsx";
-import DashboardPage from "@/pages/DashboardPage.tsx";
+import WorkspaceSelectionPage from "@/pages/WorkspaceSelectionPage.tsx";
+import WorkspacePage from "@/pages/WorkspacePage.tsx";
+import ChannelPage from "@/pages/ChannelPage.tsx";
 
 const AppRouter = () => {
   return (
@@ -10,9 +12,14 @@ const AppRouter = () => {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
 
+        {/* Workspace not selected yet */}
+        <Route path="/" element={<WorkspaceSelectionPage />} />
+
+        {/* Workspace selected */}
         <Route element={<AppLayout />}>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/:workspaceId" element={<DashboardPage />} />
+          <Route path="/:workspaceId" element={<WorkspacePage />} />
+
+          <Route path="/:workspaceId/:channelId" element={<ChannelPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
