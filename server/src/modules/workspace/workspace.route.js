@@ -22,9 +22,9 @@ const router = Router();
 router.post("/", async (req, res) => {
   const { id } = req.user;
   console.log("body///", req.body);
-  const { name } = req.body;
+  const { workspaceName } = req.body;
 
-  if (!name) {
+  if (!workspaceName) {
     console.error("Workspace name is required.");
     return res.status(400).send("Workspace name is required.");
   }
@@ -32,7 +32,7 @@ router.post("/", async (req, res) => {
   try {
     await createWorkspace({
       createdByUserId: id,
-      name,
+      name: workspaceName,
     });
 
     return res.status(201).json({
