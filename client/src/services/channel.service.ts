@@ -1,7 +1,7 @@
 import { api } from "@/lib/axios.ts";
 
-export const getChannels = async () => {
-  const response = await api.get("/channels");
+export const getChannels = async (workspaceId: string) => {
+  const response = await api.get(`/channels?workspaceId=${workspaceId}`);
 
   return response.data.data;
 };
