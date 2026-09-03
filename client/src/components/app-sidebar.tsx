@@ -3,7 +3,6 @@
 import * as React from "react";
 
 import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
 import { TeamSwitcher } from "@/components/team-switcher";
 import {
@@ -13,45 +12,9 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { GalleryVerticalEndIcon } from "lucide-react";
 import useWorkspaces from "@/hooks/use-workspaces.ts";
 import { useChannels } from "@/hooks/use-channels.ts";
-
-const data = {
-  user: {
-    name: "Sourabh",
-    email: "sourabh@example.com",
-    avatar: "",
-  },
-  teams: [
-    {
-      name: "Cote Design",
-      logo: <GalleryVerticalEndIcon />,
-      plan: "4 members online",
-    },
-  ],
-  navMain: [
-    {
-      name: "general",
-      url: "#",
-    },
-    {
-      name: "random",
-      url: "#",
-    },
-    {
-      name: "engineering",
-      url: "#",
-      unread: 3,
-    },
-  ],
-  projects: [
-    {
-      name: "Browse channels",
-      url: "#",
-    },
-  ],
-};
+import { useUser } from "@/hooks/use-user.ts";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const {
@@ -70,6 +33,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     isError: channelsError,
   } = useChannels(currentWorkspaceId);
 
+  const { data: user, isPending: userIsPending, isError: userIsError } = useUser();
+
   return (
     <Sidebar collapsible="icon" className="border-r" {...props}>
       <SidebarHeader className="px-3 py-3">
@@ -84,11 +49,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       <SidebarContent className="px-2">
         <NavMain items={channels} isLoading={channelsIsPending} isError={channelsError} />
-        <NavProjects projects={data.projects} />
       </SidebarContent>
 
       <SidebarFooter className="border-t px-2 py-2">
-        <NavUser user={data.user} />
+        <NavUser user={user} isLoading={userIsPending} isError={userIsError} />
       </SidebarFooter>
 
       <SidebarRail />
