@@ -23,9 +23,9 @@ const data = {
   },
   teams: [
     {
-      name: "Cote",
+      name: "Cote Design",
       logo: <GalleryVerticalEndIcon />,
-      plan: "Workspace",
+      plan: "4 members online",
     },
   ],
   navMain: [
@@ -53,17 +53,17 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+    <Sidebar collapsible="icon" className="border-r" {...props}>
+      <SidebarHeader className="px-3 py-3">
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="px-2">
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
       </SidebarContent>
 
-      <SidebarFooter>
+      <SidebarFooter className="border-t px-2 py-2">
         <NavUser user={data.user} />
       </SidebarFooter>
 

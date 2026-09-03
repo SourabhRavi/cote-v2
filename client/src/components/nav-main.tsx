@@ -23,9 +23,9 @@ export function NavMain({
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton tooltip={item.name}>
+            <SidebarMenuButton isActive={item.name === "general"} tooltip={item.name}>
               <a href={item.url} className="flex items-center gap-1">
-                <HashIcon />
+                <HashIcon className="size-4" />
                 <span>{item.name}</span>
 
                 {item.unread ? <span className="ml-auto text-xs">{item.unread}</span> : null}
