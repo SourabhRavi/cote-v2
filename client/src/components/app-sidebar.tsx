@@ -56,7 +56,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: user, isPending: userIsPending, isError: userIsError } = useUser();
 
   return (
-    <Sidebar collapsible="icon" className="border-r" {...props}>
+    <Sidebar collapsible="icon" className="border-transparent" {...props}>
       <SidebarHeader className="px-3 py-3">
         <TeamSwitcher
           workspaces={workspaces}
