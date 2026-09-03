@@ -20,13 +20,13 @@ const router = Router();
 
 router.post("/", validateChannelCreate, async (req, res) => {
   const { id: userId } = req.user;
-  const { workspaceId, name } = req.body;
+  const { workspaceId, channelName } = req.body;
 
   try {
     const channel = await createChannel({
       userId,
       workspaceId,
-      name,
+      channelName,
     });
 
     return res.status(201).json({
@@ -142,13 +142,13 @@ router.delete("/:channelId/leave", validateChannelId, async (req, res) => {
 router.patch("/:channelId", validateChannelUpdate, async (req, res) => {
   const { id: userId } = req.user;
   const { channelId } = req.params;
-  const { name } = req.body;
+  const { channelName } = req.body;
 
   try {
     const channel = await updateChannel({
       userId,
       channelId,
-      name,
+      channelName,
     });
 
     return res.status(200).json({

@@ -1,6 +1,6 @@
 import { db } from "../../prisma/db.ts";
 
-export const createChannel = async ({ userId, workspaceId, name }) => {
+export const createChannel = async ({ userId, workspaceId, channelName }) => {
   const workspaceMember = await db.orm.public.WorkspaceMember.first({
     workspaceId,
     userId,
@@ -12,7 +12,7 @@ export const createChannel = async ({ userId, workspaceId, name }) => {
 
   const channel = await db.orm.public.Channel.create({
     workspaceId,
-    name,
+    name: channelName,
   });
 
   // The user who creates the channel automatically becomes a member.
@@ -34,9 +34,9 @@ export const getChannels = async ({ userId, workspaceId }) => {
     throw new Error("User is not a member of this workspace.");
   }
 
-  return db.orm.public.Channel.all({
+  return db.orm.public.Channel.where({
     workspaceId,
-  });
+  }).all();
 };
 
 export const getChannel = async ({ userId, channelId }) => {
@@ -125,7 +125,7 @@ export const leaveChannel = async ({ userId, channelId }) => {
   });
 };
 
-export const updateChannel = async ({ userId, channelId, name }) => {
+export const updateChannel = async ({ userId, channelId, channelName }) => {
   const channel = await db.orm.public.Channel.first({
     id: channelId,
   });
@@ -146,7 +146,7 @@ export const updateChannel = async ({ userId, channelId, name }) => {
   return db.orm.public.Channel.where({
     id: channelId,
   }).update({
-    name,
+    name: channelName,
   });
 };
 

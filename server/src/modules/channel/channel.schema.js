@@ -2,7 +2,7 @@ import z from "zod";
 
 export const channelCreateSchema = z.object({
   workspaceId: z.uuidv7(),
-  name: z.string(),
+  channelName: z.string(),
 });
 
 export const channelWorkspaceIdSchema = z.object({
@@ -11,7 +11,7 @@ export const channelWorkspaceIdSchema = z.object({
 
 export const channelUpdateSchema = z.object({
   channelId: z.uuidv7(),
-  name: z.string(),
+  channelName: z.string(),
 });
 
 export const channelIdSchema = z.object({
