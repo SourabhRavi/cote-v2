@@ -43,9 +43,9 @@ export const getMessages = async ({ userId, channelId }) => {
     throw new Error("User is not a member of this workspace.");
   }
 
-  const messages = await db.orm.public.Message.all({
+  const messages = await db.orm.public.Message.where({
     channelId,
-  });
+  }).all();
 
   return messages.map((message) => ({
     ...message,
