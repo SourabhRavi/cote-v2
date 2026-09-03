@@ -45,7 +45,9 @@ export const getMessages = async ({ userId, channelId }) => {
 
   const messages = await db.orm.public.Message.where({
     channelId,
-  }).all();
+  })
+    .include("author")
+    .all();
 
   return messages.map((message) => ({
     ...message,
