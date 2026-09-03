@@ -77,7 +77,7 @@ export function NavMain({
                       data-active:hover:bg-primary/10
                     "
                   >
-                    <span className="truncate"># {channel.name}</span>
+                    <span className="truncate lowercase"># {channel.name}</span>
 
                     {channel.unread ? (
                       <span className="ml-auto text-xs text-muted-foreground">

@@ -5,3 +5,9 @@ export const getChannels = async (workspaceId: string) => {
 
   return response.data.data;
 };
+
+export const getChannel = async (channelId: string) => {
+  const response = await api.get(`/channels/${channelId}`);
+
+  return response.data.data;
+};
