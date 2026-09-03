@@ -10,7 +10,7 @@ export function LoginForm({
 }: React.ComponentProps<"div"> & { onGoogleLogin: () => void }) {
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
+      <Card className="ring-0 bg-background shadow-lg shadow-primary/15">
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome to Cote</CardTitle>
           <CardDescription>Login with your Google account</CardDescription>
