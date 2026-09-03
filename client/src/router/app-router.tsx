@@ -12,6 +12,7 @@ const AppRouter = () => {
 
         <Route element={<AppLayout />}>
           <Route path="/" element={<DashboardPage />} />
+          <Route path="/:workspaceId" element={<DashboardPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

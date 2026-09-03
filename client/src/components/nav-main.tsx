@@ -1,3 +1,5 @@
+"use client";
+
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -6,57 +8,79 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { HashIcon } from "lucide-react";
 
 type Channel = {
   id: string;
   name: string;
+  unread?: number;
 };
 
 export function NavMain({
   items,
+  activeChannelId,
+  onChannelChange,
   isLoading,
   isError,
 }: {
   items: Channel[];
+  activeChannelId?: string;
+  onChannelChange: (channelId: string) => void;
   isLoading?: boolean;
   isError?: boolean;
 }) {
   return (
-    <SidebarGroup>
-      <SidebarGroupLabel>Channels</SidebarGroupLabel>
+    <SidebarGroup className="px-0">
+      <SidebarGroupLabel className="px-3 text-xs">Channels</SidebarGroupLabel>
 
-      <SidebarMenu>
+      <SidebarMenu className="gap-0.5">
         {isLoading ? (
-          [0, 1, 2].map((index) => (
-            <SidebarMenuItem key={index}>
-              <SidebarMenuButton disabled>
-                <HashIcon className="size-4" />
-                <Skeleton className="h-4 w-24" />
+          [1, 2, 3, 4].map((item) => (
+            <SidebarMenuItem key={item}>
+              <SidebarMenuButton size="sm" disabled className="h-8 px-3">
+                <Skeleton className="h-3.5 w-20" />
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))
         ) : isError ? (
           <SidebarMenuItem>
-            <SidebarMenuButton disabled>
-              <span className="text-muted-foreground">Failed to load channels</span>
-            </SidebarMenuButton>
+            <span className="px-3 py-2 text-xs text-muted-foreground">Failed to load channels</span>
           </SidebarMenuItem>
         ) : items.length === 0 ? (
           <SidebarMenuItem>
-            <SidebarMenuButton disabled>
-              <span className="text-muted-foreground">No channels</span>
-            </SidebarMenuButton>
+            <span className="px-3 py-2 text-xs text-muted-foreground">No channels yet</span>
           </SidebarMenuItem>
         ) : (
-          items.map((channel) => (
-            <SidebarMenuItem key={channel.id}>
-              <SidebarMenuButton tooltip={channel.name}>
-                <HashIcon className="size-4" />
-                <span>{channel.name}</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))
+          items.map((channel) => {
+            const isActive = channel.id === activeChannelId;
+
+            return (
+              <SidebarMenuItem key={channel.id}>
+                <SidebarMenuButton
+                  size="sm"
+                  isActive={isActive}
+                  tooltip={channel.name}
+                  onClick={() => onChannelChange(channel.id)}
+                  className="
+                    h-8
+                    px-3
+                    text-xs
+                    font-normal
+                    data-active:font-semibold
+                    data-active:text-primary
+                    data-active:hover:text-primary
+                    data-active:bg-primary/10
+                    data-active:hover:bg-primary/10
+                  "
+                >
+                  <span className="truncate"># {channel.name}</span>
+
+                  {channel.unread ? (
+                    <span className="ml-auto text-xs text-muted-foreground">{channel.unread}</span>
+                  ) : null}
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })
         )}
       </SidebarMenu>
     </SidebarGroup>
