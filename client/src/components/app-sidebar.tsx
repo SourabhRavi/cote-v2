@@ -20,11 +20,13 @@ import { useUser } from "@/hooks/use-user.ts";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const navigate = useNavigate();
 
+  // get params from url
   const { workspaceId, channelId } = useParams<{
     workspaceId: string;
     channelId: string;
   }>();
 
+  // get workspace data
   const {
     data: workspaces = [],
     isPending: workspaceIsPending,
@@ -33,13 +35,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const currentWorkspaceId = workspaceId ?? workspaces[0]?.id;
 
+  // get channel data
   const {
     data: channels = [],
     isPending: channelsIsPending,
     isError: channelsIsError,
   } = useChannels(currentWorkspaceId);
-
-  const { data: user, isPending: userIsPending, isError: userIsError } = useUser();
 
   const handleWorkspaceChange = (workspaceId: string) => {
     navigate(`/${workspaceId}`);
@@ -50,6 +51,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
     navigate(`/${currentWorkspaceId}/${channelId}`);
   };
+
+  // get the user data
+  const { data: user, isPending: userIsPending, isError: userIsError } = useUser();
 
   return (
     <Sidebar collapsible="icon" className="border-r" {...props}>
