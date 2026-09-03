@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useChannel } from "@/hooks/use-channels.ts";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
+import { MessageList } from "@/components/messages/message-list.tsx";
 
 const ChannelPage = () => {
   const { channelId } = useParams<{
@@ -28,31 +29,11 @@ const ChannelContent = ({ channelId }: { channelId: string }) => {
           <div className="flex min-w-0 items-center gap-3">
             <SidebarTrigger className="md:hidden" />
 
-            <div className="space-y-2">
-              <Skeleton className="h-5 w-32" />
-            </div>
+            <Skeleton className="h-5 w-32" />
           </div>
         </header>
 
-        <main className="min-h-0 flex-1 overflow-hidden p-4 md:p-5">
-          <div className="flex flex-col gap-6">
-            {[1, 2, 3, 4].map((item) => (
-              <div key={item} className="flex gap-3">
-                <Skeleton className="size-9 shrink-0 rounded-full" />
-
-                <div className="min-w-0 flex-1 space-y-2">
-                  <div className="flex items-center justify-between gap-3">
-                    <Skeleton className="h-4 w-28" />
-                    <Skeleton className="h-3 w-14" />
-                  </div>
-
-                  <Skeleton className="h-4 w-full max-w-2xl" />
-                  <Skeleton className="h-4 w-3/4 max-w-xl" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </main>
+        <main className="min-h-0 flex-1" />
 
         <div className="shrink-0 border-t p-4 md:p-5">
           <div className="mx-auto w-full rounded-xl border p-3">
@@ -115,9 +96,13 @@ const ChannelContent = ({ channelId }: { channelId: string }) => {
           <SidebarTrigger className="md:hidden" />
 
           <div className="min-w-0">
-            <h1 className="truncate font-heading text-lg font-semibold text-foreground lowercase">
-              # {channel.name}
-            </h1>
+            {isPending ? (
+              <Skeleton className="h-10 w-full" />
+            ) : (
+              <h1 className="truncate font-heading text-lg font-semibold text-foreground lowercase">
+                # {channel.name}
+              </h1>
+            )}
           </div>
         </div>
       </header>
@@ -125,6 +110,7 @@ const ChannelContent = ({ channelId }: { channelId: string }) => {
       {/* Messages */}
       <main className="min-h-0 flex-1 overflow-y-auto p-4 md:p-5 scrollbar-none">
         {/* messages */}
+        <MessageList channel={channel} />
       </main>
 
       {/* Composer */}

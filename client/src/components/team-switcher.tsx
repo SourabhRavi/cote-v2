@@ -91,15 +91,34 @@ export function TeamSwitcher({
             render={
               <SidebarMenuButton
                 size="lg"
-                className="data-open:bg-sidebar-accent data-open:text-sidebar-accent-foreground"
+                className="
+                data-open:bg-sidebar-accent
+                data-open:text-sidebar-accent-foreground
+                group-data-[collapsible=icon]:size-8
+                group-data-[collapsible=icon]:p-0
+                group-data-[collapsible=icon]:justify-center
+              "
               />
             }
           >
-            <div className="grid flex-1 text-left text-sm leading-tight">
+            {/* Workspace icon */}
+            <div
+              className="
+              flex size-8 shrink-0 items-center justify-center rounded-md
+              bg-sidebar-accent text-xs font-semibold
+              group-data-[collapsible=icon]:size-7
+            "
+            >
+              {activeWorkspace.name.charAt(0).toUpperCase()}
+            </div>
+
+            {/* Workspace name - expanded only */}
+            <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
               <span className="truncate font-medium capitalize">{activeWorkspace.name}</span>
             </div>
 
-            <ChevronsUpDownIcon className="ml-auto" />
+            {/* Dropdown arrow - expanded only */}
+            <ChevronsUpDownIcon className="ml-auto group-data-[collapsible=icon]:hidden" />
           </DropdownMenuTrigger>
 
           <DropdownMenuContent
