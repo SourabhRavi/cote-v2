@@ -13,6 +13,16 @@ export const createWorkspace = async ({ createdByUserId, name }) => {
       role: "owner",
     });
 
+    const generalChannel = await tx.orm.public.Channel.create({
+      workspaceId: workspace.id,
+      name: "general",
+    });
+
+    await tx.orm.public.ChannelMember.create({
+      channelId: generalChannel.id,
+      userId: createdByUserId,
+    });
+
     return workspace;
   });
 };
@@ -89,11 +99,25 @@ export const addWorkspaceMember = async ({
     throw new Error("User is already a member of this workspace.");
   }
 
-  return createWorkspaceMember(db.orm, {
-    memberUserId,
-    workspaceId: workspace.id,
-    role: role,
+  const member = await createWorkspaceMember(db.orm, {
+    userId: memberUserId,
+    workspaceId,
+    role,
   });
+
+  const generalChannel = await db.orm.public.Channel.where({
+    workspaceId,
+    name: "general",
+  }).first();
+
+  if (generalChannel) {
+    await db.orm.public.ChannelMember.create({
+      channelId: generalChannel.id,
+      userId: memberUserId,
+    });
+  }
+
+  return member;
 };
 
 export const getWorkspaceMembers = async ({ userId, workspaceId }) => {
