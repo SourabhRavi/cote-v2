@@ -19,7 +19,11 @@ app.use(cookieParser());
 
 app.use("/api/v1/auth", authRouter);
 app.get("/api/v1/me", requireAuth, (req, res) => {
-  res.json(req.user);
+  res.json({
+    success: true,
+    data: req.user,
+    error: null,
+  });
 });
 app.use("/api/v1/workspaces", requireAuth, workspaceRouter);
 app.use("/api/v1/channels", requireAuth, channelRouter);
