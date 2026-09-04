@@ -18,11 +18,20 @@ export const sendMessage = async ({ userId, channelId, content }) => {
     throw new Error("User is not a member of this workspace.");
   }
 
-  return db.orm.public.Message.create({
+  const message = await db.orm.public.Message.create({
     authorId: userId,
     channelId,
     content,
   });
+
+  const author = await db.orm.public.User.first({
+    id: userId,
+  });
+
+  return {
+    author,
+    ...message,
+  };
 };
 
 export const getMessages = async ({ userId, channelId }) => {
