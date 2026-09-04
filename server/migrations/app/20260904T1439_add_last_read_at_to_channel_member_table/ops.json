@@ -1,0 +1,44 @@
+[
+  {
+    "id": "column.public.ChannelMember.lastReatAt",
+    "label": "Add column \"lastReatAt\" to \"ChannelMember\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "lastReatAt",
+        "table": "ChannelMember"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"lastReatAt\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ChannelMember",
+          "lastReatAt"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"lastReatAt\"",
+        "sql": "ALTER TABLE \"public\".\"ChannelMember\" ADD COLUMN \"lastReatAt\" timestamptz"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"lastReatAt\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ChannelMember",
+          "lastReatAt"
+        ]
+      }
+    ]
+  }
+]
