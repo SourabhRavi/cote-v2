@@ -11,3 +11,9 @@ export const getChannel = async (channelId: string) => {
 
   return response.data.data;
 };
+
+export const getUnreadCount = async (channelId: string) => {
+  const response = await api.get(`/channels/${channelId}/unread`);
+
+  return response.data.data;
+};
