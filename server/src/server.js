@@ -23,7 +23,7 @@ app.set("io", io);
 io.use(socketAuth);
 
 io.on("connection", (socket) => {
-  console.log("Client connected:", socket.id);
+  // console.log("Client connected:", socket.id);
 
   // register socket handlers
   registerSocketHandlers(io, socket);

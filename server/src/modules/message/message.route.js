@@ -11,6 +11,7 @@ import {
   sendMessage,
   updateMessage,
 } from "./message.service.js";
+import { SOCKET_EVENTS } from "../../socket/socket-events.js";
 
 const router = Router();
 
@@ -24,6 +25,11 @@ router.post("/", validateMessageSend, async (req, res) => {
       channelId,
       content,
     });
+
+    // broadcast new message to channel room
+    const io = req.app.get("io");
+
+    io.to(channelId).emit(SOCKET_EVENTS.MESSAGE_NEW, message);
 
     return res.status(201).json({
       success: true,
