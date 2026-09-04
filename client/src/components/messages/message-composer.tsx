@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button.tsx";
 import { useSendMessage } from "@/hooks/use-messages.ts";
+import { handleMessageKeyDown } from "@/lib/message-utils.ts";
 import type { Channel } from "@/types/channel.types.ts";
 import { AtSign, Paperclip, SmilePlus } from "lucide-react";
 import { useState } from "react";
@@ -42,6 +43,7 @@ const MessageComposer = ({ channel }: { channel: Channel }) => {
             onChange={(e) => {
               setMessage(() => e.target.value);
             }}
+            onKeyDown={(e) => handleMessageKeyDown(e, handleMessageSend)}
           />
 
           <div className="mt-2 flex items-center justify-between">

@@ -7,4 +7,5 @@ export type Message = {
     name: string;
     avatarUrl: string | null;
   };
+  clientMessageId?: string;
 };
