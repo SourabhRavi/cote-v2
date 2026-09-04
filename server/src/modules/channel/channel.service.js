@@ -150,6 +150,23 @@ export const updateChannel = async ({ userId, channelId, channelName }) => {
   });
 };
 
+export const markChannelAsRead = async ({ userId, channelId }) => {
+  const channelMember = await db.orm.public.ChannelMember.first({
+    userId,
+    channelId,
+  });
+
+  if (!channelMember) {
+    throw new Error("User is not a member of this channel.");
+  }
+
+  return db.orm.public.ChannelMember.where({
+    channelId: channelMember.id,
+  }).update({
+    lastReatAt: new Date().toISOString(),
+  });
+};
+
 export const deleteChannel = async ({ userId, channelId }) => {
   const channel = await db.orm.public.Channel.first({
     id: channelId,

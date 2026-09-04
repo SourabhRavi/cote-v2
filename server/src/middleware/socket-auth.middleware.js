@@ -2,7 +2,7 @@ import { parseCookie } from "cookie";
 import crypto from "node:crypto";
 import { db } from "../prisma/db.ts";
 
-export const socketAuth = async (socket, next) => {
+export const socketAuthMiddleware = async (socket, next) => {
   try {
     const cookie = parseCookie(socket.handshake.headers.cookie || "");
 

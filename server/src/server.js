@@ -2,7 +2,7 @@ import "dotenv/config";
 import app from "./app.js";
 import { createServer } from "node:http";
 import { Server } from "socket.io";
-import { socketAuth } from "./middleware/socket-auth.middleware.js";
+import { socketAuthMiddleware } from "./middleware/socket-auth.middleware.js";
 import { SOCKET_EVENTS } from "./socket/socket-events.js";
 import { registerSocketHandlers } from "./socket/socket-handlers.js";
 
@@ -20,7 +20,7 @@ const io = new Server(server, {
 // set io object in app
 app.set("io", io);
 
-io.use(socketAuth);
+io.use(socketAuthMiddleware);
 
 io.on("connection", (socket) => {
   // console.log("Client connected:", socket.id);
