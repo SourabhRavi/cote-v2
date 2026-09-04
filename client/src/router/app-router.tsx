@@ -5,6 +5,7 @@ import LoginPage from "@/pages/LoginPage.tsx";
 import WorkspaceSelectionPage from "@/pages/WorkspaceSelectionPage.tsx";
 import WorkspacePage from "@/pages/WorkspacePage.tsx";
 import ChannelPage from "@/pages/ChannelPage.tsx";
+import ProtectedRoute from "@/router/protected-route.tsx";
 
 const AppRouter = () => {
   return (
@@ -12,14 +13,16 @@ const AppRouter = () => {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
 
-        {/* Workspace not selected yet */}
-        <Route path="/" element={<WorkspaceSelectionPage />} />
+        <Route element={<ProtectedRoute />}>
+          {/* Workspace not selected yet */}
+          <Route path="/" element={<WorkspaceSelectionPage />} />
 
-        {/* Workspace selected */}
-        <Route element={<AppLayout />}>
-          <Route path="/:workspaceId" element={<WorkspacePage />} />
+          {/* Workspace selected */}
+          <Route element={<AppLayout />}>
+            <Route path="/:workspaceId" element={<WorkspacePage />} />
 
-          <Route path="/:workspaceId/:channelId" element={<ChannelPage />} />
+            <Route path="/:workspaceId/:channelId" element={<ChannelPage />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
