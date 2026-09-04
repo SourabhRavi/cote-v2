@@ -163,7 +163,7 @@ export const markChannelAsRead = async ({ userId, channelId }) => {
   return db.orm.public.ChannelMember.where({
     channelId: channelMember.id,
   }).update({
-    lastReatAt: new Date().toISOString(),
+    lastReadAt: new Date().toISOString(),
   });
 };
 
