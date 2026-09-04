@@ -167,6 +167,37 @@ export const markChannelAsRead = async ({ userId, channelId }) => {
   });
 };
 
+export const getUnreadCount = async ({ userId, channelId }) => {
+  const channelMember = await db.orm.public.ChannelMember.first({
+    userId,
+    channelId,
+  });
+
+  if (!channelMember) {
+    throw new Error("User is not a member of this channel.");
+  }
+
+  const lastReadAt = channelMember.lastReadAt;
+
+  // if lastReadAt is null then return the count of all the messages
+  if (!lastReadAt) {
+    return db.orm.public.Message.where((m) =>
+      m.channelId.eq(channelId),
+    ).aggregate((agg) => ({
+      count: agg.count,
+    }));
+  }
+
+  // if lastReadAt is not null then
+  return db.orm.public.Message.where(
+    (m) =>
+      m.channelId.eq(channelId) &&
+      (m.createdAt.gt(lastReadAt) || m.updatedAt.gt(lastReadAt)),
+  ).aggregate((agg) => ({
+    count: agg.count,
+  }));
+};
+
 export const deleteChannel = async ({ userId, channelId }) => {
   const channel = await db.orm.public.Channel.first({
     id: channelId,

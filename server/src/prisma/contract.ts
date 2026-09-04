@@ -75,7 +75,7 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
       id: field.id.uuidv7String(),
       channelId: field.uuidString(),
       userId: field.uuidString(),
-      lastReatAt: field.temporal.timestamptzString().optional(),
+      lastReadAt: field.temporal.timestamptzString().optional(),
       createdAt: field.temporal.createdAtString(),
       updatedAt: field.temporal.updatedAtString(),
     },
