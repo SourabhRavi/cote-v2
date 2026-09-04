@@ -1,4 +1,3 @@
-import { AtSign, Paperclip, SmilePlus } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -6,6 +5,7 @@ import { useChannel } from "@/hooks/use-channels.ts";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { MessageList } from "@/components/messages/message-list.tsx";
 import { Separator } from "@base-ui/react";
+import MessageComposer from "@/components/messages/message-composer.tsx";
 
 const ChannelPage = () => {
   const { channelId } = useParams<{
@@ -148,57 +148,7 @@ const ChannelContent = ({ channelId }: { channelId: string }) => {
       </main>
 
       {/* Composer */}
-      <div className="shrink-0">
-        <div className="mx-auto w-full rounded-xl bg-background shadow-lg shadow-primary/15 p-3">
-          <textarea
-            rows={2}
-            placeholder={`Type message in #${channel.name}...`}
-            className="
-              min-h-10
-              w-full
-              resize-none
-              bg-transparent
-              text-sm
-              leading-6
-              text-foreground
-              outline-none
-              placeholder:text-muted-foreground
-            "
-          />
-
-          <div className="mt-2 flex items-center justify-between">
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <button
-                type="button"
-                className="rounded-md p-1 transition-colors hover:bg-accent hover:text-accent-foreground"
-              >
-                <Paperclip className="size-4.5" />
-              </button>
-
-              <button
-                type="button"
-                className="rounded-md p-1 transition-colors hover:bg-accent hover:text-accent-foreground"
-              >
-                <SmilePlus className="size-4.5" />
-              </button>
-
-              <button
-                type="button"
-                className="rounded-md p-1 transition-colors hover:bg-accent hover:text-accent-foreground"
-              >
-                <AtSign className="size-4.5" />
-              </button>
-            </div>
-
-            <button
-              type="button"
-              className="rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground"
-            >
-              Send
-            </button>
-          </div>
-        </div>
-      </div>
+      <MessageComposer channel={channel} />
     </div>
   );
 };
