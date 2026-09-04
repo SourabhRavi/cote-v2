@@ -27,8 +27,6 @@ router.get("/google/callback", async (req, res) => {
   try {
     const { tokens } = await oauth2Client.getToken(code);
 
-    console.log("tokens:", tokens);
-
     if (typeof tokens.id_token !== "string") {
       return res.status(400).send("Invalid ID token", tokens.id_token);
     }
