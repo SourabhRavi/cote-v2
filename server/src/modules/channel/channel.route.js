@@ -14,6 +14,7 @@ import {
   leaveChannel,
   updateChannel,
   deleteChannel,
+  getUnreadCount,
 } from "./channel.service.js";
 
 const router = Router();
@@ -161,6 +162,27 @@ router.patch("/:channelId", validateChannelUpdate, async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Failed to update channel.",
+    });
+  }
+});
+
+router.get("/:channelId/unread", validateChannelId, async (req, res) => {
+  const { id: userId } = req.user;
+  const { channelId } = req.params;
+
+  try {
+    const unreadCount = await getUnreadCount({ userId, channelId });
+
+    return res.status(200).json({
+      success: true,
+      data: unreadCount,
+    });
+  } catch (error) {
+    console.error("Failed to get unread count:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to get unread count.",
     });
   }
 });
