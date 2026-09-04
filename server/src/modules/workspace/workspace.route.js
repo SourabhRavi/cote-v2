@@ -3,6 +3,7 @@ import {
   addWorkspaceMember,
   createWorkspace,
   deleteWorkspaceMember,
+  getUnreadCounts,
   getWorkspace,
   getWorkspaceMembers,
   getWorkspaces,
@@ -183,6 +184,27 @@ router.patch(
     }
   },
 );
+
+router.get("/:workspaceId/unread", validateWorkspaceId, async (req, res) => {
+  const { id: userId } = req.user;
+  const { workspaceId } = req.params;
+
+  try {
+    const unreadCounts = await getUnreadCounts({ userId, workspaceId });
+
+    return res.status(200).json({
+      success: true,
+      data: unreadCounts,
+    });
+  } catch (error) {
+    console.error("Failed to get unread counts of channels:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to get unread counts of channels.",
+    });
+  }
+});
 
 router.delete(
   "/:workspaceId/members/:memberUserId",

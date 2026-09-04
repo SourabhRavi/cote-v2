@@ -1,4 +1,5 @@
 import { db } from "../../prisma/db.ts";
+import { getChannels } from "../channel/channel.service.js";
 
 export const createWorkspace = async ({ createdByUserId, name }) => {
   return db.transaction(async (tx) => {
@@ -169,6 +170,26 @@ export const updateWorkspaceMember = async ({
   }).update({
     role: role,
   });
+};
+
+export const getUnreadCounts = async ({ userId, workspaceId }) => {
+  const unreadCounts = await db.orm.public.Message.where((m) =>
+    m.channel.some(
+      (c) =>
+        c.workspaceId.eq(workspaceId) &&
+        c.channelMembers.some(
+          (cm) =>
+            cm.userId.eq(userId) &&
+            (cm.lastReadAt.isNull() ||
+              cm.lastReadAt.lt(m.createdAt) ||
+              cm.lastReadAt.lt(m.updatedAt)),
+        ),
+    ),
+  )
+    .groupBy("channelId")
+    .aggregate((agg) => ({ count: agg.count() }));
+
+  return unreadCounts;
 };
 
 export const deleteWorkspaceMember = async ({
