@@ -1,8 +1,18 @@
+import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { socket } from "@/lib/socket.ts";
 
 const AppLayout = () => {
+  useEffect(() => {
+    socket.connect();
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
   return (
     <SidebarProvider className="h-svh min-h-0">
       <AppSidebar />
