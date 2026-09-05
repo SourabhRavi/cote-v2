@@ -346,7 +346,9 @@ export const acceptWorkspaceInvitation = async ({ userId, invitationId }) => {
     });
   }
 
-  await db.orm.public.WorkspaceInvitation.update(invitation.id, {
+  await db.orm.public.WorkspaceInvitation.where({
+    id: invitation.id,
+  }).update({
     status: "accepted",
   });
 
@@ -383,7 +385,9 @@ export const declineWorkspaceInvitation = async ({ userId, invitationId }) => {
     throw new Error("Invitation is no longer active.");
   }
 
-  await db.orm.public.WorkspaceInvitation.update(invitation.id, {
+  await db.orm.public.WorkspaceInvitation.where({
+    id: invitation.id,
+  }).update({
     status: "declined",
   });
 };
