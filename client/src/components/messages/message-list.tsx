@@ -25,6 +25,7 @@ export const MessageList = ({ channel }: { channel: Channel }) => {
   // socket events
   const queryClient = useQueryClient();
 
+  // update messages when new message arrives
   useEffect(() => {
     // join room:channelId
     socket.emit(SOCKET_EVENTS.CHANNEL_JOIN, channel.id);
