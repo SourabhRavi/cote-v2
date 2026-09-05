@@ -45,6 +45,8 @@ io.on("connection", (socket) => {
     sockets.add(socket.id);
   } else {
     // this is the user's first active socket
+    console.log("NAYA ONLINE MERE ABHAI");
+
     userSockets.set(userId, new Set([socket.id]));
 
     // only broadcast ONLINE when the user was previously offline
