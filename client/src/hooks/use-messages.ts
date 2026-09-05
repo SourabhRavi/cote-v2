@@ -1,10 +1,19 @@
 import { getMessages, sendMessage } from "@/services/message.service.ts";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useInfiniteQuery } from "@tanstack/react-query";
 
 export const useGetMessages = (channelId: string) => {
-  return useQuery({
+  // normal usage:
+  // return useQuery({
+  //   queryKey: ["get-messages", channelId],
+  //   queryFn: () => getMessages(channelId),
+  //   enabled: !!channelId,
+  // });
+
+  return useInfiniteQuery({
     queryKey: ["get-messages", channelId],
-    queryFn: () => getMessages(channelId),
+    queryFn: ({ pageParam }) => getMessages(channelId, pageParam || undefined),
+    initialPageParam: "",
+    getNextPageParam: (lastPage) => (lastPage.hasMore ? lastPage.nextCursor : undefined),
     enabled: !!channelId,
   });
 };
