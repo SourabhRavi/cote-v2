@@ -323,3 +323,5 @@ router.post("/invitations/:invitationId/decline", async (req, res) => {
     return res.status(500).send("Failed to decline workspace invitation.");
   }
 });
+
+export default router;
