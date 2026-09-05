@@ -162,24 +162,26 @@ export const MessageList = ({ channel }: { channel: Channel }) => {
   }
 
   return (
-    <main
-      className="min-h-0 flex-1 overflow-y-auto p-4 md:p-5 scrollbar-none"
-      ref={messagesContainerRef}
-    >
-      <div className="flex flex-col">
-        {isFetchingNextPage && (
-          <div className="flex items-center justify-center pb-3">
-            <div className="flex items-center gap-2 opacity-50">
-              <Spinner className="size-3.5 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground">Loading older messages</span>
+    <>
+      <main
+        className="min-h-0 flex-1 overflow-y-auto p-4 md:p-5 scrollbar-none"
+        ref={messagesContainerRef}
+      >
+        <div className="flex flex-col">
+          {isFetchingNextPage && (
+            <div className="flex items-center justify-center pb-3">
+              <div className="flex items-center gap-2 opacity-50">
+                <Spinner className="size-3.5 text-muted-foreground" />
+                <span className="text-xs text-muted-foreground">Loading older messages</span>
+              </div>
             </div>
-          </div>
-        )}
-        {messages.map((message: Message) => (
-          <MessageItem key={message.id} message={message} />
-        ))}
-      </div>
-      <div ref={messagesEndRef} />
-    </main>
+          )}
+          {messages.map((message: Message) => (
+            <MessageItem key={message.id} message={message} />
+          ))}
+        </div>
+        <div ref={messagesEndRef} />
+      </main>
+    </>
   );
 };

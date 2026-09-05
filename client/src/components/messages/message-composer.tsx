@@ -1,13 +1,19 @@
+import MessageTypingIndicator from "@/components/messages/message-typing-indicator.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useSendMessage } from "@/hooks/use-messages.ts";
 import { handleMessageKeyDown } from "@/lib/message-utils.ts";
+import { SOCKET_EVENTS } from "@/lib/socket-events.ts";
+import { socket } from "@/lib/socket.ts";
 import type { Channel } from "@/types/channel.types.ts";
+import type { TypingUser } from "@/types/user.types.ts";
+import { debounce } from "@/utils/debouce.ts";
 import { AtSign, Paperclip, SmilePlus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const MessageComposer = ({ channel }: { channel: Channel }) => {
   const { mutate, isPending } = useSendMessage();
   const [message, setMessage] = useState("");
+  const [typingUsers, setTypingUsers] = useState<TypingUser[]>([]);
 
   const handleMessageSend = () => {
     const content = message.trim();
@@ -21,9 +27,46 @@ const MessageComposer = ({ channel }: { channel: Channel }) => {
     });
   };
 
+  const stopTyping = useRef(
+    debounce(() => {
+      socket.emit(SOCKET_EVENTS.TYPING_STOP, channel.id);
+    }, 500),
+  ).current;
+
+  const handleMessageTyping = () => {
+    socket.emit(SOCKET_EVENTS.TYPING_START, channel.id);
+    stopTyping();
+  };
+
+  // handle show/hide typing indicator
+  useEffect(() => {
+    const handleTypingStart = (user: TypingUser) => {
+      setTypingUsers((users) => {
+        if (users.some((typingUser) => typingUser.id === user.id)) {
+          return users;
+        }
+
+        return [...users, user];
+      });
+    };
+
+    const handleTypingStop = (user: TypingUser) => {
+      setTypingUsers((users) => users.filter((typingUser) => typingUser.id !== user.id));
+    };
+
+    socket.on(SOCKET_EVENTS.TYPING_START, handleTypingStart);
+    socket.on(SOCKET_EVENTS.TYPING_STOP, handleTypingStop);
+
+    return () => {
+      socket.off(SOCKET_EVENTS.TYPING_START, handleTypingStart);
+      socket.off(SOCKET_EVENTS.TYPING_STOP, handleTypingStop);
+    };
+  }, []);
+
   return (
     <>
       <div className="shrink-0">
+        <MessageTypingIndicator users={typingUsers} />
         <div className="mx-auto w-full rounded-xl bg-background shadow-lg shadow-primary/15 p-3">
           <textarea
             rows={2}
@@ -42,6 +85,7 @@ const MessageComposer = ({ channel }: { channel: Channel }) => {
             value={message}
             onChange={(e) => {
               setMessage(() => e.target.value);
+              handleMessageTyping();
             }}
             onKeyDown={(e) => handleMessageKeyDown(e, handleMessageSend)}
           />
