@@ -9,6 +9,10 @@ import {
   getWorkspaces,
   updateWorkspace,
   updateWorkspaceMember,
+  createWorkspaceInvitation,
+  getWorkspaceInvitations,
+  acceptWorkspaceInvitation,
+  declineWorkspaceInvitation,
 } from "./workspace.service.js";
 import {
   validateWorkspaceId,
@@ -16,6 +20,7 @@ import {
   validateWorkspaceMemberDelete,
   validateWorkspaceMemberUpdate,
   validateWorkspaceUpdate,
+  validateWorkspaceInvitationCreate,
 } from "./workspace.middleware.js";
 
 const router = Router();
@@ -230,5 +235,91 @@ router.delete(
     }
   },
 );
+router.post(
+  "/:workspaceId/invitations",
+  validateWorkspaceId,
+  validateWorkspaceInvitationCreate,
+  async (req, res) => {
+    const { id: userId } = req.user;
+    const { workspaceId } = req.params;
+    const { userEmail } = req.body;
 
-export default router;
+    try {
+      const invitation = await createWorkspaceInvitation({
+        userId,
+        workspaceId,
+        userEmail,
+      });
+
+      return res.status(201).json({
+        success: true,
+        data: invitation,
+      });
+    } catch (error) {
+      console.error("Failed to create workspace invitation:", error);
+
+      return res.status(500).send("Failed to create workspace invitation.");
+    }
+  },
+);
+
+router.get("/invitations", async (req, res) => {
+  const { email } = req.user;
+
+  try {
+    const invitations = await getWorkspaceInvitations({
+      userEmail: email,
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: invitations,
+    });
+  } catch (error) {
+    console.error("Failed to fetch workspace invitations:", error);
+
+    return res.status(500).send("Failed to fetch workspace invitations.");
+  }
+});
+
+router.post("/invitations/:invitationId/accept", async (req, res) => {
+  const { id: userId } = req.user;
+  const { invitationId } = req.params;
+
+  try {
+    const result = await acceptWorkspaceInvitation({
+      userId,
+      invitationId,
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    console.error("Failed to accept workspace invitation:", error);
+
+    return res.status(500).send("Failed to accept workspace invitation.");
+  }
+});
+
+router.post("/invitations/:invitationId/decline", async (req, res) => {
+  const { id: userId } = req.user;
+  const { invitationId } = req.params;
+
+  try {
+    await declineWorkspaceInvitation({
+      userId,
+      invitationId,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Invitation declined.",
+    });
+  } catch (error) {
+    console.error("Failed to decline workspace invitation:", error);
+
+    return res.status(500).send("Failed to decline workspace invitation.");
+  }
+});

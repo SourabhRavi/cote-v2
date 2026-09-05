@@ -2,6 +2,7 @@ import z from "zod";
 
 import {
   workspaceIdSchema,
+  workspaceInvitationCreateSchema,
   workspaceMemberCreateSchema,
   workspaceMemberDeleteSchema,
   workspaceMemberUpdateSchema,
@@ -103,6 +104,22 @@ export const validateWorkspaceMemberDelete = (req, res, next) => {
       errors: z.treeifyError(result.error),
     });
   }
+
+  next();
+};
+
+export const validateWorkspaceInvitationCreate = (req, res, next) => {
+  const result = workspaceInvitationCreateSchema.safeParse(req.body);
+
+  if (!result.success) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid invitation data.",
+      errors: z.treeifyError(result.error),
+    });
+  }
+
+  req.body = result.data;
 
   next();
 };

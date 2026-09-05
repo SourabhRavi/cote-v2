@@ -23,3 +23,7 @@ export const workspaceMemberDeleteSchema = z.object({
   workspaceId: z.uuidv7(),
   memberUserId: z.uuidv7(),
 });
+
+export const workspaceInvitationCreateSchema = z.object({
+  userEmail: z.email(),
+});
