@@ -1,4 +1,9 @@
-import { getMessages, sendMessage, updateMessage } from "@/services/message.service.ts";
+import {
+  deleteMessage,
+  getMessages,
+  sendMessage,
+  updateMessage,
+} from "@/services/message.service.ts";
 import { useMutation, useInfiniteQuery } from "@tanstack/react-query";
 
 export const useGetMessages = (channelId: string) => {
@@ -29,5 +34,11 @@ export const useUpdateMessage = () => {
   return useMutation({
     mutationFn: ({ messageId, content }: { messageId: string; content: string }) =>
       updateMessage(messageId, content),
+  });
+};
+
+export const useDeleteMessage = () => {
+  return useMutation({
+    mutationFn: ({ messageId }: { messageId: string }) => deleteMessage(messageId),
   });
 };

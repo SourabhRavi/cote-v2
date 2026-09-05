@@ -1,7 +1,7 @@
 import { MoreHorizontal, Pencil } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import { useUpdateMessage } from "@/hooks/use-messages.ts";
+import { useDeleteMessage, useUpdateMessage } from "@/hooks/use-messages.ts";
 import type { Message } from "@/types/message.types.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
@@ -16,11 +16,18 @@ export const MessageItem = ({ message }: MessageItemProps) => {
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const { mutate: updateMessage, isPending } = useUpdateMessage();
+  const { mutate: updateMessage, isPending: isUpdatePending } = useUpdateMessage();
+  const { mutate: deleteMessage } = useDeleteMessage();
 
   const handleEdit = () => {
     setContent(message.content ?? "");
     setIsEditing(true);
+  };
+
+  const handleDelete = () => {
+    deleteMessage({
+      messageId: message.id,
+    });
   };
 
   const handleCancel = () => {
@@ -99,17 +106,17 @@ export const MessageItem = ({ message }: MessageItemProps) => {
               ref={textareaRef}
               value={content}
               onChange={(event) => setContent(event.target.value)}
-              disabled={isPending}
+              disabled={isUpdatePending}
               className="min-h-20 resize-none"
             />
 
             <div className="flex items-center justify-end gap-2">
-              <Button variant="ghost" size="sm" onClick={handleCancel} disabled={isPending}>
+              <Button variant="ghost" size="sm" onClick={handleCancel} disabled={isUpdatePending}>
                 Cancel
               </Button>
 
-              <Button size="sm" onClick={handleSave} disabled={isPending || !content.trim()}>
-                {isPending ? "Saving..." : "Save"}
+              <Button size="sm" onClick={handleSave} disabled={isUpdatePending || !content.trim()}>
+                {isUpdatePending ? "Saving..." : "Save"}
               </Button>
             </div>
           </div>
@@ -140,6 +147,16 @@ export const MessageItem = ({ message }: MessageItemProps) => {
                 >
                   <Pencil className="size-3.5" />
                   Edit
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full justify-start gap-2"
+                  onClick={handleDelete}
+                >
+                  <Pencil className="size-3.5" />
+                  Delete
                 </Button>
               </PopoverContent>
             </Popover>

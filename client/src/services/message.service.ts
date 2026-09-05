@@ -33,3 +33,9 @@ export const updateMessage = async (messageId: string, content: string) => {
 
   return response.data.data;
 };
+
+export const deleteMessage = async (messageId: string) => {
+  const response = await api.delete(`/messages/${messageId}`);
+
+  return response.data.data;
+};

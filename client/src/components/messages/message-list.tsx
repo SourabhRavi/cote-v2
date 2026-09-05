@@ -70,14 +70,35 @@ export const MessageList = ({ channel }: { channel: Channel }) => {
       );
     };
 
+    const handleDeleteMessage = (deletedMessage: Message) => {
+      queryClient.setQueryData<InfiniteData<MessageResponse, string>>(
+        ["get-messages", channel.id],
+        (oldMessagesData) => {
+          if (!oldMessagesData) return undefined;
+
+          return {
+            ...oldMessagesData,
+            pages: oldMessagesData.pages.map((page) => ({
+              ...page,
+              messages: page.messages.map((message) =>
+                message.id === deletedMessage.id ? { ...deletedMessage, content: null } : message,
+              ),
+            })),
+          };
+        },
+      );
+    };
+
     socket.on(SOCKET_EVENTS.MESSAGE_NEW, handleNewMessage);
     socket.on(SOCKET_EVENTS.MESSAGE_UPDATE, handleUpdateMessage);
+    socket.on(SOCKET_EVENTS.MESSAGE_DELETE, handleDeleteMessage);
 
     return () => {
       socket.emit(SOCKET_EVENTS.CHANNEL_LEAVE, channel.id);
 
       socket.off(SOCKET_EVENTS.MESSAGE_NEW, handleNewMessage);
       socket.off(SOCKET_EVENTS.MESSAGE_UPDATE, handleUpdateMessage);
+      socket.off(SOCKET_EVENTS.MESSAGE_DELETE, handleDeleteMessage);
     };
   }, [channel.id, queryClient, messages]);
 
