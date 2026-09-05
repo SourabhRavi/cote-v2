@@ -1,5 +1,5 @@
 import { markChannelAsRead } from "../modules/channel/channel.service.js";
-import { db } from "../prisma/db.js";
+import { db } from "../prisma/db.ts";
 import { SOCKET_EVENTS } from "./socket-events.js";
 
 export const registerSocketHandlers = (io, socket) => {
