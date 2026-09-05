@@ -34,7 +34,12 @@ export const sendMessage = async ({ userId, channelId, content }) => {
   };
 };
 
-export const getMessages = async ({ userId, channelId }) => {
+export const getMessages = async ({
+  userId,
+  channelId,
+  cursor,
+  limit = 20,
+}) => {
   const channel = await db.orm.public.Channel.first({
     id: channelId,
   });
@@ -52,16 +57,34 @@ export const getMessages = async ({ userId, channelId }) => {
     throw new Error("User is not a member of this workspace.");
   }
 
-  const messages = await db.orm.public.Message.where({
+  let query = db.orm.public.Message.where({
     channelId,
   })
     .include("author")
-    .all();
+    .orderBy((message) => message.id.desc())
+    .limit(limit + 1);
 
-  return messages.map((message) => ({
+  if (cursor) {
+    query = query.cursor({ id: cursor });
+  }
+
+  const messages = await query.all();
+
+  const hasMore = messages.length > limit;
+  const pageMessages = messages.slice(0, limit);
+
+  const nextCursor = hasMore ? pageMessages[pageMessages.length - 1].id : null;
+
+  const formattedMessages = pageMessages.map((message) => ({
     ...message,
     content: message.deletedAt ? null : message.content,
   }));
+
+  return {
+    messages: formattedMessages,
+    nextCursor,
+    hasMore,
+  };
 };
 
 export const updateMessage = async ({ userId, messageId, content }) => {

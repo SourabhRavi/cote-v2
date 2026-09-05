@@ -7,6 +7,8 @@ export const messageSendSchema = z.object({
 
 export const messageChannelIdSchema = z.object({
   channelId: z.uuidv7(),
+  cursor: z.uuidv7().optional(),
+  limit: z.coerce.number().int().min(1).max(50).default(20),
 });
 
 export const messageUpdateSchema = z.object({
