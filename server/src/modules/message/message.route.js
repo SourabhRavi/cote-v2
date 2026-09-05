@@ -26,10 +26,9 @@ router.post("/", validateMessageSend, async (req, res) => {
       content,
     });
 
-    // broadcast new message to channel room
+    // broadcast updated message to channel room
     const io = req.app.get("io");
-
-    io.to(channelId).emit(SOCKET_EVENTS.MESSAGE_NEW, message);
+    io.to(channelId).emit(SOCKET_EVENTS.MESSAGE_UPDATE, message);
 
     return res.status(201).json({
       success: true,
@@ -83,6 +82,8 @@ router.patch("/:messageId", validateMessageUpdate, async (req, res) => {
       messageId,
       content,
     });
+
+    const io = req.app.get("io");
 
     return res.status(200).json({
       success: true,
