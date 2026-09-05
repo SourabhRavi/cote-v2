@@ -1,4 +1,5 @@
 import { api } from "@/lib/axios.ts";
+import type { UnreadCount } from "@/types/unread-count.types.ts";
 
 export const getWorkspaces = async () => {
   const response = await api.get("/workspaces");
