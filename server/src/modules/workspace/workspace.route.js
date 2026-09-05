@@ -68,6 +68,25 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/invitations", async (req, res) => {
+  const { email } = req.user;
+
+  try {
+    const invitations = await getWorkspaceInvitations({
+      userEmail: email,
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: invitations,
+    });
+  } catch (error) {
+    console.error("Failed to fetch workspace invitations:", error);
+
+    return res.status(500).send("Failed to fetch workspace invitations.");
+  }
+});
+
 router.get("/:workspaceId", validateWorkspaceId, async (req, res) => {
   const { id: userId } = req.user;
   const { workspaceId } = req.params;
@@ -262,25 +281,6 @@ router.post(
     }
   },
 );
-
-router.get("/invitations", async (req, res) => {
-  const { email } = req.user;
-
-  try {
-    const invitations = await getWorkspaceInvitations({
-      userEmail: email,
-    });
-
-    return res.status(200).json({
-      success: true,
-      data: invitations,
-    });
-  } catch (error) {
-    console.error("Failed to fetch workspace invitations:", error);
-
-    return res.status(500).send("Failed to fetch workspace invitations.");
-  }
-});
 
 router.post("/invitations/:invitationId/accept", async (req, res) => {
   const { id: userId } = req.user;
