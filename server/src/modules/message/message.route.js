@@ -85,7 +85,7 @@ router.patch("/:messageId", validateMessageUpdate, async (req, res) => {
 
     // broadcast updated message to channel room
     const io = req.app.get("io");
-    io.to(channelId).emit(SOCKET_EVENTS.MESSAGE_UPDATE, message);
+    io.to(message.channelId).emit(SOCKET_EVENTS.MESSAGE_UPDATE, message);
 
     return res.status(200).json({
       success: true,
