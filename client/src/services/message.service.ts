@@ -1,8 +1,18 @@
 import { api } from "@/lib/axios.ts";
-import type { Message } from "@/types/message.types.ts";
+import type { MessageResponse } from "@/types/message.types.ts";
 
-export const getMessages = async (channelId: string): Promise<Message[]> => {
-  const response = await api.get(`/messages?channelId=${channelId}`);
+export const getMessages = async (
+  channelId: string,
+  cursor?: string,
+  limit = 20,
+): Promise<MessageResponse> => {
+  const response = await api.get(`/messages`, {
+    params: {
+      channelId,
+      cursor,
+      limit,
+    },
+  });
 
   return response.data.data;
 };

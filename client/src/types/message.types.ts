@@ -8,5 +8,10 @@ export type Message = {
     name: string;
     avatarUrl: string | null;
   };
-  clientMessageId?: string;
+};
+
+export type MessageResponse = {
+  messages: Message[];
+  hasMore: boolean;
+  cursor: string | null;
 };

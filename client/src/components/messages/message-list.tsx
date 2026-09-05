@@ -3,10 +3,9 @@ import { MessageItem } from "@/components/messages/message-item.tsx";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { useGetMessages } from "@/hooks/use-messages.ts";
 import type { Channel } from "@/types/channel.types.ts";
-import type { Message } from "@/types/message.types.ts";
 
 export const MessageList = ({ channel }: { channel: Channel }) => {
-  const { data: messages = [], isPending, isError } = useGetMessages(channel.id);
+  const { data: messages, isPending, isError } = useGetMessages(channel.id);
 
   if (isPending) {
     return (
@@ -34,13 +33,13 @@ export const MessageList = ({ channel }: { channel: Channel }) => {
     return <p>Failed to load messages.</p>;
   }
 
-  if (!messages.length) {
+  if (!messages) {
     return <EmptyChannel channelName={channel.name} />;
   }
 
   return (
     <div className="flex flex-col">
-      {messages.map((message: Message) => (
+      {messages.messages.map((message) => (
         <MessageItem key={message.id} message={message} />
       ))}
     </div>
