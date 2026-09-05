@@ -2,7 +2,7 @@ import { markChannelAsRead } from "../modules/channel/channel.service.js";
 import { db } from "../prisma/db.ts";
 import { SOCKET_EVENTS } from "./socket-events.js";
 
-export const registerSocketHandlers = (io, socket) => {
+export const registerSocketHandlers = (io, socket, userSockets) => {
   // socket joins a channel
   socket.on(SOCKET_EVENTS.CHANNEL_JOIN, async (channelId) => {
     try {
@@ -62,5 +62,29 @@ export const registerSocketHandlers = (io, socket) => {
     } catch (error) {
       console.error("Fill to handle typing stop:", error);
     }
+  });
+
+  // on disconnect
+  socket.on("disconnect", () => {
+    const userId = socket.user.id;
+
+    // get all active sockets belonging to this user
+    const sockets = userSockets.get(userId);
+
+    if (!sockets) return;
+
+    // Remove only the socket that disconnected
+    sockets.delete(socket.id);
+
+    // don't set offline if active sockets are present
+    if (sockets.size > 0) return;
+
+    // no sockets left: user is offline; delete the user from userSockets
+    userSockets.delete(userId);
+
+    // broadcast user is offline
+    socket.broadcast.emit(SOCKET_EVENTS.USER_OFFLINE, {
+      userId,
+    });
   });
 };
