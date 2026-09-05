@@ -11,4 +11,8 @@ export const SOCKET_EVENTS = {
   // channel
   CHANNEL_JOIN: "channel:join",
   CHANNEL_LEAVE: "channel:leave",
+
+  // user
+  USER_ONLINE: "user:online",
+  USER_OFFLINE: "user:offline",
 };
