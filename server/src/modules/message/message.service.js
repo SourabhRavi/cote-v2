@@ -102,9 +102,11 @@ export const updateMessage = async ({ userId, messageId, content }) => {
 
   return db.orm.public.Message.where({
     id: messageId,
-  }).update({
-    content,
-  });
+  })
+    .include("author")
+    .update({
+      content,
+    });
 };
 
 export const deleteMessage = async ({ userId, messageId }) => {
@@ -122,7 +124,9 @@ export const deleteMessage = async ({ userId, messageId }) => {
 
   return db.orm.public.Message.where({
     id: messageId,
-  }).update({
-    deletedAt: new Date(),
-  });
+  })
+    .include("author")
+    .update({
+      deletedAt: new Date(),
+    });
 };

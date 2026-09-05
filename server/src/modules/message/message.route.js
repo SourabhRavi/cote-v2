@@ -106,14 +106,24 @@ router.delete("/:messageId", validateMessageId, async (req, res) => {
   const { messageId } = req.params;
 
   try {
-    await deleteMessage({
+    const deletedMessage = await deleteMessage({
       userId,
       messageId,
     });
 
+    // broadcast deleted message to channel room
+    const io = req.app.get("io");
+    io.to(deletedMessage.channelId).emit(
+      SOCKET_EVENTS.MESSAGE_DELETE,
+      deletedMessage,
+    );
+
     return res.status(200).json({
       success: true,
-      data: null,
+      data: {
+        ...deletedMessage,
+        content: null,
+      },
     });
   } catch (error) {
     console.error("Failed to delete message:", error);
