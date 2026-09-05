@@ -4,36 +4,9 @@ import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { MessageList } from "@/components/messages/message-list.tsx";
 import { Separator } from "@base-ui/react";
 import MessageComposer from "@/components/messages/message-composer.tsx";
-// import { useEffect } from "react";
-// import { socket } from "@/lib/socket.ts";
-// import { SOCKET_EVENTS } from "@/lib/socket-events.ts";
-// import type { Message } from "@/types/message.types.ts";
-// import { useQueryClient } from "@tanstack/react-query";
 
 export const ChannelContent = ({ channelId }: { channelId: string }) => {
   const { data: channel, isPending, isError } = useChannel(channelId);
-  // const { data: messages = [] } = useGetMessages(channelId);
-
-  // const queryClient = useQueryClient();
-
-  // useEffect(() => {
-  //   socket.emit(SOCKET_EVENTS.CHANNEL_JOIN, channelId);
-
-  //   const handleNewMessage = (message: Message) => {
-  //     queryClient.setQueryData<Message[]>(["get-messages", channelId], (oldMessages) => {
-  //       if (!oldMessages) return [message];
-
-  //       return [...oldMessages, message];
-  //     });
-  //   };
-
-  //   socket.on(SOCKET_EVENTS.MESSAGE_NEW, handleNewMessage);
-
-  //   return () => {
-  //     socket.emit(SOCKET_EVENTS.CHANNEL_LEAVE, channelId);
-  //     socket.off(SOCKET_EVENTS.MESSAGE_NEW, handleNewMessage);
-  //   };
-  // }, [channelId, queryClient]);
 
   if (isPending) {
     return (
