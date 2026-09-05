@@ -3,6 +3,7 @@ import { MessageItem } from "@/components/messages/message-item.tsx";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { useGetMessages } from "@/hooks/use-messages.ts";
 import type { Channel } from "@/types/channel.types.ts";
+import type { Message } from "@/types/message.types.ts";
 
 export const MessageList = ({ channel }: { channel: Channel }) => {
   const { data: messages, isPending, isError } = useGetMessages(channel.id);
@@ -39,7 +40,7 @@ export const MessageList = ({ channel }: { channel: Channel }) => {
 
   return (
     <div className="flex flex-col">
-      {messages.messages.map((message) => (
+      {messages.messages.map((message: Message) => (
         <MessageItem key={message.id} message={message} />
       ))}
     </div>
