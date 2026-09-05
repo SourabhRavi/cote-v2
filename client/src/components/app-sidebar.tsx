@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 import { TeamSwitcher } from "@/components/team-switcher";
+
 import {
   Sidebar,
   SidebarContent,
@@ -13,20 +14,19 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 
-import useWorkspaces from "@/hooks/use-workspaces.ts";
 import { useChannels } from "@/hooks/use-channels.ts";
 import { useUser } from "@/hooks/use-user.ts";
+import { InviteWorkspaceMemberDialog } from "@/components/workspaces/invite-workspace-member-dialog.tsx";
+import { useWorkspaces } from "@/hooks/use-workspaces.ts";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const navigate = useNavigate();
 
-  // get params from url
   const { workspaceId, channelId } = useParams<{
     workspaceId: string;
     channelId: string;
   }>();
 
-  // get workspace data
   const {
     data: workspaces = [],
     isPending: workspaceIsPending,
@@ -35,7 +35,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const currentWorkspaceId = workspaceId ?? workspaces[0]?.id;
 
-  // get channel data
   const {
     data: channels = [],
     isPending: channelsIsPending,
@@ -52,12 +51,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     navigate(`/${currentWorkspaceId}/${channelId}`);
   };
 
-  // get the user data
   const { data: user, isPending: userIsPending, isError: userIsError } = useUser();
 
   return (
     <Sidebar collapsible="icon" variant="floating" {...props}>
-      <SidebarHeader className="px-3 py-3">
+      <SidebarHeader className="p-2">
         <TeamSwitcher
           workspaces={workspaces}
           activeWorkspaceId={currentWorkspaceId}
@@ -76,6 +74,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           isError={channelsIsError}
         />
       </SidebarContent>
+
+      {currentWorkspaceId && <InviteWorkspaceMemberDialog workspaceId={currentWorkspaceId} />}
 
       <SidebarFooter className="border-t px-2 py-2">
         <NavUser user={user} isLoading={userIsPending} isError={userIsError} />

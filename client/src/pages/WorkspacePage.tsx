@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 
-import useWorkspaces from "@/hooks/use-workspaces.ts";
 import type { Workspace } from "@/types/workspace.types.ts";
+import { useWorkspaces } from "@/hooks/use-workspaces.ts";
 
 const WorkspacePage = () => {
   const { workspaceId } = useParams<{

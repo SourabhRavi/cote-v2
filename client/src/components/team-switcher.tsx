@@ -23,19 +23,21 @@ type Workspace = {
   name: string;
 };
 
+type TeamSwitcherProps = {
+  workspaces: Workspace[];
+  activeWorkspaceId?: string;
+  onWorkspaceChange: (workspaceId: string) => void;
+  isLoading?: boolean;
+  isError?: boolean;
+};
+
 export function TeamSwitcher({
   workspaces,
   activeWorkspaceId,
   onWorkspaceChange,
   isLoading,
   isError,
-}: {
-  workspaces: Workspace[];
-  activeWorkspaceId?: string;
-  onWorkspaceChange: (workspaceId: string) => void;
-  isLoading?: boolean;
-  isError?: boolean;
-}) {
+}: TeamSwitcherProps) {
   const { isMobile } = useSidebar();
 
   const activeWorkspace = workspaces.find((workspace) => workspace.id === activeWorkspaceId);
@@ -45,6 +47,8 @@ export function TeamSwitcher({
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton size="lg" disabled>
+            <Skeleton className="size-8 rounded-md" />
+
             <div className="grid flex-1 text-left text-sm leading-tight">
               <Skeleton className="h-4 w-28" />
             </div>
@@ -90,44 +94,23 @@ export function TeamSwitcher({
             render={
               <SidebarMenuButton
                 size="lg"
-                className="
-                hover:text-sidebar-foreground
-                data-open:bg-sidebar-accent
-                data-open:text-sidebar-accent-foreground
-                group-data-[collapsible=icon]:size-8
-                group-data-[collapsible=icon]:p-0
-                group-data-[collapsible=icon]:justify-center
-                aria-expanded:bg-sidebar-accent
-              "
+                className="aria-expanded:bg-sidebar-accent text-sidebar-foreground! relative left-px"
               />
             }
           >
-            {/* Workspace icon */}
-            <div
-              className="
-              flex size-8 shrink-0 items-center justify-center rounded-md
-              bg-sidebar-accent font-semibold
-              group-data-[collapsible=icon]:size-7
-              ring-1 ring-primary/20
-              uppercase
-              text-xl
-              text-card-foreground
-            "
-            >
+            <div className="flex relative size-8 shrink-0 items-center justify-center rounded-md bg-sidebar-accent font-semibold uppercase text-card-foreground ring-1 ring-primary/20">
               {activeWorkspace.name.charAt(0).toUpperCase()}
             </div>
 
-            {/* Workspace name - expanded only */}
-            <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+            <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium capitalize">{activeWorkspace.name}</span>
             </div>
 
-            {/* Dropdown arrow - expanded only */}
-            <ChevronsUpDownIcon className="ml-auto group-data-[collapsible=icon]:hidden" />
+            <ChevronsUpDownIcon className="ml-auto" />
           </DropdownMenuTrigger>
 
           <DropdownMenuContent
-            className="w-fit"
+            className="w-(--radix-popper-anchor-width) min-w-56 rounded-lg"
             align="start"
             side={isMobile ? "bottom" : "right"}
             sideOffset={4}
@@ -141,9 +124,13 @@ export function TeamSwitcher({
                 <DropdownMenuItem
                   key={workspace.id}
                   onClick={() => onWorkspaceChange(workspace.id)}
-                  className="gap-2 p-2 capitalize focus:text-sidebar-foreground"
+                  className="gap-2 p-2 capitalize"
                 >
-                  {workspace.name}
+                  <div className="flex size-6 items-center justify-center rounded-sm bg-sidebar-accent font-semibold uppercase text-card-foreground">
+                    {workspace.name.charAt(0).toUpperCase()}
+                  </div>
+
+                  <span>{workspace.name}</span>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuGroup>
@@ -151,9 +138,9 @@ export function TeamSwitcher({
             <DropdownMenuSeparator />
 
             <DropdownMenuGroup>
-              <DropdownMenuItem variant="default" className="gap-2 p-2 group/add-workspace">
-                <div className="flex size-6 items-center justify-center rounded-md border group-hover/add-workspace:bg-primary">
-                  <PlusIcon className="size-4 group-hover/add-workspace:stroke-background" />
+              <DropdownMenuItem className="gap-2 p-2">
+                <div className="flex size-6 items-center justify-center rounded-md border">
+                  <PlusIcon className="size-4" />
                 </div>
 
                 <span className="font-medium text-muted-foreground">Add workspace</span>
