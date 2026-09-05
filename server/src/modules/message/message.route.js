@@ -47,7 +47,8 @@ router.post("/", validateMessageSend, async (req, res) => {
 
 router.get("/", validateMessageChannelId, async (req, res) => {
   const { id: userId } = req.user;
-  const { channelId, cursor, limit } = req.query;
+  const { channelId, cursor } = req.query;
+  const limit = Number(req.query.limit ?? 20);
 
   try {
     const messages = await getMessages({
