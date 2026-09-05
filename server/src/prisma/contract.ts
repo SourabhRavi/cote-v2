@@ -12,6 +12,14 @@ const Role = enumType(
   member("MEMBER", "member"),
 );
 
+const InvitationStatus = enumType(
+  "InvitationStatus",
+  { codecId: "pg/text@1", nativeType: "text" } as const,
+  member("INVITED", "invited"),
+  member("ACCEPTED", "accepted"),
+  member("DECLINED", "declined"),
+);
+
 export const contract = defineContract({}, ({ field, model, rel }) => {
   // user
   const User = model("User", {
@@ -94,8 +102,22 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
     },
   });
 
+  // workspace invitation
+  const WorkspaceInvitation = model("WorkspaceInvitation", {
+    fields: {
+      id: field.id.uuidv7String(),
+      workspaceId: field.uuidString(),
+      userEmail: field.text(),
+      status: field
+        .namedType(InvitationStatus)
+        .default(InvitationStatus.members.INVITED),
+      createdAt: field.temporal.createdAtString(),
+      updatedAt: field.temporal.updatedAtString(),
+    },
+  });
+
   return {
-    enums: { Role },
+    enums: { Role, InvitationStatus },
     models: {
       User: User.relations({
         sessions: rel.hasMany(Session, { by: "userId" }),
@@ -120,6 +142,7 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
           to: "id",
         }),
         channels: rel.hasMany(Channel, { by: "workspaceId" }),
+        invitations: rel.hasMany(WorkspaceInvitation, { by: "workspaceId" }),
       }).sql(({ cols, constraints }) => ({
         table: "Workspace",
         foreignKeys: [
@@ -189,6 +212,25 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
           }),
           constraints.foreignKey(cols.authorId, User.refs.id, {
             name: "Message_authorId_fKey",
+          }),
+        ],
+      })),
+      WorkspaceInvitation: WorkspaceInvitation.relations({
+        workspace: rel.belongsTo(Workspace, {
+          from: "workspaceId",
+          to: "id",
+        }),
+      }).sql(({ cols, constraints }) => ({
+        table: "WorkspaceInvitation",
+        indexes: [
+          constraints.index([cols.workspaceId, cols.userEmail], {
+            name: "WorkspaceInvitation_workspaceId_userEmail_key",
+            unique: true,
+          }),
+        ],
+        foreignKeys: [
+          constraints.foreignKey(cols.workspaceId, Workspace.refs.id, {
+            name: "WorkspaceInvitation_workspaceId_fKey",
           }),
         ],
       })),

@@ -28,6 +28,10 @@
       "model": "Workspace",
       "namespace": "public"
     },
+    "WorkspaceInvitation": {
+      "model": "WorkspaceInvitation",
+      "namespace": "public"
+    },
     "WorkspaceMember": {
       "model": "WorkspaceMember",
       "namespace": "public"
@@ -37,6 +41,23 @@
     "namespaces": {
       "public": {
         "enum": {
+          "InvitationStatus": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "INVITED",
+                "value": "invited"
+              },
+              {
+                "name": "ACCEPTED",
+                "value": "accepted"
+              },
+              {
+                "name": "DECLINED",
+                "value": "declined"
+              }
+            ]
+          },
           "Role": {
             "codecId": "pg/text@1",
             "members": [
@@ -704,6 +725,21 @@
                   "namespace": "public"
                 }
               },
+              "invitations": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "workspaceId"
+                  ]
+                },
+                "to": {
+                  "model": "WorkspaceInvitation",
+                  "namespace": "public"
+                }
+              },
               "workspaceMembers": {
                 "cardinality": "1:N",
                 "on": {
@@ -740,6 +776,105 @@
               },
               "namespaceId": "public",
               "table": "Workspace"
+            }
+          },
+          "WorkspaceInvitation": {
+            "fields": {
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/char@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 36
+                  }
+                }
+              },
+              "status": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "InvitationStatus",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "userEmail": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "workspaceId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/char@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 36
+                  }
+                }
+              }
+            },
+            "relations": {
+              "workspace": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "workspaceId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Workspace",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "status": {
+                  "column": "status"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                },
+                "userEmail": {
+                  "column": "userEmail"
+                },
+                "workspaceId": {
+                  "column": "workspaceId"
+                }
+              },
+              "namespaceId": "public",
+              "table": "WorkspaceInvitation"
             }
           },
           "WorkspaceMember": {
@@ -1389,6 +1524,111 @@
               },
               "uniques": []
             },
+            "WorkspaceInvitation": {
+              "checks": [
+                {
+                  "expression": "\"status\" IN ('invited', 'accepted', 'declined')",
+                  "name": "WorkspaceInvitation_status_check_d2a367f3",
+                  "prefix": "WorkspaceInvitation_status_check"
+                }
+              ],
+              "columns": {
+                "createdAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "sql/char@1",
+                  "nativeType": "character",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 36
+                  }
+                },
+                "status": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "invited"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "InvitationStatus",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "userEmail": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "workspaceId": {
+                  "codecId": "sql/char@1",
+                  "nativeType": "character",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 36
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "name": "WorkspaceInvitation_workspaceId_fKey",
+                  "source": {
+                    "columns": [
+                      "workspaceId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "WorkspaceInvitation"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "Workspace"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "workspaceId"
+                  ],
+                  "name": "WorkspaceInvitation_workspaceId_idx_ba65f874",
+                  "prefix": "WorkspaceInvitation_workspaceId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "workspaceId",
+                    "userEmail"
+                  ],
+                  "name": "WorkspaceInvitation_workspaceId_userEmail_key_42b21e23",
+                  "prefix": "WorkspaceInvitation_workspaceId_userEmail_key",
+                  "unique": true
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
             "WorkspaceMember": {
               "checks": [
                 {
@@ -1524,6 +1764,14 @@
             }
           },
           "valueSet": {
+            "InvitationStatus": {
+              "kind": "valueSet",
+              "values": [
+                "invited",
+                "accepted",
+                "declined"
+              ]
+            },
             "Role": {
               "kind": "valueSet",
               "values": [
@@ -1538,10 +1786,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "30a6fc1bbef8d09e5444053d1670271e0cc3d0a2292cb2fb06703fa121d94d2d"
+    "storageHash": "5d0df173f8f4cb2c8822de277c900d1cffc803433be294a5e0e4006e1c8666e6"
   },
   "execution": {
-    "executionHash": "5c7404b7631b3de43377d312e5feffdd75943ca633e78afa27bf0131f65f54a4",
+    "executionHash": "d8569c817ac57c05d10c22f3f774edaedadaf12e6126449fd3bbfba8cbfaf829",
     "mutations": {
       "defaults": [
         {
@@ -1683,6 +1931,32 @@
             "column": "updatedAt",
             "namespace": "public",
             "table": "Workspace"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv7",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "WorkspaceInvitation"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "updatedAt",
+            "namespace": "public",
+            "table": "WorkspaceInvitation"
           }
         },
         {

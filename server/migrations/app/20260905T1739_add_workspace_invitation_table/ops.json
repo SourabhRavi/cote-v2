@@ -1,0 +1,161 @@
+[
+  {
+    "id": "table.WorkspaceInvitation",
+    "label": "Create table \"WorkspaceInvitation\"",
+    "summary": "Creates table \"WorkspaceInvitation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "WorkspaceInvitation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"WorkspaceInvitation\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"WorkspaceInvitation\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"WorkspaceInvitation\"",
+        "sql": "CREATE TABLE \"public\".\"WorkspaceInvitation\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" character(36) NOT NULL,\n  \"status\" text DEFAULT 'invited' NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"userEmail\" text NOT NULL,\n  \"workspaceId\" character(36) NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"WorkspaceInvitation_status_check_d2a367f3\" CHECK (\"status\" IN ('invited', 'accepted', 'declined'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"WorkspaceInvitation\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"WorkspaceInvitation\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.WorkspaceInvitation.WorkspaceInvitation_workspaceId_idx_ba65f874",
+    "label": "Create index \"WorkspaceInvitation_workspaceId_idx_ba65f874\" on \"WorkspaceInvitation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "WorkspaceInvitation_workspaceId_idx_ba65f874",
+        "table": "WorkspaceInvitation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"WorkspaceInvitation_workspaceId_idx_ba65f874\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"WorkspaceInvitation_workspaceId_idx_ba65f874\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"WorkspaceInvitation_workspaceId_idx_ba65f874\"",
+        "sql": "CREATE INDEX \"WorkspaceInvitation_workspaceId_idx_ba65f874\" ON \"public\".\"WorkspaceInvitation\" (\"workspaceId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"WorkspaceInvitation_workspaceId_idx_ba65f874\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"WorkspaceInvitation_workspaceId_idx_ba65f874\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.WorkspaceInvitation.WorkspaceInvitation_workspaceId_userEmail_key_42b21e23",
+    "label": "Create index \"WorkspaceInvitation_workspaceId_userEmail_key_42b21e23\" on \"WorkspaceInvitation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "WorkspaceInvitation_workspaceId_userEmail_key_42b21e23",
+        "table": "WorkspaceInvitation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"WorkspaceInvitation_workspaceId_userEmail_key_42b21e23\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"WorkspaceInvitation_workspaceId_userEmail_key_42b21e23\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"WorkspaceInvitation_workspaceId_userEmail_key_42b21e23\"",
+        "sql": "CREATE UNIQUE INDEX \"WorkspaceInvitation_workspaceId_userEmail_key_42b21e23\" ON \"public\".\"WorkspaceInvitation\" (\"workspaceId\", \"userEmail\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"WorkspaceInvitation_workspaceId_userEmail_key_42b21e23\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"WorkspaceInvitation_workspaceId_userEmail_key_42b21e23\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.WorkspaceInvitation.WorkspaceInvitation_workspaceId_fKey",
+    "label": "Add foreign key \"WorkspaceInvitation_workspaceId_fKey\" on \"WorkspaceInvitation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "WorkspaceInvitation_workspaceId_fKey",
+        "table": "WorkspaceInvitation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"WorkspaceInvitation_workspaceId_fKey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "WorkspaceInvitation_workspaceId_fKey",
+          "public",
+          "\"public\".\"WorkspaceInvitation\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"WorkspaceInvitation_workspaceId_fKey\"",
+        "sql": "ALTER TABLE \"public\".\"WorkspaceInvitation\"\nADD CONSTRAINT \"WorkspaceInvitation_workspaceId_fKey\"\nFOREIGN KEY (\"workspaceId\")\nREFERENCES \"public\".\"Workspace\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"WorkspaceInvitation_workspaceId_fKey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "WorkspaceInvitation_workspaceId_fKey",
+          "public",
+          "\"public\".\"WorkspaceInvitation\""
+        ]
+      }
+    ]
+  }
+]
