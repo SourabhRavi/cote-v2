@@ -1,14 +1,68 @@
+import { MoreHorizontal, Pencil } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+
+import { useUpdateMessage } from "@/hooks/use-messages.ts";
 import type { Message } from "@/types/message.types.ts";
+import { Button } from "@/components/ui/button.tsx";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
 
 type MessageItemProps = {
   message: Message;
 };
 
 export const MessageItem = ({ message }: MessageItemProps) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [content, setContent] = useState(message.content ?? "");
+
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const { mutate: updateMessage, isPending } = useUpdateMessage();
+
+  const handleEdit = () => {
+    setContent(message.content ?? "");
+    setIsEditing(true);
+  };
+
+  const handleCancel = () => {
+    setContent(message.content ?? "");
+    setIsEditing(false);
+  };
+
+  const handleSave = () => {
+    const trimmedContent = content.trim();
+
+    if (!trimmedContent || trimmedContent === message.content) {
+      handleCancel();
+      return;
+    }
+
+    updateMessage(
+      {
+        messageId: message.id,
+        content: trimmedContent,
+      },
+      {
+        onSuccess: () => {
+          setIsEditing(false);
+        },
+      },
+    );
+  };
+
+  // set text cursor to end of message
+  useEffect(() => {
+    if (!isEditing || !textareaRef.current) return;
+
+    textareaRef.current?.focus();
+
+    const cursorPosition = textareaRef.current?.value.length ?? 0;
+    textareaRef.current?.setSelectionRange(cursorPosition, cursorPosition);
+  }, [isEditing]);
+
   return (
-    <div className="flex items-start gap-3 py-2.5">
+    <div className="group relative flex items-start gap-3 py-2.5">
       <div className="size-9 shrink-0 overflow-hidden rounded-[18px]">
-        {message.author.avatarUrl ? (
+        {message.author?.avatarUrl ? (
           <img
             src={message.author.avatarUrl}
             alt={message.author.name}
@@ -24,21 +78,73 @@ export const MessageItem = ({ message }: MessageItemProps) => {
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">
         <div className="flex w-full items-baseline justify-between gap-3">
           <div className="flex min-w-0 items-center gap-2">
-            <p className="truncate text-sm font-semibold text-foreground">{message.author.name}</p>
+            <div className="flex gap-2 items-center">
+              <p className="truncate text-sm font-semibold text-foreground">
+                {message.author.name}
+              </p>
+              <span className="shrink-0 text-[11px] text-muted-foreground/60 uppercase">
+                {new Date(message.createdAt).toLocaleTimeString([], {
+                  hour: "numeric",
+                  minute: "2-digit",
+                  hour12: true,
+                })}
+              </span>
+            </div>
           </div>
-
-          <p className="shrink-0 text-[11px] text-muted-foreground/60 uppercase">
-            {new Date(message.createdAt).toLocaleTimeString([], {
-              hour: "numeric",
-              minute: "2-digit",
-              hour12: true,
-            })}
-          </p>
         </div>
 
-        <p className="min-w-0 text-sm leading-normal text-foreground wrap-break-word">
-          {message.content}
-        </p>
+        {isEditing ? (
+          <div className="flex flex-col gap-2">
+            <textarea
+              ref={textareaRef}
+              value={content}
+              onChange={(event) => setContent(event.target.value)}
+              disabled={isPending}
+              className="min-h-20 resize-none"
+            />
+
+            <div className="flex items-center justify-end gap-2">
+              <Button variant="ghost" size="sm" onClick={handleCancel} disabled={isPending}>
+                Cancel
+              </Button>
+
+              <Button size="sm" onClick={handleSave} disabled={isPending || !content.trim()}>
+                {isPending ? "Saving..." : "Save"}
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <p className="min-w-0 text-sm leading-normal text-foreground wrap-break-word">
+            {message.content}
+          </p>
+        )}
+
+        {!isEditing && (
+          <div className="absolute top-1 right-2 opacity-0 transition-opacity group-hover:opacity-100">
+            <Popover>
+              <PopoverTrigger
+                render={
+                  <Button variant="ghost" size="icon-sm" className="size-7">
+                    <MoreHorizontal className="size-4" />
+                    <span className="sr-only">Message actions</span>
+                  </Button>
+                }
+              ></PopoverTrigger>
+
+              <PopoverContent align="end" className="w-32 p-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full justify-start gap-2"
+                  onClick={handleEdit}
+                >
+                  <Pencil className="size-3.5" />
+                  Edit
+                </Button>
+              </PopoverContent>
+            </Popover>
+          </div>
+        )}
 
         {/* Reactions will be added here later. */}
       </div>

@@ -25,3 +25,11 @@ export const sendMessage = async (channelId: string, content: string) => {
 
   return response.data.data;
 };
+
+export const updateMessage = async (messageId: string, content: string) => {
+  const response = await api.patch(`/messages/${messageId}`, {
+    content,
+  });
+
+  return response.data.data;
+};

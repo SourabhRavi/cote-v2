@@ -31,8 +31,6 @@ export const MessageList = ({ channel }: { channel: Channel }) => {
     socket.emit(SOCKET_EVENTS.CHANNEL_JOIN, channel.id);
 
     const handleNewMessage = (newMessage: Message) => {
-      console.log("MESSAGE RECIEVED", newMessage);
-
       queryClient.setQueryData<InfiniteData<MessageResponse, string>>(
         ["get-messages", channel.id],
         (oldMessagesData) => {
@@ -53,14 +51,37 @@ export const MessageList = ({ channel }: { channel: Channel }) => {
       );
     };
 
+    const handleUpdateMessage = (updatedMessage: Message) => {
+      queryClient.setQueryData<InfiniteData<MessageResponse, string>>(
+        ["get-messages", channel.id],
+        (oldMessagesData) => {
+          if (!oldMessagesData) return undefined;
+
+          return {
+            ...oldMessagesData,
+            pages: oldMessagesData.pages.map((page) => ({
+              ...page,
+              messages: page.messages.map((message) =>
+                message.id === updatedMessage.id ? updatedMessage : message,
+              ),
+            })),
+          };
+        },
+      );
+    };
+
     socket.on(SOCKET_EVENTS.MESSAGE_NEW, handleNewMessage);
+    socket.on(SOCKET_EVENTS.MESSAGE_UPDATE, handleUpdateMessage);
 
     return () => {
       socket.emit(SOCKET_EVENTS.CHANNEL_LEAVE, channel.id);
+
       socket.off(SOCKET_EVENTS.MESSAGE_NEW, handleNewMessage);
+      socket.off(SOCKET_EVENTS.MESSAGE_UPDATE, handleUpdateMessage);
     };
   }, [channel.id, queryClient, messages]);
 
+  // load old message when user scrolls to top
   useEffect(() => {
     const container = messagesContainerRef.current;
 
