@@ -1,5 +1,7 @@
 "use client";
 
+import { Plus } from "lucide-react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { NavMain } from "@/components/nav-main";
@@ -14,7 +16,17 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 
-import { useChannels } from "@/hooks/use-channels.ts";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+
+import { useChannels, useCreateChannel } from "@/hooks/use-channels.ts";
 import { useUser } from "@/hooks/use-user.ts";
 import { InviteWorkspaceMemberDialog } from "@/components/workspaces/invite-workspace-member-dialog.tsx";
 import { useWorkspaces } from "@/hooks/use-workspaces.ts";
@@ -26,6 +38,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     workspaceId: string;
     channelId: string;
   }>();
+
+  const [createChannelOpen, setCreateChannelOpen] = useState(false);
+  const [channelName, setChannelName] = useState("");
 
   const {
     data: workspaces = [],
@@ -39,7 +54,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     data: channels = [],
     isPending: channelsIsPending,
     isError: channelsIsError,
-  } = useChannels(currentWorkspaceId);
+  } = useChannels(currentWorkspaceId ?? "");
+
+  const { mutate: createChannelMutation, isPending: createChannelIsPending } = useCreateChannel();
 
   const handleWorkspaceChange = (workspaceId: string) => {
     navigate(`/${workspaceId}`);
@@ -49,6 +66,29 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     if (!currentWorkspaceId) return;
 
     navigate(`/${currentWorkspaceId}/${channelId}`);
+  };
+
+  const handleCreateChannel = () => {
+    const name = channelName.trim();
+
+    if (!currentWorkspaceId || !name || createChannelIsPending) {
+      return;
+    }
+
+    createChannelMutation(
+      {
+        workspaceId: currentWorkspaceId,
+        channelName: name,
+      },
+      {
+        onSuccess: (channel) => {
+          setChannelName("");
+          setCreateChannelOpen(false);
+
+          navigate(`/${currentWorkspaceId}/${channel.id}`);
+        },
+      },
+    );
   };
 
   const { data: user, isPending: userIsPending, isError: userIsError } = useUser();
@@ -66,6 +106,57 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
 
       <SidebarContent className="px-2">
+        <div className="mb-2 flex items-center justify-between px-2">
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Channels
+          </p>
+
+          {currentWorkspaceId && (
+            <Dialog open={createChannelOpen} onOpenChange={setCreateChannelOpen}>
+              <DialogTrigger
+                render={
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-6 text-muted-foreground hover:text-foreground"
+                  />
+                }
+              >
+                <Plus className="size-4" />
+                <span className="sr-only">Create channel</span>
+              </DialogTrigger>
+
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Create channel</DialogTitle>
+                </DialogHeader>
+
+                <div className="space-y-4">
+                  <Input
+                    autoFocus
+                    placeholder="Channel name"
+                    value={channelName}
+                    onChange={(event) => setChannelName(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        handleCreateChannel();
+                      }
+                    }}
+                  />
+
+                  <Button
+                    className="w-full"
+                    onClick={handleCreateChannel}
+                    disabled={!channelName.trim() || createChannelIsPending}
+                  >
+                    {createChannelIsPending ? "Creating..." : "Create channel"}
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          )}
+        </div>
+
         <NavMain
           items={channels}
           activeChannelId={channelId}

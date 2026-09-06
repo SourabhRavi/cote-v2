@@ -1,4 +1,5 @@
 import {
+  createChannel,
   getChannel,
   getChannels,
   getUnreadCount,
@@ -48,6 +49,21 @@ export const useJoinChannel = () => {
     onSuccess: (_, channelId) => {
       queryClient.invalidateQueries({
         queryKey: ["channels", channelId],
+      });
+    },
+  });
+};
+
+export const useCreateChannel = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ workspaceId, channelName }: { workspaceId: string; channelName: string }) =>
+      createChannel(workspaceId, channelName),
+
+    onSuccess: (_, { workspaceId }) => {
+      queryClient.invalidateQueries({
+        queryKey: ["channels", workspaceId],
       });
     },
   });

@@ -10,7 +10,7 @@ export type SearchChannel = {
   isJoined: boolean;
 };
 
-export const getChannels = async (workspaceId: string) => {
+export const getChannels = async (workspaceId: string): Promise<Channel[]> => {
   const response = await api.get(`/channels?workspaceId=${workspaceId}`);
 
   return response.data.data;
@@ -41,6 +41,15 @@ export const joinChannel = async (channelId: string) => {
 
 export const getUnreadCount = async (channelId: string) => {
   const response = await api.get(`/channels/${channelId}/unread`);
+
+  return response.data.data;
+};
+
+export const createChannel = async (workspaceId: string, channelName: string): Promise<Channel> => {
+  const response = await api.post(`/channels`, {
+    workspaceId,
+    channelName,
+  });
 
   return response.data.data;
 };
