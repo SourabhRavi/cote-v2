@@ -2,7 +2,7 @@ export const SOCKET_EVENTS = {
   // message
   MESSAGE_NEW: "message:new",
   MESSAGE_UPDATE: "message:update",
-  MESSAGE_DELETE: "message:update",
+  MESSAGE_DELETE: "message:delete",
 
   // typing
   TYPING_START: "typing:start",
