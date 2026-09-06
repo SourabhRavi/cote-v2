@@ -1,5 +1,6 @@
 import { api } from "@/lib/axios.ts";
 import type { UnreadCount } from "@/types/unread-count.types.ts";
+import type { Workspace } from "@/types/workspace.types.ts";
 
 export type WorkspaceInvitation = {
   id: string;
@@ -14,7 +15,7 @@ export type WorkspaceInvitation = {
   };
 };
 
-export const getWorkspaces = async () => {
+export const getWorkspaces = async (): Promise<Workspace[]> => {
   const response = await api.get("/workspaces");
   return response.data.data;
 };

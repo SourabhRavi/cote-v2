@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 
 import type { Workspace } from "@/types/workspace.types.ts";
 import { useWorkspaces } from "@/hooks/use-workspaces.ts";
+import { ChannelSearch } from "@/components/channels/channel-search.tsx";
 
 const WorkspacePage = () => {
   const { workspaceId } = useParams<{
@@ -32,6 +33,8 @@ const WorkspacePage = () => {
         <p className="text-sm text-muted-foreground">
           Select a channel from the sidebar to start a conversation.
         </p>
+
+        <ChannelSearch workspaceId={workspace.id} />
       </div>
     </main>
   );
