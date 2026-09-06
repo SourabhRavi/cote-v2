@@ -6,12 +6,15 @@ import WorkspaceSelectionPage from "@/pages/WorkspaceSelectionPage.tsx";
 import ChannelPage from "@/pages/ChannelPage.tsx";
 import ProtectedRoute from "@/router/protected-route.tsx";
 import WorkspacePage from "@/pages/WorkspacePage.tsx";
+import PublicRoute from "@/router/public-route.tsx";
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
+        <Route element={<PublicRoute />}>
+          <Route path="/login" element={<LoginPage />} />
+        </Route>
 
         <Route element={<ProtectedRoute />}>
           {/* Workspace not selected yet */}
