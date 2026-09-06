@@ -15,4 +15,5 @@ export const SOCKET_EVENTS = {
   // user
   USER_ONLINE: "user:online",
   USER_OFFLINE: "user:offline",
+  USER_PRESENCE_SNAPSHOT: "user:presence:snapshot",
 };
