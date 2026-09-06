@@ -39,19 +39,15 @@ export const useSearchChannels = (workspaceId: string, search: string) => {
   });
 };
 
-export const useJoinChannel = (workspaceId: string) => {
+export const useJoinChannel = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: joinChannel,
+    mutationFn: (channelId: string) => joinChannel(channelId),
 
-    onSuccess: () => {
+    onSuccess: (_, channelId) => {
       queryClient.invalidateQueries({
-        queryKey: ["channels", workspaceId],
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: ["search-channels", workspaceId],
+        queryKey: ["channels", channelId],
       });
     },
   });

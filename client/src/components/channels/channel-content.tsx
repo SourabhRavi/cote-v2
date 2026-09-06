@@ -1,10 +1,12 @@
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { useChannel } from "@/hooks/use-channels.ts";
+import { Button } from "@/components/ui/button.tsx";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { MessageList } from "@/components/messages/message-list.tsx";
-import { Separator } from "@base-ui/react";
 import MessageComposer from "@/components/messages/message-composer.tsx";
 import { ChannelSearch } from "@/components/channels/channel-search.tsx";
+
+import { useChannel, useJoinChannel } from "@/hooks/use-channels.ts";
+import { Separator } from "@base-ui/react";
 
 export const ChannelContent = ({
   channelId,
@@ -14,6 +16,14 @@ export const ChannelContent = ({
   onlineUsers: string[];
 }) => {
   const { data: channel, isPending, isError } = useChannel(channelId);
+
+  const { mutate: joinChannel, isPending: joinChannelIsPending } = useJoinChannel();
+
+  const handleJoinChannel = () => {
+    if (!channel || joinChannelIsPending) return;
+
+    joinChannel(channelId);
+  };
 
   if (isPending) {
     return (
@@ -124,11 +134,31 @@ export const ChannelContent = ({
         <Separator className="inset-0 h-px w-full bg-sidebar-border" />
       </div>
 
-      {/* Messages */}
+      {/* Message list */}
       <MessageList channel={channel} onlineUsers={onlineUsers} />
 
-      {/* Composer */}
-      <MessageComposer channel={channel} />
+      {/* Channel content */}
+      {channel.isMember ? (
+        <>
+          <MessageComposer channel={channel} />
+        </>
+      ) : (
+        <main className="flex min-h-0 flex-1 items-center justify-center p-4">
+          <div className="w-full max-w-sm text-center">
+            <h2 className="font-heading text-lg font-semibold text-foreground">
+              Join #{channel.name}
+            </h2>
+
+            <p className="mt-2 text-sm text-muted-foreground">
+              Join this channel to view messages and participate in the conversation.
+            </p>
+
+            <Button className="mt-4" onClick={handleJoinChannel} disabled={joinChannelIsPending}>
+              {joinChannelIsPending ? "Joining..." : "Join Channel"}
+            </Button>
+          </div>
+        </main>
+      )}
     </div>
   );
 };

@@ -22,8 +22,7 @@ export const ChannelSearch = ({ workspaceId }: { workspaceId: string }) => {
 
   const { data: channels = [], isPending, isError } = useSearchChannels(workspaceId, search);
 
-  const { mutate: joinChannelMutation, isPending: joinChannelIsPending } =
-    useJoinChannel(workspaceId);
+  const { mutate: joinChannelMutation, isPending: joinChannelIsPending } = useJoinChannel();
 
   const handleJoin = (channelId: string) => {
     joinChannelMutation(channelId, {

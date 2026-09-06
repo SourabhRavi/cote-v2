@@ -71,7 +71,12 @@ export const getChannel = async ({ userId, channelId }) => {
     throw new Error("User is not a member of this workspace.");
   }
 
-  return channel;
+  const channelMember = await db.orm.public.ChannelMember.first({
+    channelId,
+    userId,
+  });
+
+  return { ...channel, isMember: !!channelMember };
 };
 
 export const joinChannel = async ({ userId, channelId }) => {
