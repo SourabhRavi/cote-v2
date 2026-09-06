@@ -53,6 +53,12 @@ io.on("connection", (socket) => {
     });
   }
 
+  // Send current online users to the newly connected user
+  socket.emit(
+    SOCKET_EVENTS.USER_PRESENCE_SNAPSHOT,
+    [...userSockets.keys()].filter((id) => id !== userId),
+  );
+
   // Register all socket-specific handlers.
   registerSocketHandlers(io, socket, userSockets);
 });

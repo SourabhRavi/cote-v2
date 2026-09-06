@@ -6,7 +6,13 @@ import { Separator } from "@base-ui/react";
 import MessageComposer from "@/components/messages/message-composer.tsx";
 import { ChannelSearch } from "@/components/channels/channel-search.tsx";
 
-export const ChannelContent = ({ channelId }: { channelId: string }) => {
+export const ChannelContent = ({
+  channelId,
+  onlineUsers = [],
+}: {
+  channelId: string;
+  onlineUsers: string[];
+}) => {
   const { data: channel, isPending, isError } = useChannel(channelId);
 
   if (isPending) {
@@ -119,7 +125,7 @@ export const ChannelContent = ({ channelId }: { channelId: string }) => {
       </div>
 
       {/* Messages */}
-      <MessageList channel={channel} />
+      <MessageList channel={channel} onlineUsers={onlineUsers} />
 
       {/* Composer */}
       <MessageComposer channel={channel} />

@@ -8,10 +8,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 
 type MessageItemProps = {
   message: Message;
-  onlineUsers: Set<string>;
+  onlineUsers: string[];
 };
 
-export const MessageItem = ({ message, onlineUsers }: MessageItemProps) => {
+export const MessageItem = ({ message, onlineUsers = [] }: MessageItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(message.content ?? "");
 
@@ -21,7 +21,7 @@ export const MessageItem = ({ message, onlineUsers }: MessageItemProps) => {
   const { mutate: deleteMessage } = useDeleteMessage();
 
   // Check whether the message author's user ID is currently online.
-  const isAuthorOnline = onlineUsers.has(message.author.id);
+  const isAuthorOnline = onlineUsers ? onlineUsers.includes(message.author.id) : false;
 
   const handleEdit = () => {
     setContent(message.content ?? "");

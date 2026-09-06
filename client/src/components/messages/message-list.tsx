@@ -8,16 +8,20 @@ import { socket } from "@/lib/socket.ts";
 import type { Channel } from "@/types/channel.types.ts";
 import type { Message, MessageResponse } from "@/types/message.types.ts";
 import { useQueryClient, type InfiniteData } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
-export const MessageList = ({ channel }: { channel: Channel }) => {
+export const MessageList = ({
+  channel,
+  onlineUsers = [],
+}: {
+  channel: Channel;
+  onlineUsers: string[];
+}) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLElement>(null);
 
   const { data, isPending, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetMessages(channel.id);
-
-  const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set());
 
   const messages = data?.pages
     .slice()
@@ -122,35 +126,6 @@ export const MessageList = ({ channel }: { channel: Channel }) => {
       container.removeEventListener("scroll", handleFetchOldMessagesOnScroll);
     };
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
-
-  // set active users
-  useEffect(() => {
-    const handleUserOnline = ({ userId }: { userId: string }) => {
-      console.log("ONLINE HAI MERE BHAI");
-
-      setOnlineUsers((prev) => {
-        const next = new Set(prev);
-        next.add(userId);
-
-        return next;
-      });
-    };
-
-    const handleUserOffline = ({ userId }: { userId: string }) => {
-      setOnlineUsers((prev) => {
-        const next = new Set(prev);
-        next.delete(userId);
-        return next;
-      });
-    };
-
-    socket.on(SOCKET_EVENTS.USER_ONLINE, handleUserOnline);
-    socket.on(SOCKET_EVENTS.USER_OFFLINE, handleUserOffline);
-    return () => {
-      socket.off(SOCKET_EVENTS.USER_ONLINE, handleUserOnline);
-      socket.off(SOCKET_EVENTS.USER_OFFLINE, handleUserOffline);
-    };
-  }, []);
 
   if (isPending) {
     return (

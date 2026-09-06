@@ -1,5 +1,5 @@
 import { ChannelContent } from "@/components/channels/channel-content.tsx";
-import { useParams } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 
 const ChannelPage = () => {
   const { channelId } = useParams<{
@@ -7,11 +7,15 @@ const ChannelPage = () => {
     channelId: string;
   }>();
 
+  const { onlineUsers } = useOutletContext<{
+    onlineUsers: string[];
+  }>();
+
   if (!channelId) {
     return null;
   }
 
-  return <ChannelContent channelId={channelId} />;
+  return <ChannelContent channelId={channelId} onlineUsers={onlineUsers} />;
 };
 
 export default ChannelPage;
