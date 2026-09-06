@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   validateChannelCreate,
   validateChannelId,
+  validateChannelSearch,
   validateChannelUpdate,
   validateChannelWorkspaceId,
 } from "./channel.middleware.js";
@@ -15,6 +16,7 @@ import {
   updateChannel,
   deleteChannel,
   getUnreadCount,
+  searchChannels,
 } from "./channel.service.js";
 
 const router = Router();
@@ -64,6 +66,28 @@ router.get("/", validateChannelWorkspaceId, async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Failed to fetch channels.",
+    });
+  }
+});
+
+router.get("/search", validateChannelSearch, async (req, res) => {
+  try {
+    const { workspaceId, search } = req.query;
+
+    const channels = await searchChannels({
+      userId: req.user.id,
+      workspaceId,
+      search,
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: channels,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message,
     });
   }
 });

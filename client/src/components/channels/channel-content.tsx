@@ -4,6 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { MessageList } from "@/components/messages/message-list.tsx";
 import { Separator } from "@base-ui/react";
 import MessageComposer from "@/components/messages/message-composer.tsx";
+import { ChannelSearch } from "@/components/channels/channel-search.tsx";
 
 export const ChannelContent = ({ channelId }: { channelId: string }) => {
   const { data: channel, isPending, isError } = useChannel(channelId);
@@ -23,9 +24,10 @@ export const ChannelContent = ({ channelId }: { channelId: string }) => {
 
         <main className="min-h-0 flex-1">
           <div className="w-full px-4">
-            <Separator className="w-full inset-0 bg-sidebar-border h-px" />
+            <Separator className="inset-0 h-px w-full bg-sidebar-border" />
           </div>
-          <div className="flex flex-col gap-6 p-4 md:p-5 ">
+
+          <div className="flex flex-col gap-6 p-4 md:p-5">
             {[1, 2, 3, 4].map((item) => (
               <div key={item} className="flex gap-3">
                 <Skeleton className="size-9 shrink-0 rounded-full" />
@@ -45,7 +47,7 @@ export const ChannelContent = ({ channelId }: { channelId: string }) => {
         </main>
 
         <div className="shrink-0">
-          <div className="mx-auto h-full w-full rounded-xl bg-background shadow-lg shadow-primary/15 p-3">
+          <div className="mx-auto h-full w-full rounded-xl bg-background p-3 shadow-lg shadow-primary/15">
             <Skeleton className="h-12 w-full" />
 
             <div className="mt-2 flex items-center justify-between">
@@ -103,25 +105,17 @@ export const ChannelContent = ({ channelId }: { channelId: string }) => {
           <SidebarTrigger className="md:hidden" />
 
           <div className="min-w-0">
-            {isPending ? (
-              <Skeleton className="h-10 w-full" />
-            ) : (
-              <>
-                <h1 className="truncate font-heading text-lg font-semibold text-foreground lowercase">
-                  # {channel.name}
-                </h1>
-
-                {!channel.description && (
-                  <p className="truncate text-xs text-muted-foreground">{channel.description}</p>
-                )}
-              </>
-            )}
+            <h1 className="truncate font-heading text-lg font-semibold text-foreground lowercase">
+              # {channel.name}
+            </h1>
           </div>
         </div>
+
+        <ChannelSearch workspaceId={channel.workspaceId} />
       </header>
 
       <div className="w-full px-4">
-        <Separator className="w-full inset-0 bg-sidebar-border h-px" />
+        <Separator className="inset-0 h-px w-full bg-sidebar-border" />
       </div>
 
       {/* Messages */}

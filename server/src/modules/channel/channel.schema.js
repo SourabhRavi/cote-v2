@@ -17,3 +17,8 @@ export const channelUpdateSchema = z.object({
 export const channelIdSchema = z.object({
   channelId: z.uuidv7(),
 });
+
+export const channelSearchSchema = z.object({
+  workspaceId: z.uuidv7(),
+  search: z.string().trim().min(1),
+});

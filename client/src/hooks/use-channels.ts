@@ -1,5 +1,11 @@
-import { getChannel, getChannels, getUnreadCount } from "@/services/channel.service.ts";
-import { useQuery } from "@tanstack/react-query";
+import {
+  getChannel,
+  getChannels,
+  getUnreadCount,
+  joinChannel,
+  searchChannels,
+} from "@/services/channel.service.ts";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useChannels = (workspaceId: string) => {
   return useQuery({
@@ -22,5 +28,31 @@ export const useUnreadCount = (channelId: string) => {
     queryKey: ["unread-count", channelId],
     queryFn: () => getUnreadCount(channelId),
     enabled: !!channelId,
+  });
+};
+
+export const useSearchChannels = (workspaceId: string, search: string) => {
+  return useQuery({
+    queryKey: ["search-channels", workspaceId, search],
+    queryFn: () => searchChannels(workspaceId, search),
+    enabled: !!workspaceId && !!search.trim(),
+  });
+};
+
+export const useJoinChannel = (workspaceId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: joinChannel,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["channels", workspaceId],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["search-channels", workspaceId],
+      });
+    },
   });
 };

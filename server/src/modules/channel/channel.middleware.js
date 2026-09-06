@@ -2,6 +2,7 @@ import z from "zod";
 import {
   channelCreateSchema,
   channelIdSchema,
+  channelSearchSchema,
   channelUpdateSchema,
   channelWorkspaceIdSchema,
 } from "./channel.schema.js";
@@ -27,6 +28,20 @@ export const validateChannelWorkspaceId = (req, res, next) => {
     return res.status(400).json({
       success: false,
       message: "Invalid workspace ID.",
+      errors: z.treeifyError(result.error),
+    });
+  }
+
+  next();
+};
+
+export const validateChannelSearch = (req, res, next) => {
+  const result = channelSearchSchema.safeParse(req.query);
+
+  if (!result.success) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid channel search data.",
       errors: z.treeifyError(result.error),
     });
   }

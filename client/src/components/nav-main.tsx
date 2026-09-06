@@ -10,12 +10,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-
-type Channel = {
-  id: string;
-  name: string;
-  unread?: number;
-};
+import type { Channel } from "@/types/channel.types.ts";
 
 export function NavMain({
   items,
@@ -91,12 +86,6 @@ export function NavMain({
                     "
                   >
                     <span className="truncate lowercase"># {channel.name}</span>
-
-                    {channel.unread ? (
-                      <span className="ml-auto text-xs text-muted-foreground">
-                        {channel.unread}
-                      </span>
-                    ) : null}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               );

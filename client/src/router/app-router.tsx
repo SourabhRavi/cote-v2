@@ -3,9 +3,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AppLayout from "@/layouts/AppLayout.tsx";
 import LoginPage from "@/pages/LoginPage.tsx";
 import WorkspaceSelectionPage from "@/pages/WorkspaceSelectionPage.tsx";
-import WorkspacePage from "@/pages/WorkspacePage.tsx";
 import ChannelPage from "@/pages/ChannelPage.tsx";
 import ProtectedRoute from "@/router/protected-route.tsx";
+import WorkspacePage from "@/pages/WorkspacePage.tsx";
 
 const AppRouter = () => {
   return (

@@ -34,9 +34,23 @@ export const getChannels = async ({ userId, workspaceId }) => {
     throw new Error("User is not a member of this workspace.");
   }
 
+  const channelMembers = await db.orm.public.ChannelMember.where({
+    userId,
+  }).all();
+
+  const channelIds = channelMembers
+    .filter((channelMember) => channelMember.channelId)
+    .map((channelMember) => channelMember.channelId);
+
+  if (channelIds.length === 0) {
+    return [];
+  }
+
   return db.orm.public.Channel.where({
     workspaceId,
-  }).all();
+  })
+    .where((channel) => channel.id.in(channelIds))
+    .all();
 };
 
 export const getChannel = async ({ userId, channelId }) => {
@@ -223,4 +237,36 @@ export const deleteChannel = async ({ userId, channelId }) => {
   return db.orm.public.Channel.delete({
     id: channelId,
   });
+};
+
+export const searchChannels = async ({ userId, workspaceId, search }) => {
+  const workspaceMember = await db.orm.public.WorkspaceMember.first({
+    workspaceId,
+    userId,
+  });
+
+  if (!workspaceMember) {
+    throw new Error("User is not a member of this workspace.");
+  }
+
+  const channels = await db.orm.public.Channel.where({
+    workspaceId,
+  }).all();
+
+  const channelMembers = await db.orm.public.ChannelMember.where({
+    userId,
+  }).all();
+
+  const joinedChannelIds = new Set(
+    channelMembers.map((channelMember) => channelMember.channelId),
+  );
+
+  const normalizedSearch = search.trim().toLowerCase();
+
+  return channels
+    .filter((channel) => channel.name.toLowerCase().includes(normalizedSearch))
+    .map((channel) => ({
+      ...channel,
+      isJoined: joinedChannelIds.has(channel.id),
+    }));
 };
