@@ -5,7 +5,7 @@ const ProtectedRoute = () => {
   const { isPending, isError } = useUser();
 
   if (isPending) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   if (isError) {

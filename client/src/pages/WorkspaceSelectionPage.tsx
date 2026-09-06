@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import { SearchIcon } from "lucide-react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
@@ -84,9 +84,9 @@ const WorkspaceSelectionPage = () => {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-page px-4 py-8 sm:px-6">
-      <div className="w-full max-w-4xl">
+      <div className="flex w-full max-w-md flex-col">
         {/* Header */}
-        <div className="mx-auto h-29 max-w-md text-center">
+        <div className="h-29 shrink-0 text-center">
           <p className="text-xs font-medium text-muted-foreground">Welcome to Cote</p>
 
           <h1 className="mt-2 font-heading text-2xl font-semibold tracking-tight">
@@ -97,7 +97,7 @@ const WorkspaceSelectionPage = () => {
         </div>
 
         {/* Search */}
-        <div className="mx-auto h-10 max-w-md">
+        <div className="h-10 shrink-0">
           <div className="relative">
             <SearchIcon className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
 
@@ -110,55 +110,59 @@ const WorkspaceSelectionPage = () => {
           </div>
         </div>
 
-        {/* Your Workspaces */}
-        <section className="mx-auto mt-5 w-full max-w-md">
-          <div className="mb-2 flex items-center justify-between">
+        {/* Workspaces */}
+        <section className="mt-5 flex h-48 min-h-48 flex-col">
+          <div className="mb-2 flex h-4 shrink-0 items-center justify-between">
             <h2 className="text-xs font-medium text-muted-foreground">Your Workspaces</h2>
           </div>
 
-          {workspacesPending ? (
-            <div className="flex flex-col gap-2">
-              {[1, 2, 3].map((item) => (
-                <div
-                  key={item}
-                  className="flex h-14 items-center justify-between rounded-md border px-4"
-                >
-                  <Skeleton className="h-3.5 w-28" />
-                  <Skeleton className="h-3 w-12" />
-                </div>
-              ))}
-            </div>
-          ) : workspacesError ? (
-            <div className="flex h-14 items-center justify-center rounded-md border">
-              <p className="text-xs text-muted-foreground">Failed to load workspaces.</p>
-            </div>
-          ) : filteredWorkspaces.length === 0 ? (
-            <div className="flex h-14 items-center justify-center rounded-md border">
-              <p className="text-xs text-muted-foreground">
-                {search ? "No workspaces found." : "No workspaces available."}
-              </p>
-            </div>
-          ) : (
-            <div className="flex max-h-48 flex-col gap-2 overflow-y-auto scrollbar-none">
-              {filteredWorkspaces.map((workspace: Workspace) => (
-                <Button
-                  key={workspace.id}
-                  variant="outline"
-                  onClick={() => handleWorkspaceSelect(workspace.id)}
-                  className="h-14 w-full justify-between bg-transparent px-4 text-xs font-normal hover:bg-sidebar-accent"
-                >
-                  <span className="truncate font-medium">{workspace.name}</span>
+          <div className="min-h-0 flex-1 overflow-y-auto scrollbar-none">
+            {workspacesPending ? (
+              <div className="flex flex-col gap-2">
+                {[1, 2, 3].map((item) => (
+                  <div
+                    key={item}
+                    className="flex h-14 shrink-0 items-center justify-between rounded-md border px-4"
+                  >
+                    <Skeleton className="h-3.5 w-28" />
+                    <Skeleton className="h-3 w-12" />
+                  </div>
+                ))}
+              </div>
+            ) : workspacesError ? (
+              <div className="flex h-14 items-center justify-center rounded-md border">
+                <p className="text-xs text-muted-foreground">Failed to load workspaces.</p>
+              </div>
+            ) : filteredWorkspaces.length === 0 ? (
+              <div className="flex h-14 items-center justify-center rounded-md border">
+                <p className="text-xs text-muted-foreground">
+                  {search ? "No workspaces found." : "No workspaces available."}
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {filteredWorkspaces.map((workspace: Workspace) => (
+                  <Button
+                    key={workspace.id}
+                    variant="outline"
+                    onClick={() => handleWorkspaceSelect(workspace.id)}
+                    className="h-14 shrink-0 w-full justify-between bg-transparent px-4 text-xs font-normal hover:bg-sidebar-accent"
+                  >
+                    <span className="truncate font-medium">{workspace.name}</span>
 
-                  <span className="ml-3 shrink-0 text-xs text-muted-foreground/50">Workspace</span>
-                </Button>
-              ))}
-            </div>
-          )}
+                    <span className="ml-3 shrink-0 text-xs text-muted-foreground/50">
+                      Workspace
+                    </span>
+                  </Button>
+                ))}
+              </div>
+            )}
+          </div>
         </section>
 
         {/* Invitations */}
-        <section className="mx-auto mt-8 w-full max-w-md">
-          <div className="mb-2 flex items-center justify-between">
+        <section className="mt-8 flex h-52 min-h-52 flex-col">
+          <div className="mb-2 flex h-4 shrink-0 items-center justify-between">
             <h2 className="text-xs font-medium text-muted-foreground">Invitations</h2>
 
             {!invitationsPending && invitations.length > 0 && (
@@ -166,61 +170,68 @@ const WorkspaceSelectionPage = () => {
             )}
           </div>
 
-          {invitationsPending ? (
-            <div className="flex flex-col gap-2">
-              {[1, 2].map((item) => (
-                <div key={item} className="h-20 rounded-md border px-4 py-3">
-                  <Skeleton className="h-3.5 w-32" />
-                  <Skeleton className="mt-2 h-3 w-24" />
-                </div>
-              ))}
-            </div>
-          ) : invitationsError ? (
-            <div className="flex h-14 items-center justify-center rounded-md border">
-              <p className="text-xs text-muted-foreground">Failed to load invitations.</p>
-            </div>
-          ) : invitations.length === 0 ? (
-            <div className="flex h-14 items-center justify-center rounded-md border">
-              <p className="text-xs text-muted-foreground">No pending invitations.</p>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-2">
-              {invitations.map((invitation: WorkspaceInvitation) => (
-                <div key={invitation.id} className="rounded-md border px-4 py-3">
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-medium">{invitation.workspace.name}</p>
+          <div className="min-h-0 flex-1 overflow-y-auto scrollbar-none">
+            {invitationsPending ? (
+              <div className="flex flex-col gap-2">
+                {[1, 2].map((item) => (
+                  <div key={item} className="h-26 shrink-0 rounded-md border px-4 py-3">
+                    <Skeleton className="h-3.5 w-32" />
+                    <Skeleton className="mt-2 h-3 w-24" />
 
-                      <p className="mt-1 truncate text-xs text-muted-foreground">
-                        Workspace ID: {invitation.workspaceId}
-                      </p>
+                    <div className="mt-3 flex justify-end gap-2">
+                      <Skeleton className="h-8 w-16" />
+                      <Skeleton className="h-8 w-12" />
                     </div>
                   </div>
+                ))}
+              </div>
+            ) : invitationsError ? (
+              <div className="flex h-14 items-center justify-center rounded-md border">
+                <p className="text-xs text-muted-foreground">Failed to load invitations.</p>
+              </div>
+            ) : invitations.length === 0 ? (
+              <div className="flex h-14 items-center justify-center rounded-md border">
+                <p className="text-xs text-muted-foreground">No pending invitations.</p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {invitations.map((invitation: WorkspaceInvitation) => (
+                  <div key={invitation.id} className="shrink-0 rounded-md border px-4 py-3">
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-medium">{invitation.workspace.name}</p>
 
-                  <div className="mt-3 flex justify-end gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleDeclineInvitation(invitation.id)}
-                      disabled={isAccepting || isDeclining}
-                      className="text-xs"
-                    >
-                      Decline
-                    </Button>
+                        <p className="mt-1 truncate text-xs text-muted-foreground">
+                          Workspace ID: {invitation.workspaceId}
+                        </p>
+                      </div>
+                    </div>
 
-                    <Button
-                      size="sm"
-                      onClick={() => handleAcceptInvitation(invitation.id)}
-                      disabled={isAccepting || isDeclining}
-                      className="text-xs"
-                    >
-                      Join
-                    </Button>
+                    <div className="mt-3 flex justify-end gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeclineInvitation(invitation.id)}
+                        disabled={isAccepting || isDeclining}
+                        className="text-xs"
+                      >
+                        Decline
+                      </Button>
+
+                      <Button
+                        size="sm"
+                        onClick={() => handleAcceptInvitation(invitation.id)}
+                        disabled={isAccepting || isDeclining}
+                        className="text-xs"
+                      >
+                        Join
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
         </section>
       </div>
     </main>

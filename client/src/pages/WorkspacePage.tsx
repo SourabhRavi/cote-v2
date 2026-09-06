@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
 
-import type { Workspace } from "@/types/workspace.types.ts";
-import { useWorkspaces } from "@/hooks/use-workspaces.ts";
 import { ChannelSearch } from "@/components/channels/channel-search.tsx";
+import { useWorkspaces } from "@/hooks/use-workspaces.ts";
+import type { Workspace } from "@/types/workspace.types.ts";
 
 const WorkspacePage = () => {
   const { workspaceId } = useParams<{
@@ -14,7 +14,7 @@ const WorkspacePage = () => {
   const workspace = workspaces.find((workspace: Workspace) => workspace.id === workspaceId);
 
   if (isPending) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   if (isError || !workspace) {
