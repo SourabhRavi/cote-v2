@@ -17,11 +17,25 @@ export type WorkspaceInvitation = {
 
 export const getWorkspaces = async (): Promise<Workspace[]> => {
   const response = await api.get("/workspaces");
+
+  return response.data.data;
+};
+
+export const createWorkspace = async ({
+  workspaceName,
+}: {
+  workspaceName: string;
+}): Promise<Workspace> => {
+  const response = await api.post("/workspaces", {
+    workspaceName,
+  });
+
   return response.data.data;
 };
 
 export const getWorkspaceUnreadCounts = async (workspaceId: string): Promise<UnreadCount[]> => {
   const response = await api.get(`/workspaces/${workspaceId}/unread`);
+
   return response.data.data;
 };
 
@@ -32,8 +46,6 @@ export const createWorkspaceInvitation = async ({
   workspaceId: string;
   userEmail: string;
 }) => {
-  console.log("workspaceId:", workspaceId);
-
   const response = await api.post(`/workspaces/${workspaceId}/invitations`, { userEmail });
 
   return response.data.data;
@@ -41,6 +53,7 @@ export const createWorkspaceInvitation = async ({
 
 export const getWorkspaceInvitations = async (): Promise<WorkspaceInvitation[]> => {
   const response = await api.get("/workspaces/invitations");
+
   return response.data.data;
 };
 
@@ -55,5 +68,5 @@ export const acceptWorkspaceInvitation = async (
 export const declineWorkspaceInvitation = async (invitationId: string) => {
   const response = await api.post(`/workspaces/invitations/${invitationId}/decline`);
 
-  return response.data;
+  return response.data.data;
 };

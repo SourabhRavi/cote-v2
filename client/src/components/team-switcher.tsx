@@ -16,7 +16,9 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { CreateWorkspaceDialog } from "@/components/workspaces/create-workspace-dialog.tsx";
 import { ChevronsUpDownIcon, PlusIcon } from "lucide-react";
+import { useState } from "react";
 
 type Workspace = {
   id: string;
@@ -39,6 +41,8 @@ export function TeamSwitcher({
   isError,
 }: TeamSwitcherProps) {
   const { isMobile } = useSidebar();
+
+  const [createWorkspaceOpen, setCreateWorkspaceOpen] = useState(false);
 
   const activeWorkspace = workspaces.find((workspace) => workspace.id === activeWorkspaceId);
 
@@ -87,68 +91,75 @@ export function TeamSwitcher({
   }
 
   return (
-    <SidebarMenu>
-      <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            render={
-              <SidebarMenuButton
-                size="lg"
-                className="aria-expanded:bg-sidebar-accent text-sidebar-foreground! relative left-px"
-              />
-            }
-          >
-            <div className="flex relative size-8 shrink-0 items-center justify-center rounded-md bg-sidebar-accent font-semibold uppercase text-card-foreground ring-1 ring-primary/20">
-              {activeWorkspace.name.charAt(0).toUpperCase()}
-            </div>
+    <>
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <SidebarMenuButton
+                  size="lg"
+                  className="relative left-px aria-expanded:bg-sidebar-accent text-sidebar-foreground!"
+                />
+              }
+            >
+              <div className="relative flex size-8 shrink-0 items-center justify-center rounded-md bg-sidebar-accent font-semibold uppercase text-card-foreground ring-1 ring-primary/20">
+                {activeWorkspace.name.charAt(0).toUpperCase()}
+              </div>
 
-            <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium capitalize">{activeWorkspace.name}</span>
-            </div>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-medium capitalize">{activeWorkspace.name}</span>
+              </div>
 
-            <ChevronsUpDownIcon className="ml-auto" />
-          </DropdownMenuTrigger>
+              <ChevronsUpDownIcon className="ml-auto" />
+            </DropdownMenuTrigger>
 
-          <DropdownMenuContent
-            className="w-(--radix-popper-anchor-width) min-w-56 rounded-lg"
-            align="start"
-            side={isMobile ? "bottom" : "right"}
-            sideOffset={4}
-          >
-            <DropdownMenuGroup>
-              <DropdownMenuLabel className="text-xs text-muted-foreground">
-                Workspaces
-              </DropdownMenuLabel>
+            <DropdownMenuContent
+              className="w-(--radix-popper-anchor-width) min-w-56 rounded-lg"
+              align="start"
+              side={isMobile ? "bottom" : "right"}
+              sideOffset={4}
+            >
+              <DropdownMenuGroup>
+                <DropdownMenuLabel className="text-xs text-muted-foreground">
+                  Workspaces
+                </DropdownMenuLabel>
 
-              {workspaces.map((workspace) => (
+                {workspaces.map((workspace) => (
+                  <DropdownMenuItem
+                    key={workspace.id}
+                    onClick={() => onWorkspaceChange(workspace.id)}
+                    className="gap-2 p-2 capitalize"
+                  >
+                    <div className="flex size-6 items-center justify-center rounded-sm bg-sidebar-accent font-semibold uppercase text-card-foreground">
+                      {workspace.name.charAt(0).toUpperCase()}
+                    </div>
+
+                    <span>{workspace.name}</span>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuGroup>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuGroup>
                 <DropdownMenuItem
-                  key={workspace.id}
-                  onClick={() => onWorkspaceChange(workspace.id)}
-                  className="gap-2 p-2 capitalize"
+                  className="gap-2 p-2"
+                  onClick={() => setCreateWorkspaceOpen(true)}
                 >
-                  <div className="flex size-6 items-center justify-center rounded-sm bg-sidebar-accent font-semibold uppercase text-card-foreground">
-                    {workspace.name.charAt(0).toUpperCase()}
+                  <div className="flex size-6 items-center justify-center rounded-md border">
+                    <PlusIcon className="size-4" />
                   </div>
 
-                  <span>{workspace.name}</span>
+                  <span className="font-medium text-muted-foreground">Add workspace</span>
                 </DropdownMenuItem>
-              ))}
-            </DropdownMenuGroup>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </SidebarMenuItem>
+      </SidebarMenu>
 
-            <DropdownMenuSeparator />
-
-            <DropdownMenuGroup>
-              <DropdownMenuItem className="gap-2 p-2">
-                <div className="flex size-6 items-center justify-center rounded-md border">
-                  <PlusIcon className="size-4" />
-                </div>
-
-                <span className="font-medium text-muted-foreground">Add workspace</span>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </SidebarMenuItem>
-    </SidebarMenu>
+      <CreateWorkspaceDialog open={createWorkspaceOpen} onOpenChange={setCreateWorkspaceOpen} />
+    </>
   );
 }

@@ -7,12 +7,14 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+
 import {
   useAcceptWorkspaceInvitation,
   useDeclineWorkspaceInvitation,
   useWorkspaceInvitations,
   useWorkspaces,
 } from "@/hooks/use-workspaces.ts";
+import { CreateWorkspaceDialog } from "@/components/workspaces/create-workspace-dialog.tsx";
 
 type Workspace = {
   id: string;
@@ -32,7 +34,9 @@ type WorkspaceInvitation = {
 
 const WorkspaceSelectionPage = () => {
   const navigate = useNavigate();
+
   const [search, setSearch] = useState("");
+  const [createWorkspaceOpen, setCreateWorkspaceOpen] = useState(false);
 
   const {
     data: workspaces = [],
@@ -96,6 +100,16 @@ const WorkspaceSelectionPage = () => {
           <p className="mt-2 text-sm text-muted-foreground">Select a workspace to continue.</p>
         </div>
 
+        {/* Create Workspace */}
+        <CreateWorkspaceDialog open={createWorkspaceOpen} onOpenChange={setCreateWorkspaceOpen} />
+        <Button
+          variant="outline"
+          className="mb-3 h-10 w-full text-xs"
+          onClick={() => setCreateWorkspaceOpen(true)}
+        >
+          Create workspace
+        </Button>
+
         {/* Search */}
         <div className="h-10 shrink-0">
           <div className="relative">
@@ -146,7 +160,7 @@ const WorkspaceSelectionPage = () => {
                     key={workspace.id}
                     variant="outline"
                     onClick={() => handleWorkspaceSelect(workspace.id)}
-                    className="h-14 shrink-0 w-full justify-between bg-transparent px-4 text-xs font-normal hover:bg-sidebar-accent"
+                    className="h-14 w-full shrink-0 justify-between bg-transparent px-4 text-xs font-normal hover:bg-sidebar-accent"
                   >
                     <span className="truncate font-medium">{workspace.name}</span>
 

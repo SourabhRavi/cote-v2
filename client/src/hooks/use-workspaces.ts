@@ -1,17 +1,36 @@
 import {
+  acceptWorkspaceInvitation,
+  createWorkspace,
   createWorkspaceInvitation,
   declineWorkspaceInvitation,
   getWorkspaceInvitations,
   getWorkspaceUnreadCounts,
   getWorkspaces,
-  acceptWorkspaceInvitation,
 } from "@/services/workspace.service.ts";
-import { useMutation, useQuery } from "@tanstack/react-query";
+
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useWorkspaces = () => {
   return useQuery({
     queryKey: ["workspaces"],
     queryFn: getWorkspaces,
+  });
+};
+
+export const useCreateWorkspace = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ workspaceName }: { workspaceName: string }) =>
+      createWorkspace({
+        workspaceName,
+      }),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["workspaces"],
+      });
+    },
   });
 };
 
