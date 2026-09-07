@@ -3,6 +3,7 @@ export type Message = {
   content: string | null;
   createdAt: string;
   channelId: string;
+  deletedAt: string | null;
   author: {
     id: string;
     name: string;

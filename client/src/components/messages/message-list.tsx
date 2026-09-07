@@ -8,7 +8,7 @@ import { socket } from "@/lib/socket.ts";
 import type { Channel } from "@/types/channel.types.ts";
 import type { Message, MessageResponse } from "@/types/message.types.ts";
 import { useQueryClient, type InfiniteData } from "@tanstack/react-query";
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
 export const MessageList = ({
   channel,
@@ -17,8 +17,8 @@ export const MessageList = ({
   channel: Channel;
   onlineUsers: string[];
 }) => {
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLElement>(null);
+  const shouldScrollToBottomRef = useRef(false);
 
   const { data, isPending, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetMessages(channel.id);
@@ -31,12 +31,28 @@ export const MessageList = ({
   // socket events
   const queryClient = useQueryClient();
 
+  // scroll to bottom when channel is opened
+  useLayoutEffect(() => {
+    const container = messagesContainerRef.current;
+
+    if (!container || !messages?.length) return;
+
+    requestAnimationFrame(() => {
+      container.scrollTo({
+        top: container.scrollHeight + 10000,
+        behavior: "smooth",
+      });
+    });
+  }, [channel.id, messages?.length]);
+
   // update messages when new message arrives
   useEffect(() => {
     // join room:channelId
     socket.emit(SOCKET_EVENTS.CHANNEL_JOIN, channel.id);
 
     const handleNewMessage = (newMessage: Message) => {
+      shouldScrollToBottomRef.current = true;
+
       queryClient.setQueryData<InfiniteData<MessageResponse, string>>(
         ["get-messages", channel.id],
         (oldMessagesData) => {
@@ -127,6 +143,24 @@ export const MessageList = ({
     };
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
+  // scroll when new message
+  useEffect(() => {
+    if (!shouldScrollToBottomRef.current) return;
+
+    shouldScrollToBottomRef.current = false;
+
+    const container = messagesContainerRef.current;
+
+    if (!container) return;
+
+    requestAnimationFrame(() => {
+      container?.scrollTo({
+        top: container.scrollHeight,
+        behavior: "smooth",
+      });
+    });
+  }, [messages]);
+
   if (isPending) {
     return (
       <main className="min-h-0 flex-1 overflow-y-auto p-4 md:p-5 scrollbar-none">
@@ -186,7 +220,6 @@ export const MessageList = ({
             <MessageItem key={message.id} message={message} onlineUsers={onlineUsers} />
           ))}
         </div>
-        <div ref={messagesEndRef} />
       </main>
     </>
   );

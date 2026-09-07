@@ -137,8 +137,10 @@ export const MessageItem = ({ message, onlineUsers = [] }: MessageItemProps) => 
             </div>
           </div>
         ) : (
-          <p className="min-w-0 text-sm leading-normal text-foreground wrap-break-word">
-            {message.content}
+          <p
+            className={`min-w-0 text-sm leading-normal text-foreground wrap-break-word ${message.deletedAt ? "text-muted-foreground/80 italic" : ""}`}
+          >
+            {message.deletedAt ? "Message deleted" : message.content}
           </p>
         )}
 
