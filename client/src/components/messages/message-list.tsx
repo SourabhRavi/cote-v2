@@ -33,17 +33,14 @@ export const MessageList = ({
 
   // scroll to bottom when channel is opened
   useLayoutEffect(() => {
+    if (isPending) return;
+
     const container = messagesContainerRef.current;
 
     if (!container) return;
 
-    requestAnimationFrame(() => {
-      container.scrollTo({
-        top: container.scrollHeight + 10000,
-        behavior: "smooth",
-      });
-    });
-  }, [channel.id]);
+    container.scrollTop = container.scrollHeight;
+  }, [channel.id, isPending]);
 
   // update messages when new message arrives
   useEffect(() => {
