@@ -35,7 +35,7 @@ export const MessageList = ({
   useLayoutEffect(() => {
     const container = messagesContainerRef.current;
 
-    if (!container || !messages?.length) return;
+    if (!container) return;
 
     requestAnimationFrame(() => {
       container.scrollTo({
@@ -43,7 +43,7 @@ export const MessageList = ({
         behavior: "smooth",
       });
     });
-  }, [channel.id, messages?.length]);
+  }, [channel.id]);
 
   // update messages when new message arrives
   useEffect(() => {
