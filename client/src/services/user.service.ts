@@ -5,3 +5,7 @@ export const getUser = async () => {
 
   return response.data.data;
 };
+
+export const logout = async () => {
+  await api.post("/auth/logout");
+};

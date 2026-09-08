@@ -17,7 +17,10 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useLogout } from "@/hooks/use-user.ts";
+import { useQueryClient } from "@tanstack/react-query";
 import { ChevronsUpDownIcon, LogOutIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 type User = {
   name: string;
@@ -35,6 +38,19 @@ export function NavUser({
   isError?: boolean;
 }) {
   const { isMobile } = useSidebar();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const { mutate: logout, isPending: isLogoutPending } = useLogout();
+
+  const handleLogout = () => {
+    logout(undefined, {
+      onSuccess: () => {
+        queryClient.removeQueries({ queryKey: ["user"] });
+        navigate("/login", { replace: true });
+      },
+    });
+  };
 
   if (isLoading) {
     return (
@@ -123,23 +139,9 @@ export function NavUser({
 
             <DropdownMenuSeparator />
 
-            {/* <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheckIcon />
-                Account
-              </DropdownMenuItem>
-
-              <DropdownMenuItem>
-                <BellIcon />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-
-            <DropdownMenuSeparator /> */}
-
-            <DropdownMenuItem>
+            <DropdownMenuItem disabled={isLogoutPending} onClick={handleLogout}>
               <LogOutIcon />
-              Log out
+              {isLogoutPending ? "Logging out..." : "Log out"}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

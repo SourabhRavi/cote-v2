@@ -44,7 +44,7 @@ export const ChannelContent = ({
             <Separator className="inset-0 h-px w-full bg-sidebar-border" />
           </div>
 
-          <div className="flex flex-col gap-6 p-4 md:p-5">
+          <div className="flex flex-col gap-6 py-4 md:py-5">
             {[1, 2, 3, 4].map((item) => (
               <div key={item} className="flex gap-3">
                 <Skeleton className="size-9 shrink-0 rounded-full" />
