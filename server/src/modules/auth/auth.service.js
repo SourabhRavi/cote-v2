@@ -46,9 +46,9 @@ export const findOrCreateUserByGoogleId = async (payload) => {
 export const deleteSession = async (token) => {
   const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
 
-  const deleted = await db.orm.public.Session.delete({
+  const deleted = await db.orm.public.Session.where({
     tokenHash: tokenHash,
-  });
+  }).delete();
 
   return deleted;
 };
