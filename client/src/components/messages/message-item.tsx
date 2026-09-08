@@ -5,6 +5,8 @@ import { useDeleteMessage, useUpdateMessage } from "@/hooks/use-messages.ts";
 import type { Message } from "@/types/message.types.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
+import { Spinner } from "@/components/ui/spinner.tsx";
+import { useUser } from "@/hooks/use-user.ts";
 
 type MessageItemProps = {
   message: Message;
@@ -13,12 +15,14 @@ type MessageItemProps = {
 
 export const MessageItem = ({ message, onlineUsers = [] }: MessageItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
   const [content, setContent] = useState(message.content ?? "");
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const { mutate: updateMessage, isPending: isUpdatePending } = useUpdateMessage();
-  const { mutate: deleteMessage } = useDeleteMessage();
+  const { mutate: deleteMessage, isPending: isDeletePending } = useDeleteMessage();
+  const { data: user } = useUser();
 
   // Check whether the message author's user ID is currently online.
   const isAuthorOnline = onlineUsers ? onlineUsers.includes(message.author.id) : false;
@@ -29,9 +33,16 @@ export const MessageItem = ({ message, onlineUsers = [] }: MessageItemProps) => 
   };
 
   const handleDelete = () => {
-    deleteMessage({
-      messageId: message.id,
-    });
+    deleteMessage(
+      {
+        messageId: message.id,
+      },
+      {
+        onSuccess: () => {
+          setIsMoreActionsOpen(false);
+        },
+      },
+    );
   };
 
   const handleCancel = () => {
@@ -71,7 +82,9 @@ export const MessageItem = ({ message, onlineUsers = [] }: MessageItemProps) => 
   }, [isEditing]);
 
   return (
-    <div className="group relative flex items-start gap-3 py-2.5">
+    <div
+      className={`group relative flex items-start gap-3 p-2.5 rounded-md ${message.author.id === user.id && !message.deletedAt ? "hover:bg-muted-foreground/5" : ""}`}
+    >
       {/* Avatar + online status */}
       <div className="relative size-9 shrink-0">
         <div className="size-9 overflow-hidden rounded-[18px]">
@@ -144,9 +157,9 @@ export const MessageItem = ({ message, onlineUsers = [] }: MessageItemProps) => 
           </p>
         )}
 
-        {!isEditing && (
-          <div className="absolute top-1 right-2 opacity-0 transition-opacity group-hover:opacity-100">
-            <Popover>
+        {!isEditing && !message.deletedAt && message.author.id === user.id && (
+          <div className="absolute top-1 right-2 opacity-100 md:opacity-0 md:transition-opacity md:group-hover:opacity-100">
+            <Popover open={isMoreActionsOpen} onOpenChange={setIsMoreActionsOpen}>
               <PopoverTrigger
                 render={
                   <Button variant="ghost" size="icon-sm" className="size-7">
@@ -173,8 +186,12 @@ export const MessageItem = ({ message, onlineUsers = [] }: MessageItemProps) => 
                   className="w-full justify-start gap-2"
                   onClick={handleDelete}
                 >
-                  <Pencil className="size-3.5" />
-                  Delete
+                  {isDeletePending ? (
+                    <Spinner className="size-3.5" />
+                  ) : (
+                    <Pencil className="size-3.5" />
+                  )}
+                  {isDeletePending ? "Deleting..." : "Delete"}
                 </Button>
               </PopoverContent>
             </Popover>

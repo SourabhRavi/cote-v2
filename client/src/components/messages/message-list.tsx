@@ -160,7 +160,7 @@ export const MessageList = ({
 
   if (isPending) {
     return (
-      <main className="min-h-0 flex-1 overflow-y-auto p-4 md:p-5 scrollbar-none">
+      <main className="min-h-0 flex-1 overflow-y-auto py-2.5-4 md:py-5 px-0 scrollbar-none">
         <div className="flex flex-col gap-6">
           {[1, 2, 3, 4].map((item) => (
             <div key={item} className="flex gap-3">
@@ -184,7 +184,7 @@ export const MessageList = ({
 
   if (isError) {
     return (
-      <main className="min-h-0 flex-1 overflow-y-auto p-4 md:p-5 scrollbar-none">
+      <main className="min-h-0 flex-1 overflow-y-auto py-2.5-4 md:py-5 px-0 scrollbar-none">
         <p>Failed to load messages.</p>
       </main>
     );
@@ -192,7 +192,7 @@ export const MessageList = ({
 
   if (!messages) {
     return (
-      <main className="min-h-0 flex-1 overflow-y-auto p-4 md:p-5 scrollbar-none">
+      <main className="min-h-0 flex-1 overflow-y-auto py-2.5-4 md:py-5 px-0 scrollbar-none">
         <EmptyChannel channelName={channel.name} />
       </main>
     );
@@ -201,7 +201,7 @@ export const MessageList = ({
   return (
     <>
       <main
-        className="min-h-0 flex-1 overflow-y-auto p-4 md:p-5 scrollbar-none"
+        className="min-h-0 flex-1 overflow-y-auto py-2.5-4 md:py-5 px-0 scrollbar-none"
         ref={messagesContainerRef}
       >
         <div className="flex flex-col">
