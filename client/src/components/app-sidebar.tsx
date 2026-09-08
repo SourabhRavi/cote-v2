@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { Hash, Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -12,7 +12,11 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroupLabel,
   SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
 
@@ -105,11 +109,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         />
       </SidebarHeader>
 
-      <SidebarContent className="px-2">
-        <div className="mb-2 flex items-center justify-between px-2">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+      <SidebarContent className="px-2 mt-5">
+        <div className="flex items-center justify-between">
+          <SidebarGroupLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Channels
-          </p>
+          </SidebarGroupLabel>
 
           {currentWorkspaceId && (
             <Dialog open={createChannelOpen} onOpenChange={setCreateChannelOpen}>
@@ -155,6 +159,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </DialogContent>
             </Dialog>
           )}
+        </div>
+
+        {/* Collapsed: show only the section icon */}
+        <div className="hidden group-data-[state=collapsed]:block">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton size="sm" tooltip="Channels" className="justify-center">
+                <Hash className="size-4" />
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
         </div>
 
         <NavMain

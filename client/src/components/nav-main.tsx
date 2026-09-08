@@ -1,10 +1,7 @@
 "use client";
 
-import { Hash } from "lucide-react";
-
 import {
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -28,18 +25,7 @@ export function NavMain({
   return (
     <SidebarGroup className="flex min-h-0 flex-1 flex-col px-0">
       {/* Section heading */}
-      <SidebarGroupLabel className="shrink-0 px-3 text-xs uppercase">Channels</SidebarGroupLabel>
-
-      {/* Collapsed: show only the section icon */}
-      <div className="hidden group-data-[state=collapsed]:block">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="sm" tooltip="Channels" className="justify-center">
-              <Hash className="size-4" />
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </div>
+      {/* <SidebarGroupLabel className="shrink-0 px-3 text-xs uppercase">Channels</SidebarGroupLabel> */}
 
       {/* Expanded: show the actual channel list */}
       <div className="min-h-0 flex-1 overflow-y-auto scroll-fade scrollbar-none group-data-[state=collapsed]:hidden">

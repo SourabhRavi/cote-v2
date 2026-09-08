@@ -63,7 +63,7 @@ export function InviteWorkspaceMemberDialog({ workspaceId }: InviteWorkspaceMemb
   const errorMessage = error instanceof Error ? error.message : "Failed to send invitation.";
 
   return (
-    <SidebarMenu className="px-2">
+    <SidebarMenu className="p-2">
       <SidebarMenuItem>
         <Dialog open={open} onOpenChange={handleOpenChange}>
           <DialogTrigger render={<SidebarMenuButton tooltip="Invite member" />}>
