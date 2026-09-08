@@ -168,4 +168,8 @@
   html {
     @apply font-sans;
   }
+
+  input {
+    @apply focus-within:ring-0!;
+  }
 }

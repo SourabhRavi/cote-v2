@@ -80,7 +80,7 @@ export function InviteWorkspaceMemberDialog({ workspaceId }: InviteWorkspaceMemb
               </DialogDescription>
             </DialogHeader>
 
-            <div className="space-y-2">
+            <div className="flex flex-col gap-y-1">
               <label htmlFor="workspace-member-email" className="text-sm font-medium">
                 Email address
               </label>
@@ -99,7 +99,6 @@ export function InviteWorkspaceMemberDialog({ workspaceId }: InviteWorkspaceMemb
                 }}
                 disabled={isPending}
                 autoFocus
-                className="focus-visible:ring-0! focus-visible:ring-transparent! border-none"
               />
 
               {isError && <p className="text-sm text-destructive">{errorMessage}</p>}
