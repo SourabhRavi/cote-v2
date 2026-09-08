@@ -8,7 +8,7 @@ The application combines authenticated workspaces, role-based membership, channe
 
 **Live Demo:** [cote.chitua.site](https://cote.chitua.site)
 
-<p align="center"> <img src="./client/public/github-banner.png" alt="Cote - Communicate. Collaborate" width="100%" /> </p>
+<p align="center"> <img src="./client/public/og-image.png" alt="Cote - Communicate. Collaborate" width="100%" /> </p>
 
 ---
 
