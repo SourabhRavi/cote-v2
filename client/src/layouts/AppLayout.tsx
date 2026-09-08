@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar";
+import { ThemeProvider } from "@/components/common/theme-provider.tsx";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { SOCKET_EVENTS } from "@/lib/socket-events.ts";
 import { socket } from "@/lib/socket.ts";
@@ -37,13 +38,15 @@ const AppLayout = () => {
   }, []);
 
   return (
-    <SidebarProvider className="h-svh min-h-0">
-      <AppSidebar />
+    <ThemeProvider defaultTheme="light">
+      <SidebarProvider className="h-svh min-h-0">
+        <AppSidebar />
 
-      <SidebarInset className="min-h-0 overflow-hidden">
-        <Outlet context={{ onlineUsers }} />
-      </SidebarInset>
-    </SidebarProvider>
+        <SidebarInset className="min-h-0 overflow-hidden">
+          <Outlet context={{ onlineUsers }} />
+        </SidebarInset>
+      </SidebarProvider>
+    </ThemeProvider>
   );
 };
 

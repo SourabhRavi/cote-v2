@@ -1,3 +1,4 @@
+import { AuthLoading } from "@/components/auth/auth-loading.tsx";
 import { useUser } from "@/hooks/use-user.ts";
 import { Navigate, Outlet } from "react-router-dom";
 
@@ -5,7 +6,7 @@ const ProtectedRoute = () => {
   const { isPending, isError } = useUser();
 
   if (isPending) {
-    return null;
+    return <AuthLoading />;
   }
 
   if (isError) {

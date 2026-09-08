@@ -54,6 +54,8 @@
 
 :root {
   --background: #ffffff;
+  --foreground: #1c1b20;
+
   --primary: #6267b5;
   --primary-foreground: #f8f8fc;
 
@@ -64,9 +66,6 @@
 
   --popover: #ffffff;
   --popover-foreground: #1c1b20;
-
-  --primary: #6267b5;
-  --primary-foreground: #f8f8fc;
 
   --secondary: #f3f3f6;
   --secondary-foreground: #66666f;
@@ -81,7 +80,7 @@
 
   --border: #e8e8ec;
   --input: #e8e8ec;
-  /* --ring: #6267b5; */
+  --ring: #6267b5;
 
   --chart-1: #6267b5;
   --chart-2: #8589d4;
@@ -108,8 +107,10 @@
 
 .dark {
   --background: #191a1f;
+  --foreground: #f5f5f7;
+
   --primary: #8589d4;
-  --primary-foreground: #141519;
+  --primary-foreground: #17181d;
 
   --page: #141519;
 
@@ -118,9 +119,6 @@
 
   --popover: #1c1d22;
   --popover-foreground: #f5f5f7;
-
-  --primary: #8589d4;
-  --primary-foreground: #17181d;
 
   --secondary: #25262c;
   --secondary-foreground: #a7a7b0;
@@ -135,7 +133,7 @@
 
   --border: #2b2c32;
   --input: #303139;
-  /* --ring: #8589d4; */
+  --ring: #8589d4;
 
   --chart-1: #8589d4;
   --chart-2: #aeb1e8;

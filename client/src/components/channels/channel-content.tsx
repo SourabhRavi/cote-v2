@@ -7,6 +7,7 @@ import { ChannelSearch } from "@/components/channels/channel-search.tsx";
 
 import { useChannel, useJoinChannel } from "@/hooks/use-channels.ts";
 import { Separator } from "@base-ui/react";
+import ThemeToggle from "@/components/common/theme-toggle.tsx";
 
 export const ChannelContent = ({
   channelId,
@@ -127,7 +128,10 @@ export const ChannelContent = ({
           </div>
         </div>
 
-        <ChannelSearch workspaceId={channel.workspaceId} />
+        <div className="flex items-center gap-3">
+          <ChannelSearch workspaceId={channel.workspaceId} />
+          <ThemeToggle />
+        </div>
       </header>
 
       <div className="w-full px-4">
