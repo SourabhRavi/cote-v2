@@ -190,7 +190,7 @@ export const MessageList = ({
     );
   }
 
-  if (!messages) {
+  if (!messages?.length) {
     return (
       <main className="min-h-0 flex-1 overflow-y-auto py-2.5-4 md:py-5 px-0 scrollbar-none">
         <EmptyChannel channelName={channel.name} />

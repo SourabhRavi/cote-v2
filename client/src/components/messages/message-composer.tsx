@@ -7,7 +7,6 @@ import { socket } from "@/lib/socket.ts";
 import type { Channel } from "@/types/channel.types.ts";
 import type { TypingUser } from "@/types/user.types.ts";
 import { debounce } from "@/utils/debouce.ts";
-import { AtSign, Paperclip, SmilePlus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const MessageComposer = ({ channel }: { channel: Channel }) => {
@@ -90,8 +89,8 @@ const MessageComposer = ({ channel }: { channel: Channel }) => {
             onKeyDown={(e) => handleMessageKeyDown(e, handleMessageSend)}
           />
 
-          <div className="mt-2 flex items-center justify-between">
-            <div className="flex items-center gap-2 text-muted-foreground">
+          <div className="mt-2 flex items-center justify-end">
+            {/* <div className="flex items-center gap-2 text-muted-foreground">
               <button
                 type="button"
                 className="rounded-md p-1 transition-colors hover:bg-accent hover:text-accent-foreground"
@@ -112,12 +111,12 @@ const MessageComposer = ({ channel }: { channel: Channel }) => {
               >
                 <AtSign className="size-4.5" />
               </button>
-            </div>
+            </div> */}
 
             <Button
               onClick={handleMessageSend}
               variant="default"
-              className="w-20 rounded-md"
+              className="w-25 rounded-md"
               disabled={!message.length || isPending}
             >
               Send
