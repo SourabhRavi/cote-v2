@@ -1,6 +1,6 @@
 "use client";
 
-import { Hash, Plus } from "lucide-react";
+import { Hash, MailPlus, Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -95,6 +95,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     );
   };
 
+  const handleInvitesClick = () => {
+    navigate("/");
+  };
+
   const { data: user, isPending: userIsPending, isError: userIsError } = useUser();
 
   return (
@@ -182,6 +186,30 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
 
       {currentWorkspaceId && <InviteWorkspaceMemberDialog workspaceId={currentWorkspaceId} />}
+
+      {currentWorkspaceId && (
+        <SidebarMenu className="flex w-full min-w-0 flex-col gap-0 px-2 pb-2">
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={handleInvitesClick}
+              size="sm"
+              className="
+                      h-8
+                      font-normal
+                      text-sm
+                      data-active:font-semibold
+                      data-active:text-primary
+                      data-active:hover:text-primary
+                      data-active:bg-primary/10
+                      data-active:hover:bg-primary/10
+                    "
+            >
+              <MailPlus />
+              My workspace invites
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      )}
 
       <SidebarFooter className="border-t px-2 py-2">
         <NavUser user={user} isLoading={userIsPending} isError={userIsError} />

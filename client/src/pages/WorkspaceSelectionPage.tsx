@@ -130,7 +130,7 @@ const WorkspaceSelectionPage = () => {
             <h2 className="text-xs font-medium text-muted-foreground">Your Workspaces</h2>
           </div>
 
-          <div className="scroll-fade min-h-0 flex-1 overflow-y-auto scrollbar-none">
+          <div className="scroll-fade-12 min-h-0 flex-1 overflow-y-auto scrollbar-none space-y-2">
             {workspacesPending ? (
               <div className="flex flex-col gap-2">
                 {[1, 2, 3].map((item) => (
@@ -180,11 +180,13 @@ const WorkspaceSelectionPage = () => {
             <h2 className="text-xs font-medium text-muted-foreground">Invitations</h2>
 
             {!invitationsPending && invitations.length > 0 && (
-              <span className="text-xs text-muted-foreground/50">{invitations.length}</span>
+              <span className="text-xs font-semibold text-white bg-primary rounded-full w-5 h-5 flex items-center justify-center">
+                {invitations.length}
+              </span>
             )}
           </div>
 
-          <div className="scroll-fade min-h-0 flex-1 overflow-y-auto scrollbar-none">
+          <div className="scroll-fade-12 min-h-0 flex-1 overflow-y-auto scrollbar-none space-y-2">
             {invitationsPending ? (
               <div className="flex flex-col gap-2">
                 {[1, 2].map((item) => (

@@ -28,7 +28,7 @@ export function NavMain({
       {/* <SidebarGroupLabel className="shrink-0 px-3 text-xs uppercase">Channels</SidebarGroupLabel> */}
 
       {/* Expanded: show the actual channel list */}
-      <div className="min-h-0 flex-1 overflow-y-auto scroll-fade scrollbar-none group-data-[state=collapsed]:hidden">
+      <div className="min-h-0 flex-1 overflow-y-auto scroll-fade-12 scrollbar-none group-data-[state=collapsed]:hidden">
         <SidebarMenu className="gap-0.5">
           {isLoading ? (
             [1, 2, 3, 4].map((item) => (
