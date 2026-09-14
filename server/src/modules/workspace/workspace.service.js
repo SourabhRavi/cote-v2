@@ -352,7 +352,7 @@ export const acceptWorkspaceInvitation = async ({ userId, invitationId }) => {
     status: "accepted",
   });
 
-  const generalChannel = await db.orm.public.Channel.create({
+  const generalChannel = await db.orm.public.Channel.first({
     workspaceId: invitation.workspaceId,
     name: "general",
   });
