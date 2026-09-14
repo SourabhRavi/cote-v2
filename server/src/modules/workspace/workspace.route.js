@@ -277,7 +277,13 @@ router.post(
     } catch (error) {
       console.error("Failed to create workspace invitation:", error);
 
-      return res.status(500).send("Failed to create workspace invitation.");
+      return res.status(500).send({
+        success: false,
+        message:
+          error instanceof Error
+            ? error.message
+            : "Failed to create workspace invitation",
+      });
     }
   },
 );
