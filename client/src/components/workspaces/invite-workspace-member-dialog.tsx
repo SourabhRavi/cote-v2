@@ -15,6 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import { useCreateWorkspaceInvitation } from "@/hooks/use-workspaces.ts";
+import { toast } from "@/components/ui/toast.tsx";
+import axios from "axios";
 
 type InviteWorkspaceMemberDialogProps = {
   workspaceId: string;
@@ -24,13 +26,7 @@ export function InviteWorkspaceMemberDialog({ workspaceId }: InviteWorkspaceMemb
   const [open, setOpen] = useState(false);
   const [userEmail, setUserEmail] = useState("");
 
-  const {
-    mutate: createInvitation,
-    isPending,
-    isError,
-    error,
-    reset,
-  } = useCreateWorkspaceInvitation();
+  const { mutate: createInvitation, isPending, reset } = useCreateWorkspaceInvitation();
 
   const handleOpenChange = (nextOpen: boolean) => {
     setOpen(nextOpen);
@@ -55,12 +51,29 @@ export function InviteWorkspaceMemberDialog({ workspaceId }: InviteWorkspaceMemb
         onSuccess: () => {
           setUserEmail("");
           setOpen(false);
+          toast.add({
+            type: "success",
+            description: "Member invited.",
+          });
+        },
+        onError: (error) => {
+          if (axios.isAxiosError(error)) {
+            toast.add({
+              type: "error",
+              description: error.response?.data?.message ?? "Failed to sendsss invitation.",
+            });
+
+            return;
+          }
+
+          toast.add({
+            type: "error",
+            description: "Failed to send invitatiossn.",
+          });
         },
       },
     );
   };
-
-  const errorMessage = error instanceof Error ? error.message : "Failed to send invitation.";
 
   return (
     <SidebarMenu className="px-2 pt-2">
@@ -100,8 +113,6 @@ export function InviteWorkspaceMemberDialog({ workspaceId }: InviteWorkspaceMemb
                 disabled={isPending}
                 autoFocus
               />
-
-              {isError && <p className="text-sm text-destructive">{errorMessage}</p>}
             </div>
 
             <DialogFooter>
