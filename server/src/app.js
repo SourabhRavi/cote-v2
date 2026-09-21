@@ -23,13 +23,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.get("/resume", (req, res) => {
-  const resumePath = path.join(__dirname, "public", "resume.pdf");
+  const resumePath = path.join(__dirname, "..", "public", "resume.pdf");
 
-  res.download(resumePath, "Sourabh-Kumar-Ravi-Resume.pdf", (err) => {
+  res.setHeader("Content-Disposition", "inline");
+  res.sendFile(resumePath, (err) => {
     if (err && !res.headersSent) {
       res.status(500).json({
         success: false,
-        message: "Resume could not be downloaded.",
+        message: "Resume could not be opened.",
       });
     }
   });
