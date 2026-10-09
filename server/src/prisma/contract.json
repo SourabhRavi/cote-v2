@@ -154,6 +154,7 @@
               },
               "workspace": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "workspaceId"
@@ -247,6 +248,7 @@
             "relations": {
               "channel": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "channelId"
@@ -262,6 +264,7 @@
               },
               "user": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "userId"
@@ -365,6 +368,7 @@
             "relations": {
               "author": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "authorId"
@@ -380,6 +384,7 @@
               },
               "channel": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "channelId"
@@ -469,6 +474,7 @@
             "relations": {
               "user": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "userId"
@@ -712,6 +718,7 @@
               },
               "createdByUser": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "createdByUserId"
@@ -838,6 +845,7 @@
             "relations": {
               "workspace": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "workspaceId"
@@ -940,6 +948,7 @@
             "relations": {
               "user": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "userId"
@@ -955,6 +964,7 @@
               },
               "workspace": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "workspaceId"
@@ -1007,10 +1017,6 @@
               "columns": {
                 "createdAt": {
                   "codecId": "pg/timestamptz-string@1",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
@@ -1089,10 +1095,6 @@
                 },
                 "createdAt": {
                   "codecId": "pg/timestamptz-string@1",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
@@ -1218,10 +1220,6 @@
                 },
                 "createdAt": {
                   "codecId": "pg/timestamptz-string@1",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
@@ -1309,10 +1307,6 @@
               "columns": {
                 "createdAt": {
                   "codecId": "pg/timestamptz-string@1",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
@@ -1394,10 +1388,6 @@
                 },
                 "createdAt": {
                   "codecId": "pg/timestamptz-string@1",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
@@ -1454,10 +1444,6 @@
               "columns": {
                 "createdAt": {
                   "codecId": "pg/timestamptz-string@1",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
@@ -1535,10 +1521,6 @@
               "columns": {
                 "createdAt": {
                   "codecId": "pg/timestamptz-string@1",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
@@ -1640,10 +1622,6 @@
               "columns": {
                 "createdAt": {
                   "codecId": "pg/timestamptz-string@1",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
@@ -1786,14 +1764,25 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "5d0df173f8f4cb2c8822de277c900d1cffc803433be294a5e0e4006e1c8666e6"
+    "storageHash": "a28f3727862e8ca521972a214a08c21449c2a26f2a46871da98c329a69d88aeb"
   },
   "execution": {
-    "executionHash": "d8569c817ac57c05d10c22f3f774edaedadaf12e6126449fd3bbfba8cbfaf829",
+    "executionHash": "bdf2314c15e71e4e63b278d4af1014d933fc2adbf541e724f7ea074b1d5b3406",
     "mutations": {
       "defaults": [
         {
           "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "createdAt",
+            "namespace": "public",
+            "table": "Channel"
+          }
+        },
+        {
+          "onCreate": {
             "id": "uuidv7",
             "kind": "generator"
           },
@@ -1816,6 +1805,17 @@
             "column": "updatedAt",
             "namespace": "public",
             "table": "Channel"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "createdAt",
+            "namespace": "public",
+            "table": "ChannelMember"
           }
         },
         {
@@ -1846,6 +1846,17 @@
         },
         {
           "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "createdAt",
+            "namespace": "public",
+            "table": "Message"
+          }
+        },
+        {
+          "onCreate": {
             "id": "uuidv7",
             "kind": "generator"
           },
@@ -1868,6 +1879,17 @@
             "column": "updatedAt",
             "namespace": "public",
             "table": "Message"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "createdAt",
+            "namespace": "public",
+            "table": "Session"
           }
         },
         {
@@ -1883,6 +1905,17 @@
         },
         {
           "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "createdAt",
+            "namespace": "public",
+            "table": "User"
+          }
+        },
+        {
+          "onCreate": {
             "id": "uuidv7",
             "kind": "generator"
           },
@@ -1905,6 +1938,17 @@
             "column": "updatedAt",
             "namespace": "public",
             "table": "User"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "createdAt",
+            "namespace": "public",
+            "table": "Workspace"
           }
         },
         {
@@ -1935,6 +1979,17 @@
         },
         {
           "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "createdAt",
+            "namespace": "public",
+            "table": "WorkspaceInvitation"
+          }
+        },
+        {
+          "onCreate": {
             "id": "uuidv7",
             "kind": "generator"
           },
@@ -1957,6 +2012,17 @@
             "column": "updatedAt",
             "namespace": "public",
             "table": "WorkspaceInvitation"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "createdAt",
+            "namespace": "public",
+            "table": "WorkspaceMember"
           }
         },
         {
@@ -2001,6 +2067,8 @@
       "checkConstraint": true,
       "defaultInInsert": true,
       "enums": true,
+      "insertOnConflictSkip": true,
+      "insertOnConflictWithoutTarget": true,
       "lateral": true,
       "returning": true,
       "scalarList": true
