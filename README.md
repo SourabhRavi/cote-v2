@@ -6,7 +6,7 @@
 
 The application combines authenticated workspaces, role-based membership, channel discovery, persistent messages, unread tracking, cursor-based pagination, typing indicators, and real-time presence and messaging.
 
-**Live Demo:** [cote.chitua.site](https://cote.chitua.site)
+**Live Demo:** [cote.sourabhravi.site](https://cote.sourabhravi.site)
 
 <p align="center"> <img src="./client/public/og-image.png" alt="Cote - Communicate. Collaborate" width="100%" /> </p>
 
