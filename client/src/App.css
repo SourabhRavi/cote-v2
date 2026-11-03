@@ -1165,15 +1165,16 @@
 
 [data-slot="sidebar"][data-collapsible="icon"] .cote-workspace-switcher-trigger,
 [data-slot="sidebar"][data-collapsible="icon"] .cote-user-menu-trigger {
-  display: flex;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  position: relative;
   width: 36px !important;
   min-width: 36px !important;
   max-width: 36px !important;
   height: 36px !important;
   min-height: 36px !important;
   margin-inline: auto !important;
-  align-items: center;
-  justify-content: center;
   gap: 0;
   overflow: visible !important;
   padding: 0 !important;
@@ -1188,14 +1189,29 @@
   background: var(--sidebar-accent);
 }
 
-[data-slot="sidebar"][data-collapsible="icon"] .cote-workspace-switcher-avatar,
+[data-slot="sidebar"][data-collapsible="icon"] .cote-workspace-switcher-avatar {
+  display: grid !important;
+  place-items: center;
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  text-align: center;
+  justify-self: center;
+  align-self: center;
+  transform: none;
+}
+
 [data-slot="sidebar"][data-collapsible="icon"] .cote-user-menu-avatar {
   display: block;
   width: 32px !important;
   min-width: 32px !important;
   height: 32px !important;
-  flex: 0 0 32px;
   margin: 0;
+  justify-self: center;
+  align-self: center;
 }
 
 [data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-content,

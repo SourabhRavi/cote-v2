@@ -77,7 +77,7 @@ export function TeamSwitcher({
                 />
               }
             >
-              <div className="cote-workspace-switcher-avatar flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-sm font-bold uppercase text-primary">
+              <div className="cote-workspace-switcher-avatar grid size-9 shrink-0 place-items-center rounded-xl bg-primary/10 text-sm font-bold uppercase leading-none text-center text-primary">
                 {activeWorkspace.name.charAt(0)}
               </div>
               <div className="cote-workspace-switcher-copy grid min-w-0 flex-1 text-left leading-tight">
