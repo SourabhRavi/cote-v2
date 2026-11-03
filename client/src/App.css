@@ -1255,3 +1255,268 @@
     background-color 160ms ease,
     color 160ms ease !important;
 }
+
+
+/* Refined sign-in surface */
+.cote-auth-page {
+  grid-template-columns: minmax(0, 1.02fr) minmax(500px, .98fr);
+}
+
+.cote-auth-content {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-width: 0;
+  background:
+    radial-gradient(ellipse at 82% 13%, rgb(117 122 205 / 12%), transparent 31rem),
+    radial-gradient(ellipse at 12% 100%, rgb(135 139 211 / 8%), transparent 28rem),
+    linear-gradient(145deg, #fbfbfe 0%, #f6f7fb 54%, #f1f2f8 100%);
+  padding: clamp(36px, 5vw, 76px);
+}
+
+.cote-auth-content::before {
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  width: min(720px, 90%);
+  aspect-ratio: 1;
+  border: 1px solid rgb(98 103 181 / 7%);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 34px rgb(98 103 181 / 2.5%),
+    0 0 0 82px rgb(98 103 181 / 2%),
+    0 0 0 138px rgb(98 103 181 / 1.4%);
+  content: "";
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.cote-auth-ambient {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cote-auth-ambient-orb {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  filter: blur(1px);
+}
+
+.cote-auth-ambient-orb-one {
+  top: 12%;
+  right: 9%;
+  width: 9px;
+  height: 9px;
+  background: #9296df;
+  box-shadow: 0 0 0 7px rgb(146 150 223 / 10%), 0 0 28px rgb(98 103 181 / 22%);
+}
+
+.cote-auth-ambient-orb-two {
+  right: 16%;
+  bottom: 17%;
+  width: 6px;
+  height: 6px;
+  background: #b2b5e6;
+  box-shadow: 0 0 0 6px rgb(146 150 223 / 8%);
+}
+
+.cote-auth-ambient-line {
+  position: absolute;
+  top: 18%;
+  right: 0;
+  width: 22%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(98 103 181 / 16%), transparent);
+  transform: rotate(-28deg);
+}
+
+.cote-auth-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 456px;
+  margin-inline: auto;
+  animation: cote-auth-arrive 620ms cubic-bezier(.2,.75,.25,1) both;
+}
+
+.cote-auth-intro {
+  margin-bottom: 30px;
+}
+
+.cote-auth-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  color: #6c70b9;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: .16em;
+}
+
+.cote-auth-kicker-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #6b70c0;
+  box-shadow: 0 0 0 4px rgb(107 112 192 / 10%);
+}
+
+.cote-auth-heading {
+  color: #20212a;
+  font-family: var(--font-heading);
+  font-size: clamp(38px, 3.4vw, 46px);
+  font-weight: 680;
+  letter-spacing: -.055em;
+  line-height: 1.04;
+}
+
+.cote-auth-heading > span { color: #686dc0; }
+
+.cote-auth-description {
+  max-width: 390px;
+  margin-top: 13px;
+  color: #777b8b;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.cote-login-card {
+  border: 1px solid #e4e6ef;
+  border-radius: 21px;
+  background: rgb(255 255 255 / 88%);
+  padding: 25px;
+  box-shadow:
+    0 22px 58px rgb(39 43 91 / 7%),
+    0 3px 10px rgb(39 43 91 / 3%),
+    inset 0 1px 0 rgb(255 255 255 / 90%);
+  backdrop-filter: blur(16px);
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.cote-login-card:hover {
+  border-color: #daddf0;
+  box-shadow:
+    0 26px 66px rgb(39 43 91 / 9%),
+    0 4px 12px rgb(39 43 91 / 4%),
+    inset 0 1px 0 rgb(255 255 255 / 90%);
+  transform: translateY(-1px);
+}
+
+.cote-google-button {
+  position: relative;
+  justify-content: center;
+  box-shadow: 0 7px 16px rgb(26 28 43 / 13%), inset 0 1px 0 rgb(255 255 255 / 8%);
+  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.cote-google-button:hover {
+  box-shadow: 0 10px 22px rgb(26 28 43 / 18%), inset 0 1px 0 rgb(255 255 255 / 8%);
+  transform: translateY(-1px);
+}
+
+.cote-auth-assurance {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 25px;
+  padding: 0 3px;
+}
+
+.cote-auth-assurance-icon {
+  display: grid;
+  width: 35px;
+  height: 35px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid #e5e7ef;
+  border-radius: 11px;
+  background: rgb(255 255 255 / 72%);
+  color: #7378bb;
+}
+
+.cote-auth-assurance-title {
+  color: #444755;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.cote-auth-assurance-copy {
+  margin-top: 3px;
+  color: #9295a2;
+  font-size: 10px;
+}
+
+.cote-auth-footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 37px;
+  border-top: 1px solid rgb(126 130 174 / 13%);
+  padding: 17px 3px 0;
+  color: #777b8b;
+  font-size: 10px;
+}
+
+.cote-auth-footer-copy { color: #999cab; }
+
+.dark .cote-auth-content {
+  background:
+    radial-gradient(ellipse at 82% 13%, rgb(130 135 220 / 15%), transparent 31rem),
+    radial-gradient(ellipse at 12% 100%, rgb(135 139 211 / 8%), transparent 28rem),
+    linear-gradient(145deg, #20222d 0%, #191b25 54%, #171923 100%);
+}
+
+.dark .cote-auth-heading { color: #f1f1f7; }
+.dark .cote-auth-description,
+.dark .cote-auth-footer,
+.dark .cote-auth-assurance-copy { color: #a0a3b2; }
+.dark .cote-login-card {
+  border-color: #373a4b;
+  background: rgb(30 32 43 / 88%);
+  box-shadow: 0 22px 58px rgb(0 0 0 / 20%);
+}
+.dark .cote-auth-assurance-icon {
+  border-color: #3a3d4e;
+  background: rgb(255 255 255 / 4%);
+  color: #b0b3f1;
+}
+.dark .cote-auth-assurance-title { color: #e0e1ea; }
+.dark .cote-auth-footer { border-top-color: rgb(180 182 220 / 13%); }
+.dark .cote-auth-footer-copy { color: #8d91a3; }
+
+@keyframes cote-auth-arrive {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 1080px) and (min-width: 801px) {
+  .cote-auth-page { grid-template-columns: minmax(0, .95fr) minmax(450px, 1.05fr); }
+  .cote-auth-content { padding-inline: 38px; }
+}
+
+@media (max-width: 800px) {
+  .cote-auth-content {
+    min-height: 100svh;
+    padding: 34px 22px;
+    background:
+      radial-gradient(ellipse at 80% 12%, rgb(117 122 205 / 12%), transparent 28rem),
+      linear-gradient(145deg, #fbfbfe 0%, #f3f4f9 100%);
+  }
+  .cote-auth-card { max-width: 440px; }
+  .cote-auth-intro { margin-bottom: 25px; }
+  .cote-auth-heading { font-size: clamp(36px, 9vw, 42px); }
+  .cote-auth-footer { margin-top: 29px; flex-wrap: wrap; }
+  .cote-auth-content::before { width: 115vw; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cote-auth-card { animation: none; }
+  .cote-login-card,
+  .cote-google-button { transition: none; }
+}

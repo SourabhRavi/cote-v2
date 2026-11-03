@@ -8,18 +8,23 @@ export function LoginForm({
 }: React.ComponentProps<"div"> & { onGoogleLogin: () => void }) {
   return (
     <div className={cn("flex flex-col gap-5", className)} {...props}>
-      <div className="rounded-2xl border border-border bg-card p-5 shadow-[0_12px_34px_rgba(24,27,44,0.05)]">
-        <p className="mb-4 text-[11px] font-medium text-muted-foreground">
-          Continue with your Gmail account.
-        </p>
+      <div className="cote-login-card">
+        <div className="mb-5">
+          <p className="text-[13px] font-semibold tracking-[-0.01em] text-foreground">
+            Continue with Google
+          </p>
+          <p className="mt-1.5 text-[11px] leading-5 text-muted-foreground">
+            Use your Google account to securely access your workspace.
+          </p>
+        </div>
         <Button
           onClick={onGoogleLogin}
-          className="h-12 w-full gap-3 rounded-xl bg-[#20212a] text-[13px] font-semibold text-white shadow-sm hover:bg-[#30313b] dark:bg-[#f4f4f7] dark:text-[#17181e] dark:hover:bg-white"
+          className="cote-google-button h-[52px] w-full gap-3 rounded-xl bg-[#20212a] text-[13px] font-semibold text-white shadow-sm hover:bg-[#30313b] dark:bg-[#f4f4f7] dark:text-[#17181e] dark:hover:bg-white"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
-            className="size-[17px]"
+            className="size-[18px]"
             aria-hidden="true"
           >
             <path
@@ -28,9 +33,10 @@ export function LoginForm({
             />
           </svg>
           Continue with Google
+          <span className="ml-auto text-white/60 dark:text-black/50">→</span>
         </Button>
         <p className="mt-3 text-center text-[10px] leading-5 text-muted-foreground">
-          You’ll be redirected to Google to authenticate securely.
+          No password to remember. No extra steps.
         </p>
       </div>
     </div>

@@ -40,6 +40,12 @@ const LoginPage = () => {
       </section>
 
       <section className="cote-auth-content">
+        <div className="cote-auth-ambient" aria-hidden="true">
+          <span className="cote-auth-ambient-orb cote-auth-ambient-orb-one" />
+          <span className="cote-auth-ambient-orb cote-auth-ambient-orb-two" />
+          <span className="cote-auth-ambient-line" />
+        </div>
+
         <div className="cote-auth-card">
           <div className="mb-8 flex items-center gap-3 md:hidden">
             <div className="cote-logo-tile">
@@ -49,26 +55,38 @@ const LoginPage = () => {
               cote<span className="text-primary">.</span>
             </span>
           </div>
-          <div className="mb-8">
-            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
-              Welcome back
-            </p>
-            <h2 className="font-heading text-[34px] font-semibold tracking-tight text-foreground">
-              Your team is here.
+
+          <div className="cote-auth-intro">
+            <div className="cote-auth-kicker">
+              <span className="cote-auth-kicker-dot" />
+              YOUR WORKSPACE AWAITS
+            </div>
+            <h2 className="cote-auth-heading">
+              Welcome back<span>.</span>
             </h2>
-            <p className="mt-2 text-[13px] leading-6 text-muted-foreground">
-              Sign in to continue where the conversation left off.
+            <p className="cote-auth-description">
+              Pick up where your team left off. Your conversations are just one step away.
             </p>
           </div>
+
           <LoginForm onGoogleLogin={handleGoogleLogin} />
-          <div className="mt-7 flex items-center justify-center gap-2 text-[10px] text-muted-foreground/75">
-            <LockKeyhole className="size-3.5" />
-            Secure sign-in powered by Google
+
+          <div className="cote-auth-assurance">
+            <span className="cote-auth-assurance-icon">
+              <LockKeyhole className="size-4" />
+            </span>
+            <div>
+              <p className="cote-auth-assurance-title">Secure sign-in</p>
+              <p className="cote-auth-assurance-copy">Authentication handled safely by Google</p>
+            </div>
           </div>
-          <div className="mt-12 flex items-center justify-center gap-1 text-[10px] text-muted-foreground/55">
+
+          <div className="cote-auth-footer">
             <span>New to Cote?</span>
-            <span>Sign in with your Google account to get started.</span>
-            <ArrowUpRight className="size-3" />
+            <span className="cote-auth-footer-copy">
+              Continue with Google to get started.
+            </span>
+            <ArrowUpRight className="size-3.5" />
           </div>
         </div>
       </section>
