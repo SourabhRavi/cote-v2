@@ -18,6 +18,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,6 +36,10 @@ import { useWorkspaces } from "@/hooks/use-workspaces.ts";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const navigate = useNavigate();
+  const { isMobile, setOpenMobile } = useSidebar();
+  const closeMobileSidebar = () => {
+    if (isMobile) setOpenMobile(false);
+  };
   const { workspaceId, channelId } = useParams<{ workspaceId: string; channelId: string }>();
   const [createChannelOpen, setCreateChannelOpen] = useState(false);
   const [channelName, setChannelName] = useState("");
@@ -55,9 +60,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { mutate: createChannelMutation, isPending: createChannelIsPending } = useCreateChannel();
   const { data: user, isPending: userIsPending, isError: userIsError } = useUser();
 
-  const handleWorkspaceChange = (nextWorkspaceId: string) => navigate("/" + nextWorkspaceId);
+  const handleWorkspaceChange = (nextWorkspaceId: string) => {
+    closeMobileSidebar();
+    navigate("/" + nextWorkspaceId);
+  };
   const handleChannelChange = (nextChannelId: string) => {
-    if (currentWorkspaceId) navigate("/" + currentWorkspaceId + "/" + nextChannelId);
+    if (!currentWorkspaceId) return;
+    closeMobileSidebar();
+    navigate("/" + currentWorkspaceId + "/" + nextChannelId);
   };
 
   const handleCreateChannel = () => {
@@ -70,6 +80,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         onSuccess: (channel) => {
           setChannelName("");
           setCreateChannelOpen(false);
+          closeMobileSidebar();
           navigate("/" + currentWorkspaceId + "/" + channel.id);
         },
       },
@@ -175,7 +186,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenu className="px-1">
             <SidebarMenuItem>
               <SidebarMenuButton
-                onClick={() => navigate("/")}
+                onClick={() => {
+                  closeMobileSidebar();
+                  navigate("/");
+                }}
                 size="default"
                 tooltip="Workspace invitations"
                 className="cote-sidebar-utility h-9 text-[12px]"
