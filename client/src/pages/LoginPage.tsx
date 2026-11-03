@@ -22,7 +22,8 @@ const LoginPage = () => {
 
         <div className="relative z-10 max-w-xl py-16">
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/80 backdrop-blur">
-            <Sparkles className="size-3.5" /> Better work, together
+            <Sparkles className="size-3.5" />
+            Better work, together
           </div>
           <h1 className="font-heading text-5xl font-semibold leading-[1.04] tracking-tight lg:text-[64px]">
             Make room for <span className="text-[#c8caff]">good work.</span>

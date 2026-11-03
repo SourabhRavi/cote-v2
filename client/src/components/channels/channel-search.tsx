@@ -19,6 +19,7 @@ export const ChannelSearch = ({ workspaceId }: { workspaceId: string }) => {
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
+
   const { data: channels = [], isPending, isError } = useSearchChannels(workspaceId, search);
   const { mutate: joinChannelMutation, isPending: joinChannelIsPending } = useJoinChannel();
 
@@ -34,6 +35,7 @@ export const ChannelSearch = ({ workspaceId }: { workspaceId: string }) => {
 
   const handleJoin = (channelId: string) => {
     if (joinChannelIsPending) return;
+
     joinChannelMutation(channelId, {
       onSuccess: () => {
         setOpen(false);
@@ -43,11 +45,6 @@ export const ChannelSearch = ({ workspaceId }: { workspaceId: string }) => {
     });
   };
 
-  useEffect(() => {
-    const timer = window.setTimeout(() => setSearch(searchInput.trim()), 260);
-    return () => window.clearTimeout(timer);
-  }, [searchInput]);
-
   const handleSelect = (channelId: string, isJoined: boolean) => {
     if (isJoined) {
       setOpen(false);
@@ -55,8 +52,35 @@ export const ChannelSearch = ({ workspaceId }: { workspaceId: string }) => {
       navigate("/" + workspaceId + "/" + channelId);
       return;
     }
+
     handleJoin(channelId);
   };
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setSearch(searchInput.trim()), 250);
+    return () => window.clearTimeout(timer);
+  }, [searchInput]);
+
+  useEffect(() => {
+    const handleShortcut = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const tagName = target?.tagName?.toLowerCase();
+      const isTyping =
+        tagName === "input" ||
+        tagName === "textarea" ||
+        Boolean(target?.isContentEditable);
+
+      if (event.key === "/" && !isTyping && !event.metaKey && !event.ctrlKey && !event.altKey) {
+        event.preventDefault();
+        setOpen(true);
+      }
+
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    window.addEventListener("keydown", handleShortcut);
+    return () => window.removeEventListener("keydown", handleShortcut);
+  }, []);
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -74,7 +98,7 @@ export const ChannelSearch = ({ workspaceId }: { workspaceId: string }) => {
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Find a channel</DialogTitle>
-          <DialogDescription>Search the workspace and join a conversation.</DialogDescription>
+          <DialogDescription>Search this workspace and join a conversation.</DialogDescription>
         </DialogHeader>
 
         <div className="relative mt-2">
@@ -112,7 +136,9 @@ export const ChannelSearch = ({ workspaceId }: { workspaceId: string }) => {
           ) : isPending ? (
             <p className="py-9 text-center text-xs text-muted-foreground">Searching channels…</p>
           ) : isError ? (
-            <p className="py-9 text-center text-xs text-destructive">Couldn’t search channels. Try again.</p>
+            <p className="py-9 text-center text-xs text-destructive">
+              Couldn’t search channels. Try again.
+            </p>
           ) : channels.length === 0 ? (
             <div className="py-9 text-center">
               <p className="text-[13px] font-medium text-foreground">No channels found</p>
