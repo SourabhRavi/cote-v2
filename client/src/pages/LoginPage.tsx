@@ -1,20 +1,23 @@
-import { ArrowUpRight, LockKeyhole, MessageSquareText, Sparkles } from "lucide-react";
+import Logo from "@/assets/cote-logo.svg?react";
+import { ArrowUpRight, LockKeyhole, Sparkles } from "lucide-react";
 import { LoginForm } from "@/components/login-form.tsx";
 import { API_BASE_URL } from "@/config/api.ts";
 
 const LoginPage = () => {
   const handleGoogleLogin = () => {
-    window.location.assign(`${API_BASE_URL}/auth/google`);
+    window.location.assign(API_BASE_URL + "/auth/google");
   };
 
   return (
     <main className="cote-auth-page">
       <section className="cote-auth-aside">
-        <div className="relative z-10 flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-xl border border-white/15 bg-white/10 backdrop-blur">
-            <MessageSquareText className="size-5" />
+        <div className="relative z-10 cote-brand-lockup">
+          <div className="cote-logo-tile">
+            <Logo />
           </div>
-          <span className="font-heading text-[20px] font-semibold tracking-tight">cote.</span>
+          <span className="font-heading text-[20px] font-semibold tracking-tight text-white">
+            cote.
+          </span>
         </div>
 
         <div className="relative z-10 max-w-xl py-16">
@@ -38,14 +41,20 @@ const LoginPage = () => {
       <section className="cote-auth-content">
         <div className="cote-auth-card">
           <div className="mb-8 flex items-center gap-3 md:hidden">
-            <div className="cote-brand-mark flex size-10 items-center justify-center rounded-xl">
-              <MessageSquareText className="size-5" />
+            <div className="cote-logo-tile">
+              <Logo />
             </div>
-            <span className="font-heading text-xl font-semibold tracking-tight">cote<span className="text-primary">.</span></span>
+            <span className="font-heading text-xl font-semibold tracking-tight">
+              cote<span className="text-primary">.</span>
+            </span>
           </div>
           <div className="mb-8">
-            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">Welcome back</p>
-            <h2 className="font-heading text-[34px] font-semibold tracking-tight text-foreground">Your team is here.</h2>
+            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
+              Welcome back
+            </p>
+            <h2 className="font-heading text-[34px] font-semibold tracking-tight text-foreground">
+              Your team is here.
+            </h2>
             <p className="mt-2 text-[13px] leading-6 text-muted-foreground">
               Sign in to continue where the conversation left off.
             </p>

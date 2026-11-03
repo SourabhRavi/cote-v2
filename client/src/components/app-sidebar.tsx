@@ -1,6 +1,7 @@
 "use client";
 
-import { Hash, MailPlus, MessageSquareText, Plus } from "lucide-react";
+import Logo from "@/assets/cote-logo.svg?react";
+import { Hash, MailPlus, Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -43,8 +44,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     isPending: workspaceIsPending,
     isError: workspaceIsError,
   } = useWorkspaces();
-
   const currentWorkspaceId = workspaceId ?? workspaces[0]?.id;
+
   const {
     data: channels = [],
     isPending: channelsIsPending,
@@ -53,10 +54,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { mutate: createChannelMutation, isPending: createChannelIsPending } = useCreateChannel();
   const { data: user, isPending: userIsPending, isError: userIsError } = useUser();
 
-  const handleWorkspaceChange = (nextWorkspaceId: string) => navigate(`/${nextWorkspaceId}`);
+  const handleWorkspaceChange = (nextWorkspaceId: string) => navigate("/" + nextWorkspaceId);
 
   const handleChannelChange = (nextChannelId: string) => {
-    if (currentWorkspaceId) navigate(`/${currentWorkspaceId}/${nextChannelId}`);
+    if (currentWorkspaceId) navigate("/" + currentWorkspaceId + "/" + nextChannelId);
   };
 
   const handleCreateChannel = () => {
@@ -69,7 +70,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         onSuccess: (channel) => {
           setChannelName("");
           setCreateChannelOpen(false);
-          navigate(`/${currentWorkspaceId}/${channel.id}`);
+          navigate("/" + currentWorkspaceId + "/" + channel.id);
         },
       },
     );
@@ -77,18 +78,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar collapsible="icon" variant="floating" {...props}>
-      <SidebarHeader className="gap-4 px-3 pb-2 pt-4">
-        <div className="flex items-center gap-3 px-2 group-data-[collapsible=icon]:justify-center">
-          <div className="cote-brand-mark size-9 shrink-0 rounded-xl">
-            <MessageSquareText className="size-[18px]" strokeWidth={2.2} />
+      <SidebarHeader className="gap-4 px-3 pb-3 pt-4">
+        <div className="cote-brand-lockup px-1 group-data-[collapsible=icon]:justify-center">
+          <div className="cote-logo-tile">
+            <Logo />
           </div>
           <div className="min-w-0 group-data-[collapsible=icon]:hidden">
-            <p className="font-heading text-[19px] font-semibold tracking-tight text-foreground">
-              cote<span className="text-primary">.</span>
-            </p>
-            <p className="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.17em] text-muted-foreground">
-              A better space to work
-            </p>
+            <p className="cote-brand-name">cote<span className="text-primary">.</span></p>
+            <p className="cote-brand-caption">A better space to work</p>
           </div>
         </div>
 
@@ -115,7 +112,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <Button
                       variant="ghost"
                       size="icon-xs"
-                      className="size-7 text-muted-foreground hover:text-foreground"
+                      className="size-7 rounded-lg text-muted-foreground hover:text-foreground"
+                      aria-label="Create channel"
                     />
                   }
                 >
@@ -124,7 +122,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-md">
                   <DialogHeader>
-                    <DialogTitle>Create channel</DialogTitle>
+                    <DialogTitle>Create a channel</DialogTitle>
                   </DialogHeader>
                   <div className="space-y-4">
                     <Input
@@ -137,11 +135,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       }}
                     />
                     <Button
-                      className="h-10 w-full"
+                      className="h-10 w-full rounded-xl"
                       onClick={handleCreateChannel}
                       disabled={!channelName.trim() || createChannelIsPending}
                     >
-                      {createChannelIsPending ? "Creating..." : "Create channel"}
+                      {createChannelIsPending ? "Creating…" : "Create channel"}
                     </Button>
                   </div>
                 </DialogContent>

@@ -1,11 +1,21 @@
 "use client";
 
-import { ArrowUpRight, Building2, Check, ChevronRight, Plus, SearchIcon, Users2 } from "lucide-react";
+import Logo from "@/assets/cote-logo.svg?react";
+import {
+  ArrowUpRight,
+  Building2,
+  Check,
+  ChevronRight,
+  Plus,
+  SearchIcon,
+  Users2,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import ThemeToggle from "@/components/common/theme-toggle.tsx";
 import {
   useAcceptWorkspaceInvitation,
   useDeclineWorkspaceInvitation,
@@ -47,12 +57,12 @@ const WorkspaceSelectionPage = () => {
     return workspaces.filter((workspace: Workspace) => workspace.name.toLowerCase().includes(query));
   }, [workspaces, search]);
 
-  const handleWorkspaceSelect = (workspaceId: string) => navigate(`/${workspaceId}`);
+  const handleWorkspaceSelect = (workspaceId: string) => navigate("/" + workspaceId);
 
   const handleAcceptInvitation = (invitationId: string) => {
     if (isAccepting || isDeclining) return;
     acceptInvitation(invitationId, {
-      onSuccess: (result) => navigate(`/${result.workspaceId}`),
+      onSuccess: (result) => navigate("/" + result.workspaceId),
     });
   };
 
@@ -64,24 +74,29 @@ const WorkspaceSelectionPage = () => {
   return (
     <main className="cote-selection-page">
       <div className="cote-selection-shell">
-        <header className="mb-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="cote-brand-mark flex size-10 items-center justify-center rounded-xl">
-              <span className="font-heading text-lg font-bold">c.</span>
+        <header className="mb-14 flex items-center justify-between gap-4 sm:mb-16">
+          <div className="cote-brand-lockup">
+            <div className="cote-logo-tile">
+              <Logo />
             </div>
             <div>
-              <p className="font-heading text-[18px] font-semibold tracking-tight text-foreground">cote<span className="text-primary">.</span></p>
-              <p className="text-[9px] font-semibold uppercase tracking-[0.17em] text-muted-foreground">The team space</p>
+              <p className="cote-brand-name">cote<span className="text-primary">.</span></p>
+              <p className="cote-brand-caption">The team space</p>
             </div>
           </div>
-          <div className="hidden items-center gap-2 rounded-full border border-border bg-background/70 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:flex">
-            <span className="size-1.5 rounded-full bg-emerald-500" />
-            Your workspaces
+          <div className="flex items-center gap-3">
+            <div className="hidden items-center gap-2 rounded-full border border-border bg-background/70 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:flex">
+              <span className="size-1.5 rounded-full bg-emerald-500" />
+              Your workspaces
+            </div>
+            <ThemeToggle />
           </div>
         </header>
 
         <section className="mb-9 max-w-2xl">
-          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.17em] text-primary">A place to do your best work</p>
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.17em] text-primary">
+            A place to do your best work
+          </p>
           <h1 className="font-heading text-4xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-[54px]">
             Good work is <span className="text-primary">better together.</span>
           </h1>
@@ -147,7 +162,9 @@ const WorkspaceSelectionPage = () => {
                       <ArrowUpRight className="size-4 text-muted-foreground/50 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary" />
                     </div>
                     <p className="truncate text-[14px] font-semibold capitalize text-foreground">{workspace.name}</p>
-                    <p className="mt-1 text-[11px] text-muted-foreground">Open workspace <ChevronRight className="ml-1 inline size-3" /></p>
+                    <p className="mt-1 text-[11px] text-muted-foreground">
+                      Open workspace <ChevronRight className="ml-1 inline size-3" />
+                    </p>
                   </button>
                 ))}
                 <button
@@ -168,7 +185,9 @@ const WorkspaceSelectionPage = () => {
 
             {!workspacesPending && !workspacesError && filteredWorkspaces.length === 0 && (
               <div className="rounded-xl border border-dashed border-border py-8 text-center">
-                <p className="text-sm font-medium text-foreground">{search ? "No matching workspaces" : "No workspaces yet"}</p>
+                <p className="text-sm font-medium text-foreground">
+                  {search ? "No matching workspaces" : "No workspaces yet"}
+                </p>
                 <p className="mt-1 text-xs text-muted-foreground">Create one to bring your team together.</p>
               </div>
             )}
@@ -184,7 +203,9 @@ const WorkspaceSelectionPage = () => {
                 <p className="mt-1 text-xs text-muted-foreground">Teams that have invited you.</p>
               </div>
               {!invitationsPending && invitations.length > 0 && (
-                <span className="flex size-6 items-center justify-center rounded-full bg-primary/10 text-[11px] font-semibold text-primary">{invitations.length}</span>
+                <span className="flex size-6 items-center justify-center rounded-full bg-primary/10 text-[11px] font-semibold text-primary">
+                  {invitations.length}
+                </span>
               )}
             </div>
 
@@ -207,7 +228,9 @@ const WorkspaceSelectionPage = () => {
                     <Users2 className="size-4" />
                   </div>
                   <p className="text-[13px] font-medium text-foreground">All caught up</p>
-                  <p className="mt-1 text-[11px] leading-5 text-muted-foreground">New workspace invitations will appear here.</p>
+                  <p className="mt-1 text-[11px] leading-5 text-muted-foreground">
+                    New workspace invitations will appear here.
+                  </p>
                 </div>
               ) : (
                 invitations.map((invitation: WorkspaceInvitation) => (
@@ -217,7 +240,9 @@ const WorkspaceSelectionPage = () => {
                         <Building2 className="size-4" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-[13px] font-semibold capitalize text-foreground">{invitation.workspace.name}</p>
+                        <p className="truncate text-[13px] font-semibold capitalize text-foreground">
+                          {invitation.workspace.name}
+                        </p>
                         <p className="mt-1 break-all text-[10px] text-muted-foreground">{invitation.userEmail}</p>
                       </div>
                     </div>

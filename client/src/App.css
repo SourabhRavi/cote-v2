@@ -443,3 +443,273 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Shared surfaces and controls */
+[data-slot="button"] {
+  border-radius: 11px;
+  font-weight: 550;
+  letter-spacing: -0.01em;
+  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+[data-slot="button"]:active:not(:disabled) {
+  transform: translateY(1px) scale(0.99);
+}
+
+[data-slot="dialog-overlay"],
+[data-slot="sheet-overlay"] {
+  background: rgb(15 17 28 / 42%);
+  backdrop-filter: blur(7px);
+}
+
+[data-slot="dialog-content"],
+[data-slot="sheet-content"] {
+  border: 1px solid var(--border);
+  border-radius: 21px;
+  background: var(--card);
+  box-shadow: 0 28px 90px rgb(12 14 28 / 22%), 0 3px 12px rgb(12 14 28 / 5%);
+}
+
+[data-slot="dialog-content"] {
+  padding: 25px;
+}
+
+[data-slot="dialog-title"] {
+  font-family: var(--font-heading);
+  font-size: 21px;
+  font-weight: 650;
+  letter-spacing: -0.035em;
+}
+
+[data-slot="dialog-description"] {
+  color: var(--muted-foreground);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+[data-slot="dropdown-menu-content"],
+[data-slot="dropdown-menu-sub-content"],
+[data-slot="popover-content"] {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--popover);
+  box-shadow: 0 18px 48px rgb(15 17 30 / 13%), 0 2px 8px rgb(15 17 30 / 4%);
+  padding: 6px;
+}
+
+[data-slot="dropdown-menu-item"] {
+  min-height: 34px;
+  border-radius: 9px;
+  font-size: 13px;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+
+[data-slot="card"] {
+  border-color: var(--border);
+  border-radius: 18px;
+  background: var(--card);
+  box-shadow: 0 12px 36px rgb(24 27 44 / 4%);
+}
+
+[data-slot="avatar"] {
+  border: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+}
+
+[data-slot="toast"] {
+  border-radius: 15px;
+  box-shadow: 0 16px 42px rgb(15 17 30 / 14%);
+}
+
+[data-slot="sidebar-container"] {
+  padding: 0;
+}
+
+[data-slot="sidebar-inner"] {
+  display: flex;
+  flex-direction: column;
+  background: var(--sidebar);
+  border: 1px solid var(--sidebar-border);
+  border-radius: 19px;
+  box-shadow: 0 12px 36px rgb(24 27 44 / 5%);
+}
+
+[data-slot="sidebar-inset"] {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 12px 36px rgb(24 27 44 / 4%);
+}
+
+[data-sidebar="menu-button"] {
+  min-height: 36px;
+  border-radius: 10px;
+  transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+[data-sidebar="menu-button"]:active {
+  transform: scale(0.985);
+}
+
+[data-sidebar="menu-button"][data-active="true"] {
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: 600;
+}
+
+[data-slot="input"] {
+  min-height: 42px;
+  border-color: var(--border);
+  border-radius: 11px;
+  background: var(--background);
+  box-shadow: 0 1px 2px rgb(18 22 38 / 3%);
+}
+
+[data-slot="input"]:focus-visible {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 14%, transparent);
+}
+
+.cote-logo-tile {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid #e8e8f0;
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: 0 3px 10px rgb(24 27 44 / 7%);
+}
+
+.cote-logo-tile img,
+.cote-logo-tile svg {
+  width: 31px;
+  height: 31px;
+  object-fit: contain;
+}
+
+.cote-brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.cote-brand-name {
+  color: var(--foreground);
+  font-family: var(--font-heading);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.045em;
+}
+
+.cote-brand-caption {
+  margin-top: 1px;
+  color: var(--muted-foreground);
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.cote-search-trigger {
+  min-height: 37px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--background);
+  box-shadow: 0 1px 2px rgb(18 22 38 / 3%);
+  color: var(--muted-foreground);
+  font-size: 12px;
+}
+
+.cote-search-trigger:hover {
+  border-color: color-mix(in srgb, var(--primary) 32%, var(--border));
+  color: var(--foreground);
+  background: var(--muted);
+}
+
+.cote-search-result {
+  display: flex;
+  width: 100%;
+  min-height: 55px;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 9px 11px;
+  text-align: left;
+  transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease;
+}
+
+.cote-search-result:hover:not(:disabled) {
+  border-color: var(--border);
+  background: var(--muted);
+}
+
+.cote-search-result:active:not(:disabled) {
+  transform: scale(0.992);
+}
+
+.cote-search-result:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.cote-search-result-icon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--background);
+  color: var(--primary);
+}
+
+.cote-typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 5px 9px;
+  color: var(--muted-foreground);
+  font-size: 11px;
+}
+
+.cote-typing-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.cote-typing-dots span {
+  width: 3px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--primary);
+  animation: cote-typing 1s ease-in-out infinite;
+}
+
+.cote-typing-dots span:nth-child(2) { animation-delay: 120ms; }
+.cote-typing-dots span:nth-child(3) { animation-delay: 240ms; }
+
+@keyframes cote-typing {
+  0%, 60%, 100% { opacity: .35; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-3px); }
+}
+
+@media (max-width: 800px) {
+  [data-slot="sidebar-inset"] { border-radius: 15px; }
+  [data-slot="sidebar-container"] {
+    padding: 0;
+  }
+  [data-slot="dialog-content"] {
+    width: calc(100% - 28px);
+    max-width: 440px;
+    padding: 21px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cote-typing-dots span { animation: none; }
+}
