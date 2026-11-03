@@ -43,18 +43,22 @@ const WorkspaceSelectionPage = () => {
     isPending: workspacesPending,
     isError: workspacesError,
   } = useWorkspaces();
+
   const {
     data: invitations = [],
     isPending: invitationsPending,
     isError: invitationsError,
   } = useWorkspaceInvitations();
+
   const { mutate: acceptInvitation, isPending: isAccepting } = useAcceptWorkspaceInvitation();
   const { mutate: declineInvitation, isPending: isDeclining } = useDeclineWorkspaceInvitation();
 
   const filteredWorkspaces = useMemo(() => {
     const query = search.trim().toLowerCase();
     if (!query) return workspaces;
-    return workspaces.filter((workspace: Workspace) => workspace.name.toLowerCase().includes(query));
+    return workspaces.filter((workspace: Workspace) =>
+      workspace.name.toLowerCase().includes(query),
+    );
   }, [workspaces, search]);
 
   const handleWorkspaceSelect = (workspaceId: string) => navigate("/" + workspaceId);
@@ -101,13 +105,23 @@ const WorkspaceSelectionPage = () => {
             Good work is <span className="text-primary">better together.</span>
           </h1>
           <p className="mt-4 max-w-xl text-[14px] leading-7 text-muted-foreground">
-            Choose where you’re working today. Your channels, people, and conversations are right where you left them.
+            Choose where you’re working today. Your channels, people, and conversations are right
+            where you left them.
           </p>
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <Button className="h-10 gap-2 rounded-xl px-4" onClick={() => setCreateWorkspaceOpen(true)}>
+              <Plus className="size-4" />
+              Create workspace
+            </Button>
+            <span className="text-[11px] text-muted-foreground">
+              {workspacesPending ? "Loading your teams…" : workspaces.length + " workspaces available"}
+            </span>
+          </div>
         </section>
 
         <CreateWorkspaceDialog open={createWorkspaceOpen} onOpenChange={setCreateWorkspaceOpen} />
 
-        <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1.55fr)_minmax(300px,0.85fr)]">
+        <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1.55fr)_minmax(300px,.85fr)]">
           <section className="cote-panel">
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
               <div>
@@ -118,7 +132,7 @@ const WorkspaceSelectionPage = () => {
                 <p className="mt-1 text-xs text-muted-foreground">Pick up where your team left off.</p>
               </div>
               <span className="rounded-full bg-muted px-2.5 py-1 text-[10px] font-semibold tabular-nums text-muted-foreground">
-                {workspacesPending ? "…" : workspaces.length} total
+                {workspacesPending ? "…" : workspaces.length + " total"}
               </span>
             </div>
 
@@ -129,6 +143,7 @@ const WorkspaceSelectionPage = () => {
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Find a workspace…"
                 className="h-11 rounded-xl pl-10 text-[13px]"
+                aria-label="Find a workspace"
               />
             </div>
 
@@ -146,6 +161,15 @@ const WorkspaceSelectionPage = () => {
               <div className="rounded-xl border border-destructive/20 bg-destructive/5 px-4 py-8 text-center text-sm text-destructive">
                 We couldn’t load your workspaces. Please try again.
               </div>
+            ) : filteredWorkspaces.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-border py-10 text-center">
+                <p className="text-sm font-medium text-foreground">
+                  {search ? "No matching workspaces" : "No workspaces yet"}
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Create one to bring your team together.
+                </p>
+              </div>
             ) : (
               <div className="grid gap-3 sm:grid-cols-2">
                 {filteredWorkspaces.map((workspace: Workspace) => (
@@ -161,34 +185,14 @@ const WorkspaceSelectionPage = () => {
                       </span>
                       <ArrowUpRight className="size-4 text-muted-foreground/50 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary" />
                     </div>
-                    <p className="truncate text-[14px] font-semibold capitalize text-foreground">{workspace.name}</p>
+                    <p className="truncate text-[14px] font-semibold capitalize text-foreground">
+                      {workspace.name}
+                    </p>
                     <p className="mt-1 text-[11px] text-muted-foreground">
                       Open workspace <ChevronRight className="ml-1 inline size-3" />
                     </p>
                   </button>
                 ))}
-                <button
-                  type="button"
-                  onClick={() => setCreateWorkspaceOpen(true)}
-                  className="flex min-h-28 flex-col items-start justify-between rounded-[15px] border border-dashed border-primary/30 bg-primary/[0.035] p-4 text-left transition-colors hover:border-primary/55 hover:bg-primary/[0.06]"
-                >
-                  <span className="flex size-10 items-center justify-center rounded-xl border border-primary/15 bg-background text-primary">
-                    <Plus className="size-4" />
-                  </span>
-                  <span>
-                    <span className="block text-[13px] font-semibold text-foreground">Create a workspace</span>
-                    <span className="mt-1 block text-[11px] text-muted-foreground">Start something new</span>
-                  </span>
-                </button>
-              </div>
-            )}
-
-            {!workspacesPending && !workspacesError && filteredWorkspaces.length === 0 && (
-              <div className="rounded-xl border border-dashed border-border py-8 text-center">
-                <p className="text-sm font-medium text-foreground">
-                  {search ? "No matching workspaces" : "No workspaces yet"}
-                </p>
-                <p className="mt-1 text-xs text-muted-foreground">Create one to bring your team together.</p>
               </div>
             )}
           </section>
@@ -243,7 +247,9 @@ const WorkspaceSelectionPage = () => {
                         <p className="truncate text-[13px] font-semibold capitalize text-foreground">
                           {invitation.workspace.name}
                         </p>
-                        <p className="mt-1 break-all text-[10px] text-muted-foreground">{invitation.userEmail}</p>
+                        <p className="mt-1 break-all text-[10px] text-muted-foreground">
+                          {invitation.userEmail}
+                        </p>
                       </div>
                     </div>
                     <div className="mt-4 flex gap-2">
