@@ -16,9 +16,7 @@ const MessageTypingIndicator = ({ users }: MessageTypingIndicatorProps) => {
         <span />
         <span />
       </span>
-      <span>
-        {names} {users.length === 1 ? "is" : "are"} typing
-      </span>
+      <span>{names} {users.length === 1 ? "is" : "are"} typing</span>
     </div>
   );
 };
