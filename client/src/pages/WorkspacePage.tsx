@@ -43,10 +43,7 @@ const WorkspacePage = () => {
             <h1 className="cote-topbar-title truncate capitalize">{workspace.name}</h1>
           </div>
         </div>
-        <div className="flex shrink-0 items-center gap-2">
-          <ChannelSearch workspaceId={workspace.id} />
-          <ThemeToggle />
-        </div>
+        <ThemeToggle />
       </header>
 
       <main className="cote-workspace-scroll">
