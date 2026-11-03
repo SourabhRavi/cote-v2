@@ -1059,9 +1059,16 @@
 
 /* Sidebar collapse: keep all icon controls on a true center line. */
 [data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-header,
-[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-content,
 [data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-footer {
   align-items: center;
+}
+
+[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-content {
+  align-items: stretch;
+}
+
+[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-content > div {
+  width: 100%;
 }
 
 [data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-header {
@@ -1135,6 +1142,11 @@
 .cote-brand-copy { max-width: 190px; }
 .cote-workspace-switcher-copy,
 .cote-user-menu-copy { max-width: 190px; }
+.cote-sidebar-menu-label {
+  display: inline-block;
+  max-width: 120px;
+  white-space: nowrap;
+}
 .cote-workspace-switcher-chevron,
 .cote-user-menu-chevron { max-width: 20px; }
 
