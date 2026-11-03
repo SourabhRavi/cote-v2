@@ -46,9 +46,9 @@ export const useJoinChannel = () => {
   return useMutation({
     mutationFn: (channelId: string) => joinChannel(channelId),
 
-    onSuccess: (_, channelId) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["channels", channelId],
+        queryKey: ["channels"],
       });
     },
   });

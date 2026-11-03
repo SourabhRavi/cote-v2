@@ -9,38 +9,35 @@ const WorkspaceLayout = () => {
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
 
   useEffect(() => {
-    const handleUserPresenceSnapshot = (userIds: string[]) => {
-      setOnlineUsers(userIds);
-    };
+    const handleUserPresenceSnapshot = (userIds: string[]) => setOnlineUsers(userIds);
 
     const handleUserOnline = ({ userId }: { userId: string }) => {
-      setOnlineUsers((prev) => (prev.includes(userId) ? prev : [...prev, userId]));
+      setOnlineUsers((previous) =>
+        previous.includes(userId) ? previous : [...previous, userId],
+      );
     };
 
     const handleUserOffline = ({ userId }: { userId: string }) => {
-      setOnlineUsers((prev) => prev.filter((id) => id !== userId));
+      setOnlineUsers((previous) => previous.filter((id) => id !== userId));
     };
 
     socket.on(SOCKET_EVENTS.USER_PRESENCE_SNAPSHOT, handleUserPresenceSnapshot);
     socket.on(SOCKET_EVENTS.USER_ONLINE, handleUserOnline);
     socket.on(SOCKET_EVENTS.USER_OFFLINE, handleUserOffline);
-
     socket.connect();
 
     return () => {
       socket.off(SOCKET_EVENTS.USER_PRESENCE_SNAPSHOT, handleUserPresenceSnapshot);
       socket.off(SOCKET_EVENTS.USER_ONLINE, handleUserOnline);
       socket.off(SOCKET_EVENTS.USER_OFFLINE, handleUserOffline);
-
       socket.disconnect();
     };
   }, []);
 
   return (
-    <SidebarProvider className="h-svh min-h-0">
+    <SidebarProvider className="cote-app-shell">
       <AppSidebar />
-
-      <SidebarInset className="min-h-0 overflow-hidden">
+      <SidebarInset className="cote-workspace-main min-h-0 overflow-hidden !p-0">
         <Outlet context={{ onlineUsers }} />
       </SidebarInset>
     </SidebarProvider>

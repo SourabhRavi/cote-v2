@@ -22,11 +22,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ChevronsUpDownIcon, LogOutIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-type User = {
-  name: string;
-  email: string;
-  avatar?: string;
-};
+type User = { name: string; email: string; avatar?: string };
 
 export function NavUser({
   user,
@@ -40,7 +36,6 @@ export function NavUser({
   const { isMobile } = useSidebar();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-
   const { mutate: logout, isPending: isLogoutPending } = useLogout();
 
   const handleLogout = () => {
@@ -52,31 +47,15 @@ export function NavUser({
     });
   };
 
-  if (isLoading) {
+  if (isLoading || isError || !user) {
     return (
       <SidebarMenu>
         <SidebarMenuItem>
-          <SidebarMenuButton size="lg" disabled>
+          <SidebarMenuButton size="lg" disabled className="h-12 rounded-xl px-2">
             <Skeleton className="size-8 rounded-full" />
-
-            <div className="grid flex-1 gap-1.5 text-left">
-              <Skeleton className="h-4 w-24" />
-              <Skeleton className="h-3 w-32" />
-            </div>
-
-            <ChevronsUpDownIcon className="ml-auto size-4 opacity-50" />
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      </SidebarMenu>
-    );
-  }
-
-  if (isError || !user) {
-    return (
-      <SidebarMenu>
-        <SidebarMenuItem>
-          <SidebarMenuButton size="lg" disabled>
-            <span className="text-sm text-muted-foreground">Failed to load user</span>
+            <span className="text-xs text-muted-foreground">
+              {isLoading ? "Loading profile…" : "Profile unavailable"}
+            </span>
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
@@ -98,50 +77,51 @@ export function NavUser({
             render={
               <SidebarMenuButton
                 size="lg"
-                className="aria-expanded:bg-sidebar-accent text-sidebar-foreground!"
+                className="h-[54px] rounded-xl px-2 aria-expanded:bg-sidebar-accent"
               />
             }
           >
-            <Avatar>
+            <Avatar className="size-9 border border-border">
               {user.avatar ? <AvatarImage src={user.avatar} alt={user.name} /> : null}
-              <AvatarFallback>{initials}</AvatarFallback>
+              <AvatarFallback className="bg-primary/10 text-[11px] font-semibold text-primary">
+                {initials}
+              </AvatarFallback>
             </Avatar>
-
-            <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">{user.name}</span>
-              <span className="truncate text-xs">{user.email}</span>
+            <div className="grid min-w-0 flex-1 text-left text-sm leading-tight">
+              <span className="truncate text-[11px] font-semibold text-foreground">{user.name}</span>
+              <span className="truncate text-[10px] text-muted-foreground">{user.email}</span>
             </div>
-
-            <ChevronsUpDownIcon className="ml-auto size-4" />
+            <ChevronsUpDownIcon className="ml-auto size-4 text-muted-foreground" />
           </DropdownMenuTrigger>
 
           <DropdownMenuContent
-            className="w-fit"
+            className="w-64 rounded-xl p-1.5 shadow-xl"
             side={isMobile ? "bottom" : "right"}
             align="end"
-            sideOffset={4}
+            sideOffset={8}
           >
             <DropdownMenuGroup>
-              <DropdownMenuLabel className="p-0 font-normal">
-                <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                  <Avatar>
+              <DropdownMenuLabel className="p-2 font-normal">
+                <div className="flex items-center gap-2">
+                  <Avatar className="size-9">
                     {user.avatar ? <AvatarImage src={user.avatar} alt={user.name} /> : null}
-                    <AvatarFallback>{initials}</AvatarFallback>
+                    <AvatarFallback className="bg-primary/10 text-primary">{initials}</AvatarFallback>
                   </Avatar>
-
-                  <div className="grid flex-1 text-left text-sm leading-tight">
+                  <div className="grid min-w-0 flex-1 text-left text-sm">
                     <span className="truncate font-medium">{user.name}</span>
-                    <span className="truncate text-xs">{user.email}</span>
+                    <span className="truncate text-xs text-muted-foreground">{user.email}</span>
                   </div>
                 </div>
               </DropdownMenuLabel>
             </DropdownMenuGroup>
-
             <DropdownMenuSeparator />
-
-            <DropdownMenuItem disabled={isLogoutPending} onClick={handleLogout}>
-              <LogOutIcon />
-              {isLogoutPending ? "Logging out..." : "Log out"}
+            <DropdownMenuItem
+              disabled={isLogoutPending}
+              onClick={handleLogout}
+              className="rounded-lg"
+            >
+              <LogOutIcon className="size-4" />
+              {isLogoutPending ? "Signing out…" : "Log out"}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

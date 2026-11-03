@@ -10,6 +10,29 @@ import type { Message, MessageResponse } from "@/types/message.types.ts";
 import { useQueryClient, type InfiniteData } from "@tanstack/react-query";
 import { useEffect, useLayoutEffect, useRef } from "react";
 
+const getDayKey = (value: string) => {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString("en-CA");
+};
+
+const getDayLabel = (value: string) => {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Earlier";
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const day = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const difference = Math.round((today.getTime() - day.getTime()) / 86400000);
+
+  if (difference === 0) return "Today";
+  if (difference === 1) return "Yesterday";
+  return date.toLocaleDateString(undefined, {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  });
+};
+
 export const MessageList = ({
   channel,
   onlineUsers = [],
@@ -19,52 +42,49 @@ export const MessageList = ({
 }) => {
   const messagesContainerRef = useRef<HTMLElement>(null);
   const shouldScrollToBottomRef = useRef(false);
+  const previousScrollHeightRef = useRef(0);
 
-  const { data, isPending, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useGetMessages(channel.id);
+  const {
+    data,
+    isPending,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetMessages(channel.id);
 
-  const messages = data?.pages
-    .slice()
-    .flatMap((page) => page.messages)
-    .reverse();
-
-  // socket events
+  const messages = data?.pages.slice().flatMap((page) => page.messages).reverse();
   const queryClient = useQueryClient();
 
-  // scroll to bottom when channel is opened
   useLayoutEffect(() => {
     if (isPending) return;
-
     const container = messagesContainerRef.current;
-
     if (!container) return;
 
-    container.scrollTop = container.scrollHeight;
-  }, [channel.id, isPending]);
+    if (previousScrollHeightRef.current > 0) {
+      const heightDifference = container.scrollHeight - previousScrollHeightRef.current;
+      container.scrollTop = heightDifference;
+      previousScrollHeightRef.current = 0;
+      return;
+    }
 
-  // update messages when new message arrives
+    container.scrollTop = container.scrollHeight;
+  }, [channel.id, isPending, messages?.length]);
+
   useEffect(() => {
-    // join room:channelId
     socket.emit(SOCKET_EVENTS.CHANNEL_JOIN, channel.id);
 
     const handleNewMessage = (newMessage: Message) => {
       shouldScrollToBottomRef.current = true;
-
       queryClient.setQueryData<InfiniteData<MessageResponse, string>>(
         ["get-messages", channel.id],
         (oldMessagesData) => {
           if (!oldMessagesData) return undefined;
-
           return {
             ...oldMessagesData,
-            pages: oldMessagesData.pages.map((page, index) => {
-              if (index !== 0) return page;
-
-              return {
-                ...page,
-                messages: [newMessage, ...page.messages],
-              };
-            }),
+            pages: oldMessagesData.pages.map((page, index) =>
+              index === 0 ? { ...page, messages: [newMessage, ...page.messages] } : page,
+            ),
           };
         },
       );
@@ -75,7 +95,6 @@ export const MessageList = ({
         ["get-messages", channel.id],
         (oldMessagesData) => {
           if (!oldMessagesData) return undefined;
-
           return {
             ...oldMessagesData,
             pages: oldMessagesData.pages.map((page) => ({
@@ -94,13 +113,14 @@ export const MessageList = ({
         ["get-messages", channel.id],
         (oldMessagesData) => {
           if (!oldMessagesData) return undefined;
-
           return {
             ...oldMessagesData,
             pages: oldMessagesData.pages.map((page) => ({
               ...page,
               messages: page.messages.map((message) =>
-                message.id === deletedMessage.id ? { ...deletedMessage, content: null } : message,
+                message.id === deletedMessage.id
+                  ? { ...deletedMessage, content: null }
+                  : message,
               ),
             })),
           };
@@ -114,64 +134,47 @@ export const MessageList = ({
 
     return () => {
       socket.emit(SOCKET_EVENTS.CHANNEL_LEAVE, channel.id);
-
       socket.off(SOCKET_EVENTS.MESSAGE_NEW, handleNewMessage);
       socket.off(SOCKET_EVENTS.MESSAGE_UPDATE, handleUpdateMessage);
       socket.off(SOCKET_EVENTS.MESSAGE_DELETE, handleDeleteMessage);
     };
   }, [channel.id, queryClient]);
 
-  // load old message when user scrolls to top
   useEffect(() => {
     const container = messagesContainerRef.current;
-
     if (!container) return;
 
     const handleFetchOldMessagesOnScroll = () => {
-      if (container.scrollTop === 0 && hasNextPage && !isFetchingNextPage) {
-        fetchNextPage();
-      }
+      if (container.scrollTop > 0 || !hasNextPage || isFetchingNextPage) return;
+      previousScrollHeightRef.current = container.scrollHeight;
+      fetchNextPage();
     };
 
-    container.addEventListener("scroll", handleFetchOldMessagesOnScroll);
-
-    return () => {
-      container.removeEventListener("scroll", handleFetchOldMessagesOnScroll);
-    };
+    container.addEventListener("scroll", handleFetchOldMessagesOnScroll, { passive: true });
+    return () => container.removeEventListener("scroll", handleFetchOldMessagesOnScroll);
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  // scroll when new message
   useEffect(() => {
     if (!shouldScrollToBottomRef.current) return;
-
     shouldScrollToBottomRef.current = false;
 
     const container = messagesContainerRef.current;
-
     if (!container) return;
 
     requestAnimationFrame(() => {
-      container?.scrollTo({
-        top: container.scrollHeight,
-        behavior: "smooth",
-      });
+      container?.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
     });
   }, [messages]);
 
   if (isPending) {
     return (
-      <main className="min-h-0 flex-1 overflow-y-auto py-2.5-4 md:py-5 px-0 scrollbar-none">
-        <div className="flex flex-col gap-6">
-          {[1, 2, 3, 4].map((item) => (
+      <main className="cote-message-scroll">
+        <div className="cote-message-feed space-y-7">
+          {[1, 2, 3, 4, 5].map((item) => (
             <div key={item} className="flex gap-3">
-              <Skeleton className="size-9 shrink-0 rounded-full" />
-
+              <Skeleton className="size-10 shrink-0 rounded-xl" />
               <div className="min-w-0 flex-1 space-y-2">
-                <div className="flex items-center justify-between gap-3">
-                  <Skeleton className="h-4 w-28" />
-                  <Skeleton className="h-3 w-14" />
-                </div>
-
+                <Skeleton className="h-3.5 w-28" />
                 <Skeleton className="h-4 w-full max-w-2xl" />
                 <Skeleton className="h-4 w-3/4 max-w-xl" />
               </div>
@@ -184,40 +187,53 @@ export const MessageList = ({
 
   if (isError) {
     return (
-      <main className="min-h-0 flex-1 overflow-y-auto py-2.5-4 md:py-5 px-0 scrollbar-none">
-        <p>Failed to load messages.</p>
+      <main className="cote-message-scroll">
+        <div className="mx-auto mt-12 max-w-sm rounded-2xl border border-border bg-card p-7 text-center shadow-sm">
+          <p className="text-sm font-semibold text-foreground">Messages couldn’t be loaded</p>
+          <p className="mt-1 text-xs leading-6 text-muted-foreground">
+            Refresh the channel and try again.
+          </p>
+        </div>
       </main>
     );
   }
 
   if (!messages?.length) {
     return (
-      <main className="min-h-0 flex-1 overflow-y-auto py-2.5-4 md:py-5 px-0 scrollbar-none">
+      <main className="cote-message-scroll">
         <EmptyChannel channelName={channel.name} />
       </main>
     );
   }
 
   return (
-    <>
-      <main
-        className="min-h-0 flex-1 overflow-y-auto py-2.5-4 md:py-5 px-0 scrollbar-none"
-        ref={messagesContainerRef}
-      >
-        <div className="flex flex-col">
-          {isFetchingNextPage && (
-            <div className="flex items-center justify-center pb-3">
-              <div className="flex items-center gap-2 opacity-50">
-                <Spinner className="size-3.5 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">Loading older messages</span>
-              </div>
+    <main className="cote-message-scroll" ref={messagesContainerRef} aria-label="Channel messages">
+      <div className="cote-message-feed" role="log" aria-live="polite">
+        {isFetchingNextPage && (
+          <div className="flex items-center justify-center pb-4">
+            <div className="flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-[10px] text-muted-foreground shadow-sm">
+              <Spinner className="size-3.5" />
+              Loading earlier messages
             </div>
-          )}
-          {messages.map((message: Message) => (
-            <MessageItem key={message.id} message={message} onlineUsers={onlineUsers} />
-          ))}
-        </div>
-      </main>
-    </>
+          </div>
+        )}
+        {messages.map((message: Message, index: number) => {
+          const previousMessage = messages[index - 1];
+          const showDayDivider =
+            !previousMessage || getDayKey(previousMessage.createdAt) !== getDayKey(message.createdAt);
+
+          return (
+            <div key={message.id}>
+              {showDayDivider && (
+                <div className="cote-day-divider">
+                  <span>{getDayLabel(message.createdAt)}</span>
+                </div>
+              )}
+              <MessageItem message={message} onlineUsers={onlineUsers} />
+            </div>
+          );
+        })}
+      </div>
+    </main>
   );
 };

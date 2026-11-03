@@ -1,12 +1,11 @@
+import { Hash, MessageCircle, Users } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button.tsx";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { MessageList } from "@/components/messages/message-list.tsx";
 import MessageComposer from "@/components/messages/message-composer.tsx";
 import { ChannelSearch } from "@/components/channels/channel-search.tsx";
-
 import { useChannel, useJoinChannel } from "@/hooks/use-channels.ts";
-import { Separator } from "@base-ui/react";
 import ThemeToggle from "@/components/common/theme-toggle.tsx";
 
 export const ChannelContent = ({
@@ -17,44 +16,29 @@ export const ChannelContent = ({
   onlineUsers: string[];
 }) => {
   const { data: channel, isPending, isError } = useChannel(channelId);
-
   const { mutate: joinChannel, isPending: joinChannelIsPending } = useJoinChannel();
 
   const handleJoinChannel = () => {
     if (!channel || joinChannelIsPending) return;
-
     joinChannel(channelId);
   };
 
   if (isPending) {
     return (
-      <div className="flex h-full min-h-0 flex-col text-foreground">
-        <header className="flex min-h-10 shrink-0 items-center px-4 py-4 md:px-5">
-          <div className="flex min-w-0 items-center gap-3">
+      <div className="flex h-full min-h-0 flex-col">
+        <header className="cote-topbar">
+          <div className="flex items-center gap-3">
             <SidebarTrigger className="md:hidden" />
-
-            <div className="flex flex-col gap-2">
-              <Skeleton className="h-7 w-32" />
-            </div>
+            <Skeleton className="h-9 w-44 rounded-xl" />
           </div>
         </header>
-
-        <main className="min-h-0 flex-1">
-          <div className="w-full px-4">
-            <Separator className="inset-0 h-px w-full bg-sidebar-border" />
-          </div>
-
-          <div className="flex flex-col gap-6 py-4 md:py-5">
-            {[1, 2, 3, 4].map((item) => (
+        <main className="cote-message-scroll">
+          <div className="cote-message-feed space-y-7">
+            {[1, 2, 3, 4, 5].map((item) => (
               <div key={item} className="flex gap-3">
-                <Skeleton className="size-9 shrink-0 rounded-full" />
-
+                <Skeleton className="size-10 shrink-0 rounded-xl" />
                 <div className="min-w-0 flex-1 space-y-2">
-                  <div className="flex items-center justify-between gap-3">
-                    <Skeleton className="h-4 w-28" />
-                    <Skeleton className="h-3 w-14" />
-                  </div>
-
+                  <Skeleton className="h-3.5 w-28" />
                   <Skeleton className="h-4 w-full max-w-2xl" />
                   <Skeleton className="h-4 w-3/4 max-w-xl" />
                 </div>
@@ -62,19 +46,11 @@ export const ChannelContent = ({
             ))}
           </div>
         </main>
-
-        <div className="shrink-0">
-          <div className="mx-auto h-full w-full rounded-xl bg-background p-3 shadow-lg shadow-primary/15">
-            <Skeleton className="h-12 w-full" />
-
-            <div className="mt-2 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Skeleton className="size-6 rounded-md" />
-                <Skeleton className="size-6 rounded-md" />
-                <Skeleton className="size-6 rounded-md" />
-              </div>
-
-              <Skeleton className="h-7 w-12 rounded-md" />
+        <div className="cote-composer-wrap">
+          <div className="cote-composer">
+            <Skeleton className="h-14 w-full" />
+            <div className="mt-3 flex justify-end">
+              <Skeleton className="h-8 w-20 rounded-lg" />
             </div>
           </div>
         </div>
@@ -84,29 +60,25 @@ export const ChannelContent = ({
 
   if (isError || !channel) {
     return (
-      <div className="flex h-full min-h-0 flex-col text-foreground">
-        <header className="flex min-h-10 shrink-0 items-center px-4 py-4 md:px-5">
-          <div className="flex min-w-0 items-center gap-3">
+      <div className="flex h-full min-h-0 flex-col">
+        <header className="cote-topbar">
+          <div className="flex items-center gap-3">
             <SidebarTrigger className="md:hidden" />
-
             <div>
-              <h1 className="font-heading text-lg font-semibold text-foreground">
-                Channel unavailable
-              </h1>
-
-              <p className="text-xs text-muted-foreground">We couldn't load this channel.</p>
+              <p className="cote-topbar-eyebrow">Conversation</p>
+              <h1 className="cote-topbar-title">Channel unavailable</h1>
             </div>
           </div>
+          <ThemeToggle />
         </header>
-
-        <main className="flex min-h-0 flex-1 items-center justify-center p-4">
-          <div className="text-center">
-            <h2 className="font-heading text-base font-semibold text-foreground">
-              Unable to load channel
-            </h2>
-
-            <p className="mt-1 text-sm text-muted-foreground">
-              The channel may have been deleted or you may not have access to it.
+        <main className="flex min-h-0 flex-1 items-center justify-center p-6">
+          <div className="max-w-sm text-center">
+            <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-2xl border border-border bg-muted text-muted-foreground">
+              <MessageCircle className="size-5" />
+            </div>
+            <h2 className="font-heading text-xl font-semibold">This channel isn’t available</h2>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              It may have been removed, or you may no longer have access to it.
             </p>
           </div>
         </main>
@@ -116,52 +88,59 @@ export const ChannelContent = ({
 
   return (
     <div className="flex h-full min-h-0 flex-col text-foreground">
-      {/* Channel header */}
-      <header className="flex min-h-10 shrink-0 items-center justify-between px-4 py-4 md:px-5">
+      <header className="cote-topbar">
         <div className="flex min-w-0 items-center gap-3">
           <SidebarTrigger className="md:hidden" />
-
+          <div className="cote-icon-surface">
+            <Hash className="size-[17px]" strokeWidth={2} />
+          </div>
           <div className="min-w-0">
-            <h1 className="truncate font-heading text-lg font-semibold text-foreground lowercase">
-              # {channel.name}
-            </h1>
+            <p className="cote-topbar-eyebrow">Channel</p>
+            <h1 className="cote-topbar-title truncate lowercase">{channel.name}</h1>
+          </div>
+          <span className="ml-2 hidden h-7 w-px bg-border sm:block" />
+          <div className="hidden min-w-0 items-center gap-2 sm:flex">
+            <span className="flex size-7 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+              <Users className="size-3.5" />
+            </span>
+            <span className="truncate text-[10px] text-muted-foreground">
+              A shared space for the team
+            </span>
           </div>
         </div>
-
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-2">
           <ChannelSearch workspaceId={channel.workspaceId} />
           <ThemeToggle />
         </div>
       </header>
 
-      <div className="w-full px-4">
-        <Separator className="inset-0 h-px w-full bg-sidebar-border" />
-      </div>
-
-      {/* Message list */}
       <MessageList channel={channel} onlineUsers={onlineUsers} />
 
-      {/* Channel content */}
       {channel.isMember ? (
-        <>
-          <MessageComposer channel={channel} />
-        </>
+        <MessageComposer channel={channel} />
       ) : (
-        <main className="flex min-h-0 flex-1 items-center justify-center p-4">
-          <div className="w-full max-w-sm text-center">
-            <h2 className="font-heading text-lg font-semibold text-foreground">
-              Join #{channel.name}
-            </h2>
-
-            <p className="mt-2 text-sm text-muted-foreground">
-              Join this channel to view messages and participate in the conversation.
-            </p>
-
-            <Button className="mt-4" onClick={handleJoinChannel} disabled={joinChannelIsPending}>
-              {joinChannelIsPending ? "Joining..." : "Join Channel"}
+        <div className="mx-auto mb-6 w-[min(100%-32px,620px)] rounded-2xl border border-border bg-card px-5 py-4 shadow-sm">
+          <div className="flex flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left">
+            <div className="flex items-center gap-3">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Users className="size-4.5" />
+              </span>
+              <div>
+                <p className="text-sm font-semibold text-foreground">Join #{channel.name}</p>
+                <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                  Become a member to participate in this conversation.
+                </p>
+              </div>
+            </div>
+            <Button
+              className="h-9 rounded-xl px-4"
+              onClick={handleJoinChannel}
+              disabled={joinChannelIsPending}
+            >
+              {joinChannelIsPending ? "Joining…" : "Join channel"}
             </Button>
           </div>
-        </main>
+        </div>
       )}
     </div>
   );
