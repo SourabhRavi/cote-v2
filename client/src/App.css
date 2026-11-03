@@ -1048,7 +1048,7 @@
     top: 12px;
     bottom: 12px;
     left: 12px;
-    width: var(--sidebar-width);
+    /* Let the sidebar component apply its expanded and collapsed widths. */
     padding: 0;
   }
 }
