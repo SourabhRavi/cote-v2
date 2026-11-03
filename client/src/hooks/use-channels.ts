@@ -48,7 +48,7 @@ export const useJoinChannel = () => {
 
     onSuccess: (_, channelId) => {
       queryClient.invalidateQueries({
-        queryKey: ["channels", channelId],
+        queryKey: ["channels"],
       });
     },
   });

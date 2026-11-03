@@ -1041,3 +1041,14 @@
   .cote-panel,
   .cote-auth-card { animation: none; }
 }
+
+
+@media (min-width: 768px) {
+  [data-slot="sidebar-container"] {
+    top: 12px;
+    bottom: 12px;
+    left: 12px;
+    width: var(--sidebar-width);
+    padding: 0;
+  }
+}
