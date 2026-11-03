@@ -94,7 +94,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <div className="cote-logo-tile">
             <Logo />
           </div>
-          <div className="min-w-0 group-data-[collapsible=icon]:hidden">
+          <div className="cote-brand-copy min-w-0">
             <p className="cote-brand-name">cote<span className="text-primary">.</span></p>
             <p className="cote-brand-caption">A better space to work</p>
           </div>
@@ -123,7 +123,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       variant="ghost"
                       size="icon-xs"
                       aria-label="Create channel"
-                      className="cote-sidebar-action"
+                      className="cote-sidebar-action group-data-[collapsible=icon]:hidden"
                     />
                   }
                 >
@@ -195,7 +195,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 className="cote-sidebar-utility h-9 text-[12px]"
               >
                 <MailPlus className="size-4" />
-                <span>Invitations</span>
+                <span className="cote-sidebar-menu-label">Invitations</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>

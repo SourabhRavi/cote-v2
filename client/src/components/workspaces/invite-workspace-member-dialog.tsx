@@ -65,7 +65,7 @@ export function InviteWorkspaceMemberDialog({ workspaceId }: InviteWorkspaceMemb
         <Dialog open={open} onOpenChange={handleOpenChange}>
           <DialogTrigger render={<SidebarMenuButton tooltip="Invite member" />}>
             <UserPlus className="size-4" />
-            <span>Invite member</span>
+            <span className="cote-sidebar-menu-label">Invite member</span>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>

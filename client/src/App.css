@@ -1055,33 +1055,115 @@
   }
 }
 
-/* Keep the floating sidebar fully inset from the viewport. */
-[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-header {
+
+
+/* Sidebar collapse: keep all icon controls on a true center line. */
+[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-header,
+[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-content,
+[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-footer {
   align-items: center;
+}
+
+[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-header {
   gap: 14px;
-  padding: 18px 5px 12px;
+  padding-inline: 5px;
 }
 
 [data-slot="sidebar"][data-collapsible="icon"] .cote-brand-lockup {
   width: 100%;
   justify-content: center;
+  gap: 0;
   padding-inline: 0;
 }
 
-[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-header [data-slot="sidebar-menu"] {
+[data-slot="sidebar"][data-collapsible="icon"] [data-slot="sidebar-menu"] {
   width: 100%;
   align-items: center;
+  padding-inline: 0;
+}
+
+[data-slot="sidebar"][data-collapsible="icon"] [data-slot="sidebar-menu-item"] {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+[data-slot="sidebar"][data-collapsible="icon"] [data-sidebar="menu-button"] {
+  display: flex;
+  width: 36px !important;
+  min-width: 36px !important;
+  max-width: 36px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  margin-inline: auto !important;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  overflow: visible !important;
+  padding: 0 !important;
+  border-radius: 11px;
+  text-align: center;
+}
+
+[data-slot="sidebar"][data-collapsible="icon"] [data-sidebar="menu-button"] > svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  margin: 0;
+}
+
+[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-action {
+  display: none;
+}
+
+.cote-brand-copy,
+.cote-workspace-switcher-copy,
+.cote-workspace-switcher-chevron,
+.cote-user-menu-copy,
+.cote-user-menu-chevron,
+.cote-sidebar-menu-label {
+  overflow: hidden;
+  opacity: 1;
+  transition:
+    max-width 260ms cubic-bezier(.22, 1, .36, 1),
+    opacity 160ms ease,
+    transform 260ms cubic-bezier(.22, 1, .36, 1),
+    flex-basis 260ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.cote-brand-copy { max-width: 190px; }
+.cote-workspace-switcher-copy,
+.cote-user-menu-copy { max-width: 190px; }
+.cote-workspace-switcher-chevron,
+.cote-user-menu-chevron { max-width: 20px; }
+
+[data-slot="sidebar"][data-collapsible="icon"] .cote-brand-copy,
+[data-slot="sidebar"][data-collapsible="icon"] .cote-workspace-switcher-copy,
+[data-slot="sidebar"][data-collapsible="icon"] .cote-workspace-switcher-chevron,
+[data-slot="sidebar"][data-collapsible="icon"] .cote-user-menu-copy,
+[data-slot="sidebar"][data-collapsible="icon"] .cote-user-menu-chevron,
+[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-menu-label {
+  max-width: 0;
+  flex-basis: 0;
+  opacity: 0;
+  transform: translateX(-5px);
+  pointer-events: none;
 }
 
 [data-slot="sidebar"][data-collapsible="icon"] .cote-workspace-switcher-trigger,
 [data-slot="sidebar"][data-collapsible="icon"] .cote-user-menu-trigger {
+  display: flex;
   width: 36px !important;
+  min-width: 36px !important;
+  max-width: 36px !important;
   height: 36px !important;
   min-height: 36px !important;
-  margin-inline: auto;
+  margin-inline: auto !important;
+  align-items: center;
   justify-content: center;
   gap: 0;
-  overflow: visible;
+  overflow: visible !important;
   padding: 0 !important;
   border-color: transparent;
   background: transparent;
@@ -1094,42 +1176,54 @@
   background: var(--sidebar-accent);
 }
 
-.cote-workspace-switcher-copy,
-.cote-workspace-switcher-chevron,
-.cote-user-menu-copy,
-.cote-user-menu-chevron {
-  min-width: 0;
-}
-
-[data-slot="sidebar"][data-collapsible="icon"] .cote-workspace-switcher-copy,
-[data-slot="sidebar"][data-collapsible="icon"] .cote-workspace-switcher-chevron,
-[data-slot="sidebar"][data-collapsible="icon"] .cote-user-menu-copy,
-[data-slot="sidebar"][data-collapsible="icon"] .cote-user-menu-chevron {
-  display: none !important;
-}
-
 [data-slot="sidebar"][data-collapsible="icon"] .cote-workspace-switcher-avatar,
 [data-slot="sidebar"][data-collapsible="icon"] .cote-user-menu-avatar {
-  width: 32px;
-  height: 32px;
+  display: block;
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 32px !important;
   flex: 0 0 32px;
   margin: 0;
 }
 
+[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-content,
 [data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-footer {
-  align-items: center;
-  padding: 10px 5px;
-}
-
-[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-footer [data-slot="sidebar-menu"] {
-  width: 100%;
-  align-items: center;
-}
-
-[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-content {
   padding-inline: 5px;
 }
 
-[data-slot="sidebar"][data-collapsible="icon"] [data-sidebar="menu-button"] {
-  justify-content: center;
+[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-footer {
+  padding-block: 10px;
+}
+
+[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-footer [data-slot="sidebar-menu"] {
+  align-items: center;
+}
+
+/* Use one eased timing curve for the gap, fixed panel, and controls. */
+[data-slot="sidebar-gap"] {
+  transition: width 280ms cubic-bezier(.22, 1, .36, 1) !important;
+  will-change: width;
+}
+
+[data-slot="sidebar-container"] {
+  transition:
+    left 280ms cubic-bezier(.22, 1, .36, 1),
+    right 280ms cubic-bezier(.22, 1, .36, 1),
+    width 280ms cubic-bezier(.22, 1, .36, 1) !important;
+  will-change: width;
+}
+
+[data-slot="sidebar-inner"] {
+  transition:
+    border-radius 220ms cubic-bezier(.22, 1, .36, 1),
+    box-shadow 220ms ease !important;
+}
+
+[data-slot="sidebar-menu-button"] {
+  transition:
+    width 280ms cubic-bezier(.22, 1, .36, 1),
+    height 220ms cubic-bezier(.22, 1, .36, 1),
+    padding 220ms cubic-bezier(.22, 1, .36, 1),
+    background-color 160ms ease,
+    color 160ms ease !important;
 }
