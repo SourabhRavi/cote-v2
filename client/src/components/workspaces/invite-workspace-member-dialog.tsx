@@ -67,7 +67,6 @@ export function InviteWorkspaceMemberDialog({ workspaceId }: InviteWorkspaceMemb
             <UserPlus className="size-4" />
             <span>Invite member</span>
           </DialogTrigger>
-
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle>Invite a teammate</DialogTitle>
@@ -75,7 +74,6 @@ export function InviteWorkspaceMemberDialog({ workspaceId }: InviteWorkspaceMemb
                 Send an invitation to someone who should have access to this workspace.
               </DialogDescription>
             </DialogHeader>
-
             <div className="mt-3 flex flex-col gap-2">
               <label htmlFor="workspace-member-email" className="text-xs font-semibold text-foreground">
                 Email address
@@ -96,7 +94,6 @@ export function InviteWorkspaceMemberDialog({ workspaceId }: InviteWorkspaceMemb
                 className="h-11"
               />
             </div>
-
             <DialogFooter className="mt-2">
               <Button
                 type="button"

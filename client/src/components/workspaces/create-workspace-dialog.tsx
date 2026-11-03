@@ -70,7 +70,6 @@ export function CreateWorkspaceDialog({ open, onOpenChange }: CreateWorkspaceDia
               className="h-11"
             />
           </div>
-
           <Button
             className="h-10 w-full rounded-xl"
             onClick={handleCreateWorkspace}
