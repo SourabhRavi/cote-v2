@@ -982,3 +982,62 @@
   }
   .cote-typing-dots span { animation: none; }
 }
+
+.cote-search-result {
+  display: flex;
+  width: 100%;
+  min-height: 58px;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 10px 11px;
+  text-align: left;
+  transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease;
+}
+
+.cote-search-result:hover:not(:disabled) {
+  border-color: var(--border);
+  background: var(--muted);
+}
+
+.cote-search-result:active:not(:disabled) { transform: scale(.992); }
+.cote-search-result:disabled { cursor: wait; opacity: .65; }
+
+.cote-search-result-icon {
+  display: grid;
+  width: 35px;
+  height: 35px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--primary) 15%, var(--border));
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--primary) 7%, var(--background));
+  color: var(--primary);
+}
+
+[data-slot="sidebar"][data-mobile="true"] {
+  border: 0;
+  border-radius: 0 20px 20px 0;
+  background: var(--sidebar);
+  box-shadow: 20px 0 60px rgb(12 14 28 / 16%);
+}
+
+.cote-home-hero,
+.cote-channel-card,
+.cote-panel,
+.cote-auth-card {
+  animation: cote-enter 420ms cubic-bezier(.2,.75,.25,1) both;
+}
+
+@keyframes cote-enter {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cote-home-hero,
+  .cote-channel-card,
+  .cote-panel,
+  .cote-auth-card { animation: none; }
+}
