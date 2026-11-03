@@ -24,23 +24,20 @@ const WorkspaceLayout = () => {
     socket.on(SOCKET_EVENTS.USER_PRESENCE_SNAPSHOT, handleUserPresenceSnapshot);
     socket.on(SOCKET_EVENTS.USER_ONLINE, handleUserOnline);
     socket.on(SOCKET_EVENTS.USER_OFFLINE, handleUserOffline);
-
     socket.connect();
 
     return () => {
       socket.off(SOCKET_EVENTS.USER_PRESENCE_SNAPSHOT, handleUserPresenceSnapshot);
       socket.off(SOCKET_EVENTS.USER_ONLINE, handleUserOnline);
       socket.off(SOCKET_EVENTS.USER_OFFLINE, handleUserOffline);
-
       socket.disconnect();
     };
   }, []);
 
   return (
-    <SidebarProvider className="h-svh min-h-0">
+    <SidebarProvider className="h-svh min-h-0 gap-2 bg-page p-2 md:gap-3 md:p-3">
       <AppSidebar />
-
-      <SidebarInset className="min-h-0 overflow-hidden">
+      <SidebarInset className="min-h-0 overflow-hidden !p-0">
         <Outlet context={{ onlineUsers }} />
       </SidebarInset>
     </SidebarProvider>

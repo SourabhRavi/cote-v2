@@ -7,6 +7,7 @@ import { socket } from "@/lib/socket.ts";
 import type { Channel } from "@/types/channel.types.ts";
 import type { TypingUser } from "@/types/user.types.ts";
 import { debounce } from "@/utils/debouce.ts";
+import { ArrowUp, CornerDownLeft } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const MessageComposer = ({ channel }: { channel: Channel }) => {
@@ -16,20 +17,13 @@ const MessageComposer = ({ channel }: { channel: Channel }) => {
 
   const handleMessageSend = () => {
     const content = message.trim();
-    setMessage("");
-
     if (!content) return;
-
-    mutate({
-      channelId: channel.id,
-      content,
-    });
+    setMessage("");
+    mutate({ channelId: channel.id, content });
   };
 
   const stopTyping = useRef(
-    debounce(() => {
-      socket.emit(SOCKET_EVENTS.TYPING_STOP, channel.id);
-    }, 500),
+    debounce(() => socket.emit(SOCKET_EVENTS.TYPING_STOP, channel.id), 500),
   ).current;
 
   const handleMessageTyping = () => {
@@ -37,25 +31,17 @@ const MessageComposer = ({ channel }: { channel: Channel }) => {
     stopTyping();
   };
 
-  // handle show/hide typing indicator
   useEffect(() => {
     const handleTypingStart = (user: TypingUser) => {
-      setTypingUsers((users) => {
-        if (users.some((typingUser) => typingUser.id === user.id)) {
-          return users;
-        }
-
-        return [...users, user];
-      });
+      setTypingUsers((users) =>
+        users.some((typingUser) => typingUser.id === user.id) ? users : [...users, user],
+      );
     };
-
     const handleTypingStop = (user: TypingUser) => {
       setTypingUsers((users) => users.filter((typingUser) => typingUser.id !== user.id));
     };
-
     socket.on(SOCKET_EVENTS.TYPING_START, handleTypingStart);
     socket.on(SOCKET_EVENTS.TYPING_STOP, handleTypingStop);
-
     return () => {
       socket.off(SOCKET_EVENTS.TYPING_START, handleTypingStart);
       socket.off(SOCKET_EVENTS.TYPING_STOP, handleTypingStop);
@@ -64,62 +50,37 @@ const MessageComposer = ({ channel }: { channel: Channel }) => {
 
   return (
     <>
-      <div className="shrink-0">
+      <div className="cote-composer-wrap">
         <MessageTypingIndicator users={typingUsers} />
-        <div className="mx-auto w-full rounded-xl bg-background shadow-lg shadow-primary/15 p-3">
+        <div className="cote-composer">
+          <div className="mb-2 flex items-center justify-between">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/75">
+              Message #{channel.name}
+            </span>
+            <span className="hidden items-center gap-1 text-[10px] text-muted-foreground/65 sm:flex">
+              <CornerDownLeft className="size-3" /> Enter to send
+            </span>
+          </div>
           <textarea
             rows={2}
-            placeholder={`Type message in #${channel.name}...`}
-            className="
-              min-h-10
-              w-full
-              resize-none
-              bg-transparent
-              text-sm
-              leading-6
-              text-foreground
-              outline-none
-              placeholder:text-muted-foreground
-            "
+            placeholder="Write a message…"
+            className="cote-composer-input"
             value={message}
-            onChange={(e) => {
-              setMessage(() => e.target.value);
+            onChange={(event) => {
+              setMessage(event.target.value);
               handleMessageTyping();
             }}
-            onKeyDown={(e) => handleMessageKeyDown(e, handleMessageSend)}
+            onKeyDown={(event) => handleMessageKeyDown(event, handleMessageSend)}
           />
-
-          <div className="mt-2 flex items-center justify-end">
-            {/* <div className="flex items-center gap-2 text-muted-foreground">
-              <button
-                type="button"
-                className="rounded-md p-1 transition-colors hover:bg-accent hover:text-accent-foreground"
-              >
-                <Paperclip className="size-4.5" />
-              </button>
-
-              <button
-                type="button"
-                className="rounded-md p-1 transition-colors hover:bg-accent hover:text-accent-foreground"
-              >
-                <SmilePlus className="size-4.5" />
-              </button>
-
-              <button
-                type="button"
-                className="rounded-md p-1 transition-colors hover:bg-accent hover:text-accent-foreground"
-              >
-                <AtSign className="size-4.5" />
-              </button>
-            </div> */}
-
+          <div className="flex items-center justify-between border-t border-border/70 pt-2.5">
+            <span className="text-[10px] text-muted-foreground/65">Keep it thoughtful. Keep it moving.</span>
             <Button
               onClick={handleMessageSend}
-              variant="default"
-              className="w-25 rounded-md"
-              disabled={!message.length || isPending}
+              className="h-9 gap-2 rounded-xl px-3.5 shadow-sm"
+              disabled={!message.trim().length || isPending}
             >
-              Send
+              {isPending ? "Sending…" : "Send"}
+              <ArrowUp className="size-3.5" />
             </Button>
           </div>
         </div>
