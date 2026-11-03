@@ -70,28 +70,25 @@ export function NavUser({
         <DropdownMenu>
           <DropdownMenuTrigger
             render={
-              <SidebarMenuButton size="lg" className="h-12 rounded-xl px-2 aria-expanded:bg-sidebar-accent">
-                <Avatar className="size-8 border border-border">
-                  {user.avatar ? <AvatarImage src={user.avatar} alt={user.name} /> : null}
-                  <AvatarFallback className="bg-primary/10 text-[11px] font-semibold text-primary">{initials}</AvatarFallback>
-                </Avatar>
-                <div className="grid min-w-0 flex-1 text-left text-sm leading-tight">
-                  <span className="truncate text-[12px] font-semibold text-foreground">{user.name}</span>
-                  <span className="truncate text-[10px] text-muted-foreground">{user.email}</span>
-                </div>
-                <ChevronsUpDownIcon className="ml-auto size-4 text-muted-foreground" />
-              </SidebarMenuButton>
+              <SidebarMenuButton
+                size="lg"
+                className="h-12 rounded-xl px-2 aria-expanded:bg-sidebar-accent"
+              />
             }
           >
             <Avatar className="size-8 border border-border">
               {user.avatar ? <AvatarImage src={user.avatar} alt={user.name} /> : null}
-              <AvatarFallback className="bg-primary/10 text-primary">{initials}</AvatarFallback>
+              <AvatarFallback className="bg-primary/10 text-[11px] font-semibold text-primary">
+                {initials}
+              </AvatarFallback>
             </Avatar>
             <div className="grid min-w-0 flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">{user.name}</span>
-              <span className="truncate text-xs text-muted-foreground">{user.email}</span>
+              <span className="truncate text-[12px] font-semibold text-foreground">{user.name}</span>
+              <span className="truncate text-[10px] text-muted-foreground">{user.email}</span>
             </div>
+            <ChevronsUpDownIcon className="ml-auto size-4 text-muted-foreground" />
           </DropdownMenuTrigger>
+
           <DropdownMenuContent
             className="w-64 rounded-xl p-1.5 shadow-xl"
             side={isMobile ? "bottom" : "right"}
@@ -113,7 +110,11 @@ export function NavUser({
               </DropdownMenuLabel>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem disabled={isLogoutPending} onClick={handleLogout} className="rounded-lg">
+            <DropdownMenuItem
+              disabled={isLogoutPending}
+              onClick={handleLogout}
+              className="rounded-lg"
+            >
               <LogOutIcon className="size-4" />
               {isLogoutPending ? "Signing out…" : "Log out"}
             </DropdownMenuItem>
