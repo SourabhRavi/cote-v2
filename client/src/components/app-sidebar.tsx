@@ -44,18 +44,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     isPending: workspaceIsPending,
     isError: workspaceIsError,
   } = useWorkspaces();
-  const currentWorkspaceId = workspaceId ?? workspaces[0]?.id;
 
+  const currentWorkspaceId = workspaceId ?? workspaces[0]?.id;
   const {
     data: channels = [],
     isPending: channelsIsPending,
     isError: channelsIsError,
   } = useChannels(currentWorkspaceId ?? "");
+
   const { mutate: createChannelMutation, isPending: createChannelIsPending } = useCreateChannel();
   const { data: user, isPending: userIsPending, isError: userIsError } = useUser();
 
   const handleWorkspaceChange = (nextWorkspaceId: string) => navigate("/" + nextWorkspaceId);
-
   const handleChannelChange = (nextChannelId: string) => {
     if (currentWorkspaceId) navigate("/" + currentWorkspaceId + "/" + nextChannelId);
   };
@@ -77,8 +77,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   };
 
   return (
-    <Sidebar collapsible="icon" variant="floating" {...props}>
-      <SidebarHeader className="gap-4 px-3 pb-3 pt-4">
+    <Sidebar collapsible="icon" variant="floating" className="cote-sidebar" {...props}>
+      <SidebarHeader className="cote-sidebar-header">
         <div className="cote-brand-lockup px-1 group-data-[collapsible=icon]:justify-center">
           <div className="cote-logo-tile">
             <Logo />
@@ -98,13 +98,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         />
       </SidebarHeader>
 
-      <SidebarContent className="mt-1 gap-4 px-2">
+      <SidebarContent className="cote-sidebar-content">
         <div>
           <div className="flex items-center justify-between px-2 pb-2">
-            <SidebarGroupLabel className="h-auto p-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/80">
-              Channels
+            <SidebarGroupLabel className="cote-sidebar-section-title h-auto p-0">
+              Your channels
             </SidebarGroupLabel>
-
             {currentWorkspaceId && (
               <Dialog open={createChannelOpen} onOpenChange={setCreateChannelOpen}>
                 <DialogTrigger
@@ -112,8 +111,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <Button
                       variant="ghost"
                       size="icon-xs"
-                      className="size-7 rounded-lg text-muted-foreground hover:text-foreground"
                       aria-label="Create channel"
+                      className="cote-sidebar-action"
                     />
                   }
                 >
@@ -166,25 +165,30 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           />
         </div>
 
-        {currentWorkspaceId && <InviteWorkspaceMemberDialog workspaceId={currentWorkspaceId} />}
-
-        {currentWorkspaceId && (
+        <div className="space-y-1">
+          <div className="px-2 pb-1">
+            <SidebarGroupLabel className="cote-sidebar-section-title h-auto p-0">
+              Workspace
+            </SidebarGroupLabel>
+          </div>
+          {currentWorkspaceId && <InviteWorkspaceMemberDialog workspaceId={currentWorkspaceId} />}
           <SidebarMenu className="px-1">
             <SidebarMenuItem>
               <SidebarMenuButton
                 onClick={() => navigate("/")}
                 size="default"
-                className="h-9 text-[13px] font-medium text-muted-foreground hover:text-foreground"
+                tooltip="Workspace invitations"
+                className="cote-sidebar-utility h-9 text-[12px]"
               >
                 <MailPlus className="size-4" />
-                <span>Workspace invitations</span>
+                <span>Invitations</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
-        )}
+        </div>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border px-2 py-2">
+      <SidebarFooter className="cote-sidebar-footer">
         <NavUser user={user} isLoading={userIsPending} isError={userIsError} />
       </SidebarFooter>
       <SidebarRail />

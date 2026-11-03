@@ -10,7 +10,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLogout } from "@/hooks/use-user.ts";
 import { useQueryClient } from "@tanstack/react-query";
@@ -72,18 +77,18 @@ export function NavUser({
             render={
               <SidebarMenuButton
                 size="lg"
-                className="h-12 rounded-xl px-2 aria-expanded:bg-sidebar-accent"
+                className="h-[54px] rounded-xl px-2 aria-expanded:bg-sidebar-accent"
               />
             }
           >
-            <Avatar className="size-8 border border-border">
+            <Avatar className="size-9 border border-border">
               {user.avatar ? <AvatarImage src={user.avatar} alt={user.name} /> : null}
               <AvatarFallback className="bg-primary/10 text-[11px] font-semibold text-primary">
                 {initials}
               </AvatarFallback>
             </Avatar>
             <div className="grid min-w-0 flex-1 text-left text-sm leading-tight">
-              <span className="truncate text-[12px] font-semibold text-foreground">{user.name}</span>
+              <span className="truncate text-[11px] font-semibold text-foreground">{user.name}</span>
               <span className="truncate text-[10px] text-muted-foreground">{user.email}</span>
             </div>
             <ChevronsUpDownIcon className="ml-auto size-4 text-muted-foreground" />
