@@ -77,21 +77,21 @@ export function NavUser({
             render={
               <SidebarMenuButton
                 size="lg"
-                className="h-[54px] rounded-xl px-2 aria-expanded:bg-sidebar-accent"
+                className="cote-user-menu-trigger h-[54px] rounded-xl px-2 aria-expanded:bg-sidebar-accent"
               />
             }
           >
-            <Avatar className="size-9 border border-border">
+            <Avatar className="cote-user-menu-avatar size-9 border border-border">
               {user.avatar ? <AvatarImage src={user.avatar} alt={user.name} /> : null}
               <AvatarFallback className="bg-primary/10 text-[11px] font-semibold text-primary">
                 {initials}
               </AvatarFallback>
             </Avatar>
-            <div className="grid min-w-0 flex-1 text-left text-sm leading-tight">
+            <div className="cote-user-menu-copy grid min-w-0 flex-1 text-left text-sm leading-tight">
               <span className="truncate text-[11px] font-semibold text-foreground">{user.name}</span>
               <span className="truncate text-[10px] text-muted-foreground">{user.email}</span>
             </div>
-            <ChevronsUpDownIcon className="ml-auto size-4 text-muted-foreground" />
+            <ChevronsUpDownIcon className="cote-user-menu-chevron ml-auto size-4 text-muted-foreground" />
           </DropdownMenuTrigger>
 
           <DropdownMenuContent

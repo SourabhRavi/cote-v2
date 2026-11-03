@@ -1048,7 +1048,88 @@
     top: 12px;
     bottom: 12px;
     left: 12px;
+    height: auto;
+    min-height: 0;
     /* Let the sidebar component apply its expanded and collapsed widths. */
     padding: 0;
   }
+}
+
+/* Keep the floating sidebar fully inset from the viewport. */
+[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-header {
+  align-items: center;
+  gap: 14px;
+  padding: 18px 5px 12px;
+}
+
+[data-slot="sidebar"][data-collapsible="icon"] .cote-brand-lockup {
+  width: 100%;
+  justify-content: center;
+  padding-inline: 0;
+}
+
+[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-header [data-slot="sidebar-menu"] {
+  width: 100%;
+  align-items: center;
+}
+
+[data-slot="sidebar"][data-collapsible="icon"] .cote-workspace-switcher-trigger,
+[data-slot="sidebar"][data-collapsible="icon"] .cote-user-menu-trigger {
+  width: 36px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  margin-inline: auto;
+  justify-content: center;
+  gap: 0;
+  overflow: visible;
+  padding: 0 !important;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+[data-slot="sidebar"][data-collapsible="icon"] .cote-workspace-switcher-trigger:hover,
+[data-slot="sidebar"][data-collapsible="icon"] .cote-user-menu-trigger:hover {
+  border-color: var(--sidebar-border);
+  background: var(--sidebar-accent);
+}
+
+.cote-workspace-switcher-copy,
+.cote-workspace-switcher-chevron,
+.cote-user-menu-copy,
+.cote-user-menu-chevron {
+  min-width: 0;
+}
+
+[data-slot="sidebar"][data-collapsible="icon"] .cote-workspace-switcher-copy,
+[data-slot="sidebar"][data-collapsible="icon"] .cote-workspace-switcher-chevron,
+[data-slot="sidebar"][data-collapsible="icon"] .cote-user-menu-copy,
+[data-slot="sidebar"][data-collapsible="icon"] .cote-user-menu-chevron {
+  display: none !important;
+}
+
+[data-slot="sidebar"][data-collapsible="icon"] .cote-workspace-switcher-avatar,
+[data-slot="sidebar"][data-collapsible="icon"] .cote-user-menu-avatar {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  margin: 0;
+}
+
+[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-footer {
+  align-items: center;
+  padding: 10px 5px;
+}
+
+[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-footer [data-slot="sidebar-menu"] {
+  width: 100%;
+  align-items: center;
+}
+
+[data-slot="sidebar"][data-collapsible="icon"] .cote-sidebar-content {
+  padding-inline: 5px;
+}
+
+[data-slot="sidebar"][data-collapsible="icon"] [data-sidebar="menu-button"] {
+  justify-content: center;
 }

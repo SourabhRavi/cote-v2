@@ -73,14 +73,14 @@ export function TeamSwitcher({
               render={
                 <SidebarMenuButton
                   size="lg"
-                  className="h-[58px] rounded-xl border border-sidebar-border bg-background/85 px-3 shadow-sm aria-expanded:bg-sidebar-accent"
+                  className="cote-workspace-switcher-trigger h-[58px] rounded-xl border border-sidebar-border bg-background/85 px-3 shadow-sm aria-expanded:bg-sidebar-accent"
                 />
               }
             >
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-sm font-bold uppercase text-primary">
+              <div className="cote-workspace-switcher-avatar flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-sm font-bold uppercase text-primary">
                 {activeWorkspace.name.charAt(0)}
               </div>
-              <div className="grid min-w-0 flex-1 text-left leading-tight">
+              <div className="cote-workspace-switcher-copy grid min-w-0 flex-1 text-left leading-tight">
                 <span className="truncate text-[12px] font-semibold capitalize text-foreground">
                   {activeWorkspace.name}
                 </span>
@@ -88,7 +88,7 @@ export function TeamSwitcher({
                   Current workspace
                 </span>
               </div>
-              <ChevronsUpDownIcon className="ml-auto size-4 text-muted-foreground" />
+              <ChevronsUpDownIcon className="cote-workspace-switcher-chevron ml-auto size-4 text-muted-foreground" />
             </DropdownMenuTrigger>
 
             <DropdownMenuContent
