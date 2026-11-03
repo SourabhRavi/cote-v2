@@ -100,7 +100,7 @@ export const MessageItem = ({ message, onlineUsers = [] }: MessageItemProps) => 
             </div>
           </div>
         ) : (
-          <p className={\`min-w-0 whitespace-pre-wrap break-words text-[13px] leading-[1.75] text-foreground/90 \${message.deletedAt ? "italic text-muted-foreground" : ""}\`}>
+          <p className={`min-w-0 whitespace-pre-wrap break-words text-[13px] leading-[1.75] text-foreground/90 ${message.deletedAt ? "italic text-muted-foreground" : ""}`}>
             {message.deletedAt ? "Message deleted" : message.content}
           </p>
         )}

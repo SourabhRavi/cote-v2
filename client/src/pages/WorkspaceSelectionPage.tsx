@@ -47,12 +47,12 @@ const WorkspaceSelectionPage = () => {
     return workspaces.filter((workspace: Workspace) => workspace.name.toLowerCase().includes(query));
   }, [workspaces, search]);
 
-  const handleWorkspaceSelect = (workspaceId: string) => navigate(\`/\${workspaceId}\`);
+  const handleWorkspaceSelect = (workspaceId: string) => navigate(`/${workspaceId}`);
 
   const handleAcceptInvitation = (invitationId: string) => {
     if (isAccepting || isDeclining) return;
     acceptInvitation(invitationId, {
-      onSuccess: (result) => navigate(\`/\${result.workspaceId}\`),
+      onSuccess: (result) => navigate(`/${result.workspaceId}`),
     });
   };
 

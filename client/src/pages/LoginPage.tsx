@@ -4,7 +4,7 @@ import { API_BASE_URL } from "@/config/api.ts";
 
 const LoginPage = () => {
   const handleGoogleLogin = () => {
-    window.location.assign(\`\${API_BASE_URL}/auth/google\`);
+    window.location.assign(`${API_BASE_URL}/auth/google`);
   };
 
   return (

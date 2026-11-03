@@ -53,10 +53,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { mutate: createChannelMutation, isPending: createChannelIsPending } = useCreateChannel();
   const { data: user, isPending: userIsPending, isError: userIsError } = useUser();
 
-  const handleWorkspaceChange = (nextWorkspaceId: string) => navigate(\`/\${nextWorkspaceId}\`);
+  const handleWorkspaceChange = (nextWorkspaceId: string) => navigate(`/${nextWorkspaceId}`);
 
   const handleChannelChange = (nextChannelId: string) => {
-    if (currentWorkspaceId) navigate(\`/\${currentWorkspaceId}/\${nextChannelId}\`);
+    if (currentWorkspaceId) navigate(`/${currentWorkspaceId}/${nextChannelId}`);
   };
 
   const handleCreateChannel = () => {
@@ -69,7 +69,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         onSuccess: (channel) => {
           setChannelName("");
           setCreateChannelOpen(false);
-          navigate(\`/\${currentWorkspaceId}/\${channel.id}\`);
+          navigate(`/${currentWorkspaceId}/${channel.id}`);
         },
       },
     );
